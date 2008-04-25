@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Stand 060420ma -->
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:tei="http://www.tei-c.org/ns/1.0"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml">
+
+    <xsl:preserve-space elements="*"/>
+
+    <xsl:output indent="no"/>
+
+    <xsl:variable name="interpunktion">。，、： ？.,:;?!&#10;&#13;「」</xsl:variable>
+
+    <xsl:param name="id"/>
+
+    <xsl:template match="tei:TEI">
+        <div class="layout-text" lang="zh">
+            <xsl:apply-templates select="tei:text/tei:body/tei:div[@xml:lang = 'zh']" />
+        </div>
+    </xsl:template>
+
+    <!-- Templates fuer die Layout-Darstellung -->
+
+    <xsl:template match="tei:note" />
+
+    <xsl:template match="tei:choice" >
+        <xsl:choose>
+            <xsl:when test="tei:unclear/@cert">
+                <xsl:variable name="cert_max" select="max(tei:unclear/@cert)"/>
+                <xsl:apply-templates select="tei:unclear[@cert = $cert_max]"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates select="tei:unclear[1]"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <xsl:template match="tei:app">
+        <xsl:apply-templates select="tei:lem" />
+    </xsl:template>
+
+    <xsl:template match="tei:lb">
+        <br/>
+    </xsl:template>
+
+    <xsl:template match="tei:persName//text()">
+        <xsl:variable name="class">
+            <xsl:choose>
+                <xsl:when test="ancestor::tei:persName/@type = 'Buddha'">persNameBuddha</xsl:when>
+                <xsl:when test="ancestor::tei:persName/@type = ('monk', 'nun')">persNameMonk</xsl:when>
+                <xsl:when test="ancestor::tei:persName/starts-with(@type, 'Bodhi')"
+                    >persNameBodhisattva</xsl:when>
+                <xsl:when test="ancestor::tei:persName/starts-with(@type, 'emp')">persNameEmperor</xsl:when>
+                <xsl:when test="ancestor::tei:persName/starts-with(@type, 'disciple')"
+                    >persNameDisciple</xsl:when>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:for-each select="string-to-codepoints(translate(.,$interpunktion,''))">
+            <span class="cell">
+                <span class="{$class}">
+                    <xsl:value-of select="codepoints-to-string(.)"/>
+                </span>
+            </span>
+        </xsl:for-each>
+    </xsl:template>
+
+    <xsl:template match="tei:placeName">
+        <xsl:for-each select="string-to-codepoints(translate(.,$interpunktion,''))">
+            <span class="cell">
+                <span class="placeName">
+                    <xsl:value-of select="codepoints-to-string(.)"/>
+                </span>
+            </span>
+        </xsl:for-each>
+    </xsl:template>
+
+    <xsl:template match="tei:unclear//text()">
+        <!--xsl:variable name="choice" select="ancestor::tei:choice[1]"/>
+        <xsl:variable name="id" select="generate-id($choice)"/>
+        <xsl:variable name="tooltip">
+            <span id="for_tooltip_{$id}" class="footer_content"> Unclear character, possible
+                readings: <xsl:apply-templates select="$choice/tei:unclear" />
+            </span>
+        </xsl:variable-->
+        <xsl:for-each select="string-to-codepoints(translate(.,$interpunktion,''))">
+            <span class="cell">
+                <span id="tooltip_{$id}" class="footer">
+                    <xsl:value-of select="codepoints-to-string(.)"/>
+                </span>
+                <!--xsl:copy-of select="$tooltip"/-->
+            </span>
+        </xsl:for-each>
+    </xsl:template>
+
+    <xsl:template match="tei:supplied//text()">
+        <xsl:for-each select="string-to-codepoints(translate(.,$interpunktion,''))">
+            <span class="cell supplied">
+                <xsl:value-of select="codepoints-to-string(.)"/>
+            </span>
+        </xsl:for-each>
+    </xsl:template>
+
+    <xsl:template match="element()">
+        <xsl:apply-templates/>
+    </xsl:template>
+
+    <xsl:template match="text()">
+        <xsl:variable name="text" select="string-to-codepoints(translate(.,$interpunktion,''))"/>
+        <xsl:for-each select="$text">
+            <span class="cell">
+                <xsl:value-of select="codepoints-to-string(.)"/>
+            </span>
+        </xsl:for-each>
+    </xsl:template>
+
+</xsl:stylesheet>

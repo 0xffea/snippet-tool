@@ -1,0 +1,1644 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unihandb>
+<char xmlid="U+2F93C">
+	<charProp>
+		<kCompatibilityVariant>U+24FB8</kCompatibilityVariant>
+		<kIRG_TSource>7-537B</kIRG_TSource>
+		<kRSUnicode>106.16</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F93D">
+	<charProp>
+		<kCompatibilityVariant>U+25044</kCompatibilityVariant>
+		<kIRG_TSource>6-2D3A</kIRG_TSource>
+		<kRSUnicode>108.3</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F93E">
+	<charProp>
+		<kCompatibilityVariant>U+3FFC</kCompatibilityVariant>
+		<kIRG_TSource>5-3371</kIRG_TSource>
+		<kRSUnicode>108.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F93F">
+	<charProp>
+		<kCompatibilityVariant>U+4008</kCompatibilityVariant>
+		<kIRG_TSource>F-563C</kIRG_TSource>
+		<kRSUnicode>108.11</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F940">
+	<charProp>
+		<kCihaiT>944.102</kCihaiT>
+		<kCompatibilityVariant>U+76F4</kCompatibilityVariant>
+		<kIRG_TSource>6-2D45</kIRG_TSource>
+		<kRSUnicode>109.3</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F941">
+	<charProp>
+		<kCompatibilityVariant>U+250F3</kCompatibilityVariant>
+		<kIRG_TSource>6-2D3D</kIRG_TSource>
+		<kRSUnicode>109.3</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F942">
+	<charProp>
+		<kCompatibilityVariant>U+250F2</kCompatibilityVariant>
+		<kIRG_TSource>6-333D</kIRG_TSource>
+		<kRSUnicode>109.3</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F943">
+	<charProp>
+		<kCompatibilityVariant>U+25119</kCompatibilityVariant>
+		<kIRG_TSource>6-3331</kIRG_TSource>
+		<kRSUnicode>109.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F944">
+	<charProp>
+		<kCompatibilityVariant>U+25133</kCompatibilityVariant>
+		<kIRG_TSource>5-2F26</kIRG_TSource>
+		<kRSUnicode>109.5</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F945">
+	<charProp>
+		<kCompatibilityVariant>U+771E</kCompatibilityVariant>
+		<kIRG_TSource>F-2C57</kIRG_TSource>
+		<kRSAdobe_Japan1_6>C+13357+109.5.5</kRSAdobe_Japan1_6>
+		<kRSUnicode>109.5</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F946">
+	<charProp>
+		<kCompatibilityVariant>U+771F</kCompatibilityVariant>
+		<kIRG_TSource>6-3A2D</kIRG_TSource>
+		<kRSUnicode>109.5</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F947">
+	<charProp>
+		<kCompatibilityVariant>U+771F</kCompatibilityVariant>
+		<kIRG_TSource>6-3A2E</kIRG_TSource>
+		<kRSAdobe_Japan1_6>C+13854+109.5.5</kRSAdobe_Japan1_6>
+		<kRSUnicode>109.5</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F948">
+	<charProp>
+		<kCompatibilityVariant>U+774A</kCompatibilityVariant>
+		<kIRG_TSource>6-4248</kIRG_TSource>
+		<kRSUnicode>109.7</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F949">
+	<charProp>
+		<kCompatibilityVariant>U+4039</kCompatibilityVariant>
+		<kIRG_TSource>6-4B7A</kIRG_TSource>
+		<kRSUnicode>109.7</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F94A">
+	<charProp>
+		<kCihaiT>953.301</kCihaiT>
+		<kCompatibilityVariant>U+778B</kCompatibilityVariant>
+		<kIRG_TSource>F-505F</kIRG_TSource>
+		<kRSUnicode>109.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F94B">
+	<charProp>
+		<kCompatibilityVariant>U+4046</kCompatibilityVariant>
+		<kIRG_TSource>7-304A</kIRG_TSource>
+		<kRSUnicode>109.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F94C">
+	<charProp>
+		<kCompatibilityVariant>U+4096</kCompatibilityVariant>
+		<kIRG_TSource>6-253F</kIRG_TSource>
+		<kRSUnicode>112.1</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F94D">
+	<charProp>
+		<kCompatibilityVariant>U+2541D</kCompatibilityVariant>
+		<kIRG_TSource>6-2D46</kIRG_TSource>
+		<kRSUnicode>112.3</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F94E">
+	<charProp>
+		<kCihaiT>968.404</kCihaiT>
+		<kCompatibilityVariant>U+784E</kCompatibilityVariant>
+		<kIRG_KPSource>KP1-6043</kIRG_KPSource>
+		<kIRG_TSource>3-4333</kIRG_TSource>
+		<kRSUnicode>112.6</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F94F">
+	<charProp>
+		<kCompatibilityVariant>U+788C</kCompatibilityVariant>
+		<kIRG_TSource>6-556B</kIRG_TSource>
+		<kRSUnicode>112.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F950">
+	<charProp>
+		<kCihaiT>972.602</kCihaiT>
+		<kCompatibilityVariant>U+78CC</kCompatibilityVariant>
+		<kIRG_TSource>7-257B</kIRG_TSource>
+		<kRSUnicode>112.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F951">
+	<charProp>
+		<kCompatibilityVariant>U+40E3</kCompatibilityVariant>
+		<kIRG_TSource>7-396D</kIRG_TSource>
+		<kRSUnicode>112.12</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F952">
+	<charProp>
+		<kCompatibilityVariant>U+25626</kCompatibilityVariant>
+		<kIRG_TSource>F-283C</kIRG_TSource>
+		<kRSUnicode>113.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F953">
+	<charProp>
+		<kCompatibilityVariant>U+7956</kCompatibilityVariant>
+		<kIRG_TSource>6-334A</kIRG_TSource>
+		<kRSUnicode>113.5</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F954">
+	<charProp>
+		<kCompatibilityVariant>U+2569A</kCompatibilityVariant>
+		<kIRG_TSource>F-3D60</kIRG_TSource>
+		<kRSUnicode>113.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F955">
+	<charProp>
+		<kCompatibilityVariant>U+256C5</kCompatibilityVariant>
+		<kIRG_TSource>4-4B60</kIRG_TSource>
+		<kRSUnicode>113.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F956">
+	<charProp>
+		<kCompatibilityVariant>U+798F</kCompatibilityVariant>
+		<kIRG_TSource>7-2627</kIRG_TSource>
+		<kRSUnicode>113.9</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F957">
+	<charProp>
+		<kCompatibilityVariant>U+79EB</kCompatibilityVariant>
+		<kIRG_TSource>6-3A43</kIRG_TSource>
+		<kRSUnicode>115.5</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F958">
+	<charProp>
+		<kCompatibilityVariant>U+412F</kCompatibilityVariant>
+		<kIRG_TSource>6-4267</kIRG_TSource>
+		<kRSUnicode>115.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F959">
+	<charProp>
+		<kCompatibilityVariant>U+7A40</kCompatibilityVariant>
+		<kIRG_KPSource>KP1-6246</kIRG_KPSource>
+		<kIRG_TSource>4-455F</kIRG_TSource>
+		<kRSUnicode>115.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F95A">
+	<charProp>
+		<kCihaiT>996.502</kCihaiT>
+		<kCompatibilityVariant>U+7A4A</kCompatibilityVariant>
+		<kIRG_TSource>4-5221</kIRG_TSource>
+		<kRSUnicode>115.11</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F95B">
+	<charProp>
+		<kCompatibilityVariant>U+7A4F</kCompatibilityVariant>
+		<kIRG_TSource>7-3066</kIRG_TSource>
+		<kRSUnicode>115.11</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F95C">
+	<charProp>
+		<kCompatibilityVariant>U+2597C</kCompatibilityVariant>
+		<kIRG_TSource>6-5F75</kIRG_TSource>
+		<kRSUnicode>116.7</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F95D">
+	<charProp>
+		<kCompatibilityVariant>U+25AA7</kCompatibilityVariant>
+		<kIRG_TSource>7-263E</kIRG_TSource>
+		<kRSUnicode>117.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F95E">
+	<charProp>
+		<kCompatibilityVariant>U+25AA7</kCompatibilityVariant>
+		<kIRG_TSource>7-263C</kIRG_TSource>
+		<kRSUnicode>117.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F95F">
+	<charProp>
+		<kCompatibilityVariant>U+7AEE</kCompatibilityVariant>
+		<kIRG_KPSource>KP1-639A</kIRG_KPSource>
+		<kIRG_TSource>7-3073</kIRG_TSource>
+		<kRSUnicode>117.11</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F960">
+	<charProp>
+		<kCompatibilityVariant>U+4202</kCompatibilityVariant>
+		<kIRG_TSource>F-4A7B</kIRG_TSource>
+		<kRSUnicode>118.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F961">
+	<charProp>
+		<kCompatibilityVariant>U+25BAB</kCompatibilityVariant>
+		<kIRG_TSource>6-6023</kIRG_TSource>
+		<kRSUnicode>118.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F962">
+	<charProp>
+		<kCompatibilityVariant>U+7BC6</kCompatibilityVariant>
+		<kIRG_TSource>F-5123</kIRG_TSource>
+		<kRSUnicode>118.9</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F963">
+	<charProp>
+		<kCompatibilityVariant>U+7BC9</kCompatibilityVariant>
+		<kIRG_TSource>7-264D</kIRG_TSource>
+		<kRSUnicode>118.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F964">
+	<charProp>
+		<kCompatibilityVariant>U+4227</kCompatibilityVariant>
+		<kIRG_TSource>7-413C</kIRG_TSource>
+		<kRSUnicode>118.9</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F965">
+	<charProp>
+		<kCompatibilityVariant>U+25C80</kCompatibilityVariant>
+		<kIRG_TSource>5-6C7D</kIRG_TSource>
+		<kRSUnicode>118.11</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F966">
+	<charProp>
+		<kCompatibilityVariant>U+7CD2</kCompatibilityVariant>
+		<kIRG_TSource>7-312D</kIRG_TSource>
+		<kRSUnicode>119.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F967">
+	<charProp>
+		<kCompatibilityVariant>U+42A0</kCompatibilityVariant>
+		<kIRG_TSource>7-3A33</kIRG_TSource>
+		<kRSUnicode>119.11</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F968">
+	<charProp>
+		<kCompatibilityVariant>U+7CE8</kCompatibilityVariant>
+		<kIRG_TSource>4-5C59</kIRG_TSource>
+		<kRSUnicode>119.11</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F969">
+	<charProp>
+		<kCompatibilityVariant>U+7CE3</kCompatibilityVariant>
+		<kIRG_TSource>7-4144</kIRG_TSource>
+		<kRSUnicode>119.12</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F96A">
+	<charProp>
+		<kCompatibilityVariant>U+7D00</kCompatibilityVariant>
+		<kIRG_TSource>3-2E56</kIRG_TSource>
+		<kRSUnicode>120.3</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F96B">
+	<charProp>
+		<kCompatibilityVariant>U+25F86</kCompatibilityVariant>
+		<kIRG_TSource>6-3366</kIRG_TSource>
+		<kRSUnicode>120.2</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F96C">
+	<charProp>
+		<kCihaiT>1052.202</kCihaiT>
+		<kCompatibilityVariant>U+7D63</kCompatibilityVariant>
+		<kIRG_KPSource>KP1-6725</kIRG_KPSource>
+		<kIRG_TSource>3-486A</kIRG_TSource>
+		<kRSAdobe_Japan1_6>C+14180+120.6.8</kRSAdobe_Japan1_6>
+		<kRSUnicode>120.6</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F96D">
+	<charProp>
+		<kCompatibilityVariant>U+4301</kCompatibilityVariant>
+		<kIRG_TSource>F-5137</kIRG_TSource>
+		<kRSUnicode>120.9</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F96E">
+	<charProp>
+		<kCompatibilityVariant>U+7DC7</kCompatibilityVariant>
+		<kIRG_TSource>7-266A</kIRG_TSource>
+		<kRSUnicode>120.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F96F">
+	<charProp>
+		<kCompatibilityVariant>U+7E02</kCompatibilityVariant>
+		<kIRG_TSource>7-2669</kIRG_TSource>
+		<kRSUnicode>120.9</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F970">
+	<charProp>
+		<kCompatibilityVariant>U+7E45</kCompatibilityVariant>
+		<kIRG_TSource>4-6426</kIRG_TSource>
+		<kRSUnicode>120.11</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F971">
+	<charProp>
+		<kCompatibilityVariant>U+4334</kCompatibilityVariant>
+		<kIRG_TSource>7-624D</kIRG_TSource>
+		<kRSUnicode>120.19</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F972">
+	<charProp>
+		<kCompatibilityVariant>U+26228</kCompatibilityVariant>
+		<kIRG_TSource>6-4C72</kIRG_TSource>
+		<kRSUnicode>121.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F973">
+	<charProp>
+		<kCompatibilityVariant>U+26247</kCompatibilityVariant>
+		<kIRG_TSource>7-3A46</kIRG_TSource>
+		<kRSUnicode>121.9</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F974">
+	<charProp>
+		<kCompatibilityVariant>U+4359</kCompatibilityVariant>
+		<kIRG_TSource>F-3E32</kIRG_TSource>
+		<kRSUnicode>122.7</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F975">
+	<charProp>
+		<kCompatibilityVariant>U+262D9</kCompatibilityVariant>
+		<kIRG_TSource>7-3A49</kIRG_TSource>
+		<kRSUnicode>122.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F976">
+	<charProp>
+		<kCompatibilityVariant>U+7F7A</kCompatibilityVariant>
+		<kIRG_TSource>7-486D</kIRG_TSource>
+		<kRSUnicode>122.11</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F977">
+	<charProp>
+		<kCompatibilityVariant>U+2633E</kCompatibilityVariant>
+		<kIRG_TSource>7-5F3C</kIRG_TSource>
+		<kRSUnicode>122.19</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F978">
+	<charProp>
+		<kCompatibilityVariant>U+7F95</kCompatibilityVariant>
+		<kIRG_TSource>6-4D23</kIRG_TSource>
+		<kRSUnicode>123.5</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F979">
+	<charProp>
+		<kCompatibilityVariant>U+7FFA</kCompatibilityVariant>
+		<kIRG_TSource>F-5727</kIRG_TSource>
+		<kRSUnicode>124.12</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F97A">
+	<charProp>
+		<kCompatibilityVariant>U+8005</kCompatibilityVariant>
+		<kIRG_TSource>4-2B26</kIRG_TSource>
+		<kRSUnicode>125.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F97B">
+	<charProp>
+		<kCompatibilityVariant>U+264DA</kCompatibilityVariant>
+		<kIRG_TSource>7-2728</kIRG_TSource>
+		<kRSUnicode>126.9</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F97C">
+	<charProp>
+		<kCompatibilityVariant>U+26523</kCompatibilityVariant>
+		<kIRG_TSource>F-5728</kIRG_TSource>
+		<kRSUnicode>127.12</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F97D">
+	<charProp>
+		<kCompatibilityVariant>U+8060</kCompatibilityVariant>
+		<kIRG_TSource>6-605D</kIRG_TSource>
+		<kRSUnicode>128.6</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F97E">
+	<charProp>
+		<kCompatibilityVariant>U+265A8</kCompatibilityVariant>
+		<kIRG_TSource>5-4874</kIRG_TSource>
+		<kRSUnicode>128.9</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F97F">
+	<charProp>
+		<kCompatibilityVariant>U+8070</kCompatibilityVariant>
+		<kIRG_TSource>F-5C2D</kIRG_TSource>
+		<kRSUnicode>128.11</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F980">
+	<charProp>
+		<kCompatibilityVariant>U+2335F</kCompatibilityVariant>
+		<kIRG_TSource>6-287B</kIRG_TSource>
+		<kRSUnicode>74.3</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F981">
+	<charProp>
+		<kCompatibilityVariant>U+43D5</kCompatibilityVariant>
+		<kIRG_TSource>4-2768</kIRG_TSource>
+		<kRSUnicode>130.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F982">
+	<charProp>
+		<kCompatibilityVariant>U+80B2</kCompatibilityVariant>
+		<kIRG_TSource>6-2D69</kIRG_TSource>
+		<kRSUnicode>130.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F983">
+	<charProp>
+		<kCompatibilityVariant>U+8103</kCompatibilityVariant>
+		<kIRG_TSource>3-3350</kIRG_TSource>
+		<kRSUnicode>130.6</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F984">
+	<charProp>
+		<kCompatibilityVariant>U+440B</kCompatibilityVariant>
+		<kIRG_TSource>5-3B50</kIRG_TSource>
+		<kRSUnicode>130.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F985">
+	<charProp>
+		<kCompatibilityVariant>U+813E</kCompatibilityVariant>
+		<kIRG_TSource>6-4D48</kIRG_TSource>
+		<kRSUnicode>130.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F986">
+	<charProp>
+		<kCompatibilityVariant>U+5AB5</kCompatibilityVariant>
+		<kIRG_TSource>F-4468</kIRG_TSource>
+		<kRSUnicode>38.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F987">
+	<charProp>
+		<kCompatibilityVariant>U+267A7</kCompatibilityVariant>
+		<kIRG_TSource>F-4B57</kIRG_TSource>
+		<kRSUnicode>130.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F988">
+	<charProp>
+		<kCompatibilityVariant>U+267B5</kCompatibilityVariant>
+		<kIRG_TSource>F-4B56</kIRG_TSource>
+		<kRSUnicode>130.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F989">
+	<charProp>
+		<kCompatibilityVariant>U+23393</kCompatibilityVariant>
+		<kIRG_TSource>4-4C56</kIRG_TSource>
+		<kRSUnicode>74.11</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F98A">
+	<charProp>
+		<kCompatibilityVariant>U+2339C</kCompatibilityVariant>
+		<kIRG_TSource>4-582D</kIRG_TSource>
+		<kRSUnicode>74.13</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F98B">
+	<charProp>
+		<kCihaiT>1112.605</kCihaiT>
+		<kCompatibilityVariant>U+8201</kCompatibilityVariant>
+		<kIRG_TSource>4-3457</kIRG_TSource>
+		<kRSUnicode>134.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F98C">
+	<charProp>
+		<kCompatibilityVariant>U+8204</kCompatibilityVariant>
+		<kIRG_TSource>6-4D5E</kIRG_TSource>
+		<kRSUnicode>134.6</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F98D">
+	<charProp>
+		<kCompatibilityVariant>U+8F9E</kCompatibilityVariant>
+		<kIRG_TSource>3-4425</kIRG_TSource>
+		<kRSUnicode>160.6</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F98E">
+	<charProp>
+		<kCompatibilityVariant>U+446B</kCompatibilityVariant>
+		<kIRG_TSource>6-6125</kIRG_TSource>
+		<kRSUnicode>137.6</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F98F">
+	<charProp>
+		<kCompatibilityVariant>U+8291</kCompatibilityVariant>
+		<kIRG_TSource>3-272A</kIRG_TSource>
+		<kRSUnicode>140.3</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F990">
+	<charProp>
+		<kCompatibilityVariant>U+828B</kCompatibilityVariant>
+		<kIRG_TSource>6-2552</kIRG_TSource>
+		<kRSUnicode>140.3</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F991">
+	<charProp>
+		<kCompatibilityVariant>U+829D</kCompatibilityVariant>
+		<kIRG_TSource>6-2927</kIRG_TSource>
+		<kRSUnicode>140.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F992">
+	<charProp>
+		<kCompatibilityVariant>U+52B3</kCompatibilityVariant>
+		<kIRG_TSource>F-285C</kIRG_TSource>
+		<kRSUnicode>19.5</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F993">
+	<charProp>
+		<kCompatibilityVariant>U+82B1</kCompatibilityVariant>
+		<kIRG_TSource>6-2928</kIRG_TSource>
+		<kRSUnicode>140.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F994">
+	<charProp>
+		<kCangjie>UUYHS</kCangjie>
+		<kCompatibilityVariant>U+82B3</kCompatibilityVariant>
+		<kHKSCS>8EFD</kHKSCS>
+		<kIRG_HSource>8EFD</kIRG_HSource>
+		<kRSUnicode>140.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F995">
+	<charProp>
+		<kCompatibilityVariant>U+82BD</kCompatibilityVariant>
+		<kIRG_TSource>6-2E22</kIRG_TSource>
+		<kRSAdobe_Japan1_6>C+13670+92.4.3 C+13670+140.3.4</kRSAdobe_Japan1_6>
+		<kRSUnicode>140.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F996">
+	<charProp>
+		<kCompatibilityVariant>U+82E6</kCompatibilityVariant>
+		<kIRG_TSource>6-2E23</kIRG_TSource>
+		<kRSUnicode>140.5</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F997">
+	<charProp>
+		<kCompatibilityVariant>U+26B3C</kCompatibilityVariant>
+		<kIRG_TSource>6-3444</kIRG_TSource>
+		<kRSUnicode>140.5</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F998">
+	<charProp>
+		<kCompatibilityVariant>U+82E5</kCompatibilityVariant>
+		<kIRG_TSource>6-2E24</kIRG_TSource>
+		<kRSUnicode>140.5</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F999">
+	<charProp>
+		<kCihaiT>1142.202</kCihaiT>
+		<kCompatibilityVariant>U+831D</kCompatibilityVariant>
+		<kIRG_TSource>6-3B52</kIRG_TSource>
+		<kRSUnicode>140.7</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F99A">
+	<charProp>
+		<kCompatibilityVariant>U+8363</kCompatibilityVariant>
+		<kIRG_TSource>F-323A</kIRG_TSource>
+		<kRSUnicode>140.6</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F99B">
+	<charProp>
+		<kCompatibilityVariant>U+83AD</kCompatibilityVariant>
+		<kIRG_TSource>4-3473</kIRG_TSource>
+		<kRSUnicode>140.9</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F99C">
+	<charProp>
+		<kCompatibilityVariant>U+8323</kCompatibilityVariant>
+		<kIRG_TSource>6-442B</kIRG_TSource>
+		<kRSUnicode>140.7</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F99D">
+	<charProp>
+		<kCompatibilityVariant>U+83BD</kCompatibilityVariant>
+		<kIRG_TSource>4-3474</kIRG_TSource>
+		<kRSUnicode>140.6</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F99E">
+	<charProp>
+		<kCompatibilityVariant>U+83E7</kCompatibilityVariant>
+		<kIRG_TSource>6-4376</kIRG_TSource>
+		<kRSUnicode>140.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F99F">
+	<charProp>
+		<kCompatibilityVariant>U+8457</kCompatibilityVariant>
+		<kIRG_KPSource>KP1-6E4B</kIRG_KPSource>
+		<kIRG_TSource>6-443B</kIRG_TSource>
+		<kRSUnicode>140.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9A0">
+	<charProp>
+		<kCihaiT>1143.301</kCihaiT>
+		<kCompatibilityVariant>U+8353</kCompatibilityVariant>
+		<kIRG_TSource>4-3A66</kIRG_TSource>
+		<kRSUnicode>140.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9A1">
+	<charProp>
+		<kCompatibilityVariant>U+83CA</kCompatibilityVariant>
+		<kIRG_TSource>6-443E</kIRG_TSource>
+		<kRSUnicode>140.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9A2">
+	<charProp>
+		<kCompatibilityVariant>U+83CC</kCompatibilityVariant>
+		<kIRG_TSource>6-443C</kIRG_TSource>
+		<kRSUnicode>140.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9A3">
+	<charProp>
+		<kCompatibilityVariant>U+83DC</kCompatibilityVariant>
+		<kIRG_TSource>6-443D</kIRG_TSource>
+		<kRSUnicode>140.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9A4">
+	<charProp>
+		<kCompatibilityVariant>U+26C36</kCompatibilityVariant>
+		<kIRG_TSource>6-4E3B</kIRG_TSource>
+		<kRSUnicode>140.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9A5">
+	<charProp>
+		<kCompatibilityVariant>U+26D6B</kCompatibilityVariant>
+		<kIRG_TSource>6-613E</kIRG_TSource>
+		<kRSUnicode>140.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9A6">
+	<charProp>
+		<kCompatibilityVariant>U+26CD5</kCompatibilityVariant>
+		<kIRG_TSource>6-614F</kIRG_TSource>
+		<kRSUnicode>140.9</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9A7">
+	<charProp>
+		<kCompatibilityVariant>U+452B</kCompatibilityVariant>
+		<kIRG_TSource>F-5164</kIRG_TSource>
+		<kRSUnicode>140.11</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9A8">
+	<charProp>
+		<kCompatibilityVariant>U+84F1</kCompatibilityVariant>
+		<kIRG_TSource>4-4C79</kIRG_TSource>
+		<kRSUnicode>140.11</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9A9">
+	<charProp>
+		<kCompatibilityVariant>U+84F3</kCompatibilityVariant>
+		<kIRG_TSource>7-2761</kIRG_TSource>
+		<kRSUnicode>140.11</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9AA">
+	<charProp>
+		<kCompatibilityVariant>U+8516</kCompatibilityVariant>
+		<kIRG_TSource>7-276D</kIRG_TSource>
+		<kRSUnicode>140.11</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9AB">
+	<charProp>
+		<kCompatibilityVariant>U+273CA</kCompatibilityVariant>
+		<kIRG_TSource>7-3244</kIRG_TSource>
+		<kRSUnicode>142.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9AC">
+	<charProp>
+		<kCompatibilityVariant>U+8564</kCompatibilityVariant>
+		<kIRG_TSource>F-5747</kIRG_TSource>
+		<kRSUnicode>140.12</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9AD">
+	<charProp>
+		<kCompatibilityVariant>U+26F2C</kCompatibilityVariant>
+		<kIRG_TSource>7-3A6F</kIRG_TSource>
+		<kRSUnicode>140.13</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9AE">
+	<charProp>
+		<kCompatibilityVariant>U+455D</kCompatibilityVariant>
+		<kIRG_TSource>F-605D</kIRG_TSource>
+		<kRSUnicode>140.14</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9AF">
+	<charProp>
+		<kCompatibilityVariant>U+4561</kCompatibilityVariant>
+		<kIRG_TSource>7-423C</kIRG_TSource>
+		<kRSUnicode>140.15</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9B0">
+	<charProp>
+		<kCompatibilityVariant>U+26FB1</kCompatibilityVariant>
+		<kIRG_TSource>7-545E</kIRG_TSource>
+		<kRSUnicode>140.14</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9B1">
+	<charProp>
+		<kCompatibilityVariant>U+270D2</kCompatibilityVariant>
+		<kIRG_TSource>4-672B</kIRG_TSource>
+		<kRSUnicode>140.17</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9B2">
+	<charProp>
+		<kCangjie>TYUE</kCangjie>
+		<kCompatibilityVariant>U+456B</kCompatibilityVariant>
+		<kHKSCS>8FA8</kHKSCS>
+		<kIRG_HSource>8FA8</kIRG_HSource>
+		<kRSUnicode>140.16</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9B3">
+	<charProp>
+		<kCompatibilityVariant>U+8650</kCompatibilityVariant>
+		<kIRG_TSource>6-3447</kIRG_TSource>
+		<kRSUnicode>141.3</kRSUnicode>
+		<kTotalStrokes>9</kTotalStrokes>
+	</charProp>
+</char>
+<char xmlid="U+2F9B4">
+	<charProp>
+		<kCompatibilityVariant>U+865C</kCompatibilityVariant>
+		<kIRG_TSource>4-404F</kIRG_TSource>
+		<kRSUnicode>141.6</kRSUnicode>
+		<kTotalStrokes>12</kTotalStrokes>
+	</charProp>
+</char>
+<char xmlid="U+2F9B5">
+	<charProp>
+		<kCompatibilityVariant>U+8667</kCompatibilityVariant>
+		<kIRG_TSource>7-3B38</kIRG_TSource>
+		<kRSUnicode>141.11</kRSUnicode>
+		<kTotalStrokes>17</kTotalStrokes>
+	</charProp>
+</char>
+<char xmlid="U+2F9B6">
+	<charProp>
+		<kCompatibilityVariant>U+8669</kCompatibilityVariant>
+		<kIRG_TSource>3-5B26</kIRG_TSource>
+		<kRSUnicode>141.12</kRSUnicode>
+		<kTotalStrokes>18</kTotalStrokes>
+	</charProp>
+</char>
+<char xmlid="U+2F9B7">
+	<charProp>
+		<kCompatibilityVariant>U+86A9</kCompatibilityVariant>
+		<kIRG_TSource>6-3B71</kIRG_TSource>
+		<kRSUnicode>142.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9B8">
+	<charProp>
+		<kCihaiT>1189.501</kCihaiT>
+		<kCompatibilityVariant>U+8688</kCompatibilityVariant>
+		<kIRG_KPSource>KP1-7168</kIRG_KPSource>
+		<kIRG_TSource>4-3A75</kIRG_TSource>
+		<kRSUnicode>142.6</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9B9">
+	<charProp>
+		<kCompatibilityVariant>U+870E</kCompatibilityVariant>
+		<kIRG_TSource>6-4E46</kIRG_TSource>
+		<kRSUnicode>142.7</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9BA">
+	<charProp>
+		<kCihaiT>1192.603</kCihaiT>
+		<kCompatibilityVariant>U+86E2</kCompatibilityVariant>
+		<kIRG_KPSource>KP1-71CD</kIRG_KPSource>
+		<kIRG_TSource>4-467C</kIRG_TSource>
+		<kRSUnicode>142.6</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9BB">
+	<charProp>
+		<kCompatibilityVariant>U+8779</kCompatibilityVariant>
+		<kIRG_TSource>4-4D33</kIRG_TSource>
+		<kRSUnicode>142.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9BC">
+	<charProp>
+		<kCangjie>LIYSO</kCangjie>
+		<kCompatibilityVariant>U+8728</kCompatibilityVariant>
+		<kHKSCS>957A</kHKSCS>
+		<kIRG_HSource>957A</kIRG_HSource>
+		<kIRG_TSource>F-5224</kIRG_TSource>
+		<kRSUnicode>142.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9BD">
+	<charProp>
+		<kCompatibilityVariant>U+876B</kCompatibilityVariant>
+		<kIRG_TSource>7-282E</kIRG_TSource>
+		<kRSUnicode>142.9</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9BE">
+	<charProp>
+		<kCompatibilityVariant>U+8786</kCompatibilityVariant>
+		<kIRG_TSource>F-517D</kIRG_TSource>
+		<kRSUnicode>142.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9BF">
+	<charProp>
+		<kCompatibilityVariant>U+45D7</kCompatibilityVariant>
+		<kIRG_TSource>7-4260</kIRG_TSource>
+		<kRSUnicode>142.12</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9C0">
+	<charProp>
+		<kCompatibilityVariant>U+87E1</kCompatibilityVariant>
+		<kIRG_TSource>7-425F</kIRG_TSource>
+		<kRSUnicode>142.9</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9C1">
+	<charProp>
+		<kCompatibilityVariant>U+8801</kCompatibilityVariant>
+		<kIRG_TSource>3-5B2D</kIRG_TSource>
+		<kRSUnicode>142.13</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9C2">
+	<charProp>
+		<kCompatibilityVariant>U+45F9</kCompatibilityVariant>
+		<kIRG_TSource>4-643F</kIRG_TSource>
+		<kRSUnicode>142.13</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9C3">
+	<charProp>
+		<kCompatibilityVariant>U+8860</kCompatibilityVariant>
+		<kIRG_TSource>4-534C</kIRG_TSource>
+		<kRSUnicode>144.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9C4">
+	<charProp>
+		<kCompatibilityVariant>U+8863</kCompatibilityVariant>
+		<kIRG_TSource>6-2553</kIRG_TSource>
+		<kRSUnicode>145.0</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9C5">
+	<charProp>
+		<kCompatibilityVariant>U+27667</kCompatibilityVariant>
+		<kIRG_TSource>5-303E</kIRG_TSource>
+		<kRSUnicode>145.6</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9C6">
+	<charProp>
+		<kCompatibilityVariant>U+88D7</kCompatibilityVariant>
+		<kIRG_TSource>6-582E</kIRG_TSource>
+		<kRSUnicode>145.7</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9C7">
+	<charProp>
+		<kCompatibilityVariant>U+88DE</kCompatibilityVariant>
+		<kIRG_TSource>6-582C</kIRG_TSource>
+		<kRSUnicode>145.7</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9C8">
+	<charProp>
+		<kCompatibilityVariant>U+4635</kCompatibilityVariant>
+		<kIRG_TSource>F-453D</kIRG_TSource>
+		<kRSUnicode>145.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9C9">
+	<charProp>
+		<kCompatibilityVariant>U+88FA</kCompatibilityVariant>
+		<kIRG_TSource>7-3B61</kIRG_TSource>
+		<kRSUnicode>145.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9CA">
+	<charProp>
+		<kCompatibilityVariant>U+34BB</kCompatibilityVariant>
+		<kIRG_TSource>F-384A</kIRG_TSource>
+		<kRSUnicode>13.9</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9CB">
+	<charProp>
+		<kCompatibilityVariant>U+278AE</kCompatibilityVariant>
+		<kIRG_TSource>5-7A38</kIRG_TSource>
+		<kRSUnicode>147.21</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9CC">
+	<charProp>
+		<kCompatibilityVariant>U+27966</kCompatibilityVariant>
+		<kIRG_TSource>6-3C2D</kIRG_TSource>
+		<kRSUnicode>149.3</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9CD">
+	<charProp>
+		<kCompatibilityVariant>U+46BE</kCompatibilityVariant>
+		<kIRG_TSource>4-3545</kIRG_TSource>
+		<kRSUnicode>149.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9CE">
+	<charProp>
+		<kCompatibilityVariant>U+46C7</kCompatibilityVariant>
+		<kIRG_TSource>F-3F3B</kIRG_TSource>
+		<kRSUnicode>149.5</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9CF">
+	<charProp>
+		<kCompatibilityVariant>U+8AA0</kCompatibilityVariant>
+		<kIRG_TSource>6-6247</kIRG_TSource>
+		<kRSUnicode>149.7</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9D0">
+	<charProp>
+		<kCompatibilityVariant>U+8AED</kCompatibilityVariant>
+		<kIRG_TSource>7-334F</kIRG_TSource>
+		<kRSAdobe_Japan1_6>C+14068+149.7.9</kRSAdobe_Japan1_6>
+		<kRSUnicode>149.9</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9D1">
+	<charProp>
+		<kCompatibilityVariant>U+8B8A</kCompatibilityVariant>
+		<kIRG_TSource>7-5941</kIRG_TSource>
+		<kRSUnicode>149.16</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9D2">
+	<charProp>
+		<kCompatibilityVariant>U+8C55</kCompatibilityVariant>
+		<kIRG_TSource>6-292A</kIRG_TSource>
+		<kRSUnicode>152.0</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9D3">
+	<charProp>
+		<kCompatibilityVariant>U+27CA8</kCompatibilityVariant>
+		<kIRG_KPSource>KP1-78AC</kIRG_KPSource>
+		<kIRG_TSource>6-5850</kIRG_TSource>
+		<kRSUnicode>153.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9D4">
+	<charProp>
+		<kCangjie>WYBUC</kCangjie>
+		<kCompatibilityVariant>U+8CAB</kCompatibilityVariant>
+		<kHKSCS>8FF0</kHKSCS>
+		<kIRG_HSource>8FF0</kIRG_HSource>
+		<kRSUnicode>154.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9D5">
+	<charProp>
+		<kCompatibilityVariant>U+8CC1</kCompatibilityVariant>
+		<kIRG_TSource>6-585C</kIRG_TSource>
+		<kRSUnicode>154.5</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9D6">
+	<charProp>
+		<kCompatibilityVariant>U+8D1B</kCompatibilityVariant>
+		<kIRG_TSource>3-607C</kIRG_TSource>
+		<kRSUnicode>154.17</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9D7">
+	<charProp>
+		<kCompatibilityVariant>U+8D77</kCompatibilityVariant>
+		<kIRG_TSource>6-3C3B</kIRG_TSource>
+		<kRSUnicode>156.3</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9D8">
+	<charProp>
+		<kCompatibilityVariant>U+27F2F</kCompatibilityVariant>
+		<kIRG_TSource>7-3379</kIRG_TSource>
+		<kRSUnicode>156.9</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9D9">
+	<charProp>
+		<kCompatibilityVariant>U+20804</kCompatibilityVariant>
+		<kIRG_TSource>7-3373</kIRG_TSource>
+		<kRSUnicode>18.14</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9DA">
+	<charProp>
+		<kCompatibilityVariant>U+8DCB</kCompatibilityVariant>
+		<kIRG_TSource>F-3F53</kIRG_TSource>
+		<kRSUnicode>157.5</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9DB">
+	<charProp>
+		<kCihaiT>1290.401</kCihaiT>
+		<kCompatibilityVariant>U+8DBC</kCompatibilityVariant>
+		<kIRG_KPSource>KP1-7AAD</kIRG_KPSource>
+		<kIRG_TSource>3-446D</kIRG_TSource>
+		<kRSUnicode>157.6</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9DC">
+	<charProp>
+		<kCihaiT>1292.305</kCihaiT>
+		<kCompatibilityVariant>U+8DF0</kCompatibilityVariant>
+		<kIRG_KPSource>KP1-7B04</kIRG_KPSource>
+		<kIRG_TSource>7-2944</kIRG_TSource>
+		<kRSUnicode>157.6</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9DD">
+	<charProp>
+		<kCompatibilityVariant>U+208DE</kCompatibilityVariant>
+		<kIRG_TSource>6-345D</kIRG_TSource>
+		<kRSUnicode>20.7</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9DE">
+	<charProp>
+		<kCompatibilityVariant>U+8ED4</kCompatibilityVariant>
+		<kIRG_TSource>4-302C</kIRG_TSource>
+		<kRSAdobe_Japan1_6>C+20066+159.7.3</kRSAdobe_Japan1_6>
+		<kRSUnicode>159.3</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9DF">
+	<charProp>
+		<kCompatibilityVariant>U+8F38</kCompatibilityVariant>
+		<kIRG_TSource>7-3431</kIRG_TSource>
+		<kRSAdobe_Japan1_6>C+14069+159.7.9</kRSAdobe_Japan1_6>
+		<kRSUnicode>159.9</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9E0">
+	<charProp>
+		<kCompatibilityVariant>U+285D2</kCompatibilityVariant>
+		<kIRG_TSource>4-5437</kIRG_TSource>
+		<kRSUnicode>162.12</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9E1">
+	<charProp>
+		<kCompatibilityVariant>U+285ED</kCompatibilityVariant>
+		<kIRG_TSource>7-3C61</kIRG_TSource>
+		<kRSUnicode>162.13</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9E2">
+	<charProp>
+		<kCompatibilityVariant>U+9094</kCompatibilityVariant>
+		<kIRG_TSource>6-255B</kIRG_TSource>
+		<kRSUnicode>163.3</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9E3">
+	<charProp>
+		<kCihaiT>1342.101</kCihaiT>
+		<kCompatibilityVariant>U+90F1</kCompatibilityVariant>
+		<kIRG_TSource>4-3572</kIRG_TSource>
+		<kRSUnicode>163.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9E4">
+	<charProp>
+		<kCompatibilityVariant>U+9111</kCompatibilityVariant>
+		<kIRG_TSource>6-5947</kIRG_TSource>
+		<kRSUnicode>163.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9E5">
+	<charProp>
+		<kCompatibilityVariant>U+2872E</kCompatibilityVariant>
+		<kIRG_TSource>6-594A</kIRG_TSource>
+		<kRSUnicode>163.9</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9E6">
+	<charProp>
+		<kCompatibilityVariant>U+911B</kCompatibilityVariant>
+		<kIRG_TSource>7-3C6B</kIRG_TSource>
+		<kRSUnicode>163.11</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9E7">
+	<charProp>
+		<kCompatibilityVariant>U+9238</kCompatibilityVariant>
+		<kIRG_TSource>F-4573</kIRG_TSource>
+		<kRSUnicode>167.5</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9E8">
+	<charProp>
+		<kCompatibilityVariant>U+92D7</kCompatibilityVariant>
+		<kIRG_KPSource>KP1-8054</kIRG_KPSource>
+		<kIRG_TSource>6-6353</kIRG_TSource>
+		<kRSUnicode>167.7</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9E9">
+	<charProp>
+		<kCompatibilityVariant>U+92D8</kCompatibilityVariant>
+		<kIRG_TSource>6-634F</kIRG_TSource>
+		<kRSUnicode>167.7</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9EA">
+	<charProp>
+		<kCihaiT>1383.503</kCihaiT>
+		<kCompatibilityVariant>U+927C</kCompatibilityVariant>
+		<kIRG_KPSource>KP1-80AD</kIRG_KPSource>
+		<kIRG_TSource>4-544A</kIRG_TSource>
+		<kRSUnicode>167.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9EB">
+	<charProp>
+		<kCompatibilityVariant>U+93F9</kCompatibilityVariant>
+		<kIRG_TSource>F-665E</kIRG_TSource>
+		<kRSUnicode>167.11</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9EC">
+	<charProp>
+		<kCihaiT>1393.505</kCihaiT>
+		<kCompatibilityVariant>U+9415</kCompatibilityVariant>
+		<kIRG_TSource>7-506B</kIRG_TSource>
+		<kRSUnicode>167.12</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9ED">
+	<charProp>
+		<kCompatibilityVariant>U+28BFA</kCompatibilityVariant>
+		<kIRG_TSource>F-6C3F</kIRG_TSource>
+		<kRSUnicode>167.17</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9EE">
+	<charProp>
+		<kCompatibilityVariant>U+958B</kCompatibilityVariant>
+		<kIRG_KPSource>KP1-8255</kIRG_KPSource>
+		<kIRG_TSource>6-6358</kIRG_TSource>
+		<kRSUnicode>169.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9EF">
+	<charProp>
+		<kCompatibilityVariant>U+4995</kCompatibilityVariant>
+		<kIRG_TSource>7-347A</kIRG_TSource>
+		<kRSUnicode>169.6</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9F0">
+	<charProp>
+		<kCompatibilityVariant>U+95B7</kCompatibilityVariant>
+		<kIRG_TSource>7-3471</kIRG_TSource>
+		<kRSUnicode>169.9</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9F1">
+	<charProp>
+		<kCompatibilityVariant>U+28D77</kCompatibilityVariant>
+		<kIRG_TSource>F-614A</kIRG_TSource>
+		<kRSUnicode>169.9</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9F2">
+	<charProp>
+		<kCompatibilityVariant>U+49E6</kCompatibilityVariant>
+		<kIRG_TSource>6-5022</kIRG_TSource>
+		<kRSUnicode>170.12</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9F3">
+	<charProp>
+		<kCihaiT>1440.401</kCihaiT>
+		<kCompatibilityVariant>U+96C3</kCompatibilityVariant>
+		<kIRG_TSource>6-636E</kIRG_TSource>
+		<kRSUnicode>172.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9F4">
+	<charProp>
+		<kCompatibilityVariant>U+5DB2</kCompatibilityVariant>
+		<kIRG_TSource>7-3535</kIRG_TSource>
+		<kRSAdobe_Japan1_6>C+15269+45.3.12</kRSAdobe_Japan1_6>
+		<kRSUnicode>46.13</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9F5">
+	<charProp>
+		<kCompatibilityVariant>U+9723</kCompatibilityVariant>
+		<kIRG_TSource>3-5678</kIRG_TSource>
+		<kRSUnicode>173.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9F6">
+	<charProp>
+		<kCompatibilityVariant>U+29145</kCompatibilityVariant>
+		<kIRG_TSource>5-5F5E</kIRG_TSource>
+		<kRSUnicode>173.11</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9F7">
+	<charProp>
+		<kCompatibilityVariant>U+2921A</kCompatibilityVariant>
+		<kIRG_TSource>7-3D50</kIRG_TSource>
+		<kRSUnicode>176.6</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9F8">
+	<charProp>
+		<kCompatibilityVariant>U+4A6E</kCompatibilityVariant>
+		<kIRG_TSource>F-5878</kIRG_TSource>
+		<kRSUnicode>177.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9F9">
+	<charProp>
+		<kCompatibilityVariant>U+4A76</kCompatibilityVariant>
+		<kIRG_TSource>7-4B5F</kIRG_TSource>
+		<kRSUnicode>177.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9FA">
+	<charProp>
+		<kCompatibilityVariant>U+97E0</kCompatibilityVariant>
+		<kIRG_TSource>4-652A</kIRG_TSource>
+		<kRSUnicode>178.11</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9FB">
+	<charProp>
+		<kCompatibilityVariant>U+2940A</kCompatibilityVariant>
+		<kIRG_TSource>7-4B6B</kIRG_TSource>
+		<kRSUnicode>179.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9FC">
+	<charProp>
+		<kCompatibilityVariant>U+4AB2</kCompatibilityVariant>
+		<kIRG_TSource>5-3D47</kIRG_TSource>
+		<kRSUnicode>181.3</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9FD">
+	<charProp>
+		<kCompatibilityVariant>U+29496</kCompatibilityVariant>
+		<kIRG_TSource>5-4435</kIRG_TSource>
+		<kRSUnicode>181.6</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9FE">
+	<charProp>
+		<kCompatibilityVariant>U+980B</kCompatibilityVariant>
+		<kIRG_TSource>6-5A33</kIRG_TSource>
+		<kRSUnicode>181.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2F9FF">
+	<charProp>
+		<kCompatibilityVariant>U+980B</kCompatibilityVariant>
+		<kIRG_TSource>6-6430</kIRG_TSource>
+		<kRSUnicode>181.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA00">
+	<charProp>
+		<kCihaiT>1479.301</kCihaiT>
+		<kCompatibilityVariant>U+9829</kCompatibilityVariant>
+		<kIRG_KPSource>KP1-8703</kIRG_KPSource>
+		<kIRG_TSource>4-5976</kIRG_TSource>
+		<kRSUnicode>181.6</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA01">
+	<charProp>
+		<kCompatibilityVariant>U+295B6</kCompatibilityVariant>
+		<kIRG_TSource>6-643A</kIRG_TSource>
+		<kRSUnicode>182.5</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA02">
+	<charProp>
+		<kCompatibilityVariant>U+98E2</kCompatibilityVariant>
+		<kIRG_TSource>6-3C77</kIRG_TSource>
+		<kRSUnicode>184.2</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA03">
+	<charProp>
+		<kCompatibilityVariant>U+4B33</kCompatibilityVariant>
+		<kIRG_TSource>6-5A3D</kIRG_TSource>
+		<kRSUnicode>184.5</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA04">
+	<charProp>
+		<kCompatibilityVariant>U+9929</kCompatibilityVariant>
+		<kIRG_TSource>4-5523</kIRG_TSource>
+		<kRSUnicode>184.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA05">
+	<charProp>
+		<kCompatibilityVariant>U+99A7</kCompatibilityVariant>
+		<kIRG_TSource>4-5E60</kIRG_TSource>
+		<kRSUnicode>186.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA06">
+	<charProp>
+		<kCompatibilityVariant>U+99C2</kCompatibilityVariant>
+		<kIRG_TSource>6-6450</kIRG_TSource>
+		<kRSUnicode>187.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA07">
+	<charProp>
+		<kCompatibilityVariant>U+99FE</kCompatibilityVariant>
+		<kIRG_TSource>7-3E29</kIRG_TSource>
+		<kRSUnicode>187.7</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA08">
+	<charProp>
+		<kCompatibilityVariant>U+4BCE</kCompatibilityVariant>
+		<kIRG_TSource>7-2B55</kIRG_TSource>
+		<kRSUnicode>188.5</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA09">
+	<charProp>
+		<kCompatibilityVariant>U+29B30</kCompatibilityVariant>
+		<kIRG_TSource>F-5932</kIRG_TSource>
+		<kRSUnicode>190.6</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA0A">
+	<charProp>
+		<kCihaiT>1519.311</kCihaiT>
+		<kCompatibilityVariant>U+9B12</kCompatibilityVariant>
+		<kIRG_TSource>7-517A</kIRG_TSource>
+		<kRSUnicode>190.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA0B">
+	<charProp>
+		<kCompatibilityVariant>U+9C40</kCompatibilityVariant>
+		<kIRG_TSource>7-5A60</kIRG_TSource>
+		<kRSUnicode>195.11</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA0C">
+	<charProp>
+		<kCompatibilityVariant>U+9CFD</kCompatibilityVariant>
+		<kIRG_TSource>4-5A59</kIRG_TSource>
+		<kRSUnicode>196.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA0D">
+	<charProp>
+		<kCompatibilityVariant>U+4CCE</kCompatibilityVariant>
+		<kIRG_KPSource>KP1-8E7E</kIRG_KPSource>
+		<kIRG_TSource>7-4565</kIRG_TSource>
+		<kRSUnicode>196.6</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA0E">
+	<charProp>
+		<kCompatibilityVariant>U+4CED</kCompatibilityVariant>
+		<kIRG_TSource>4-5F37</kIRG_TSource>
+		<kRSKangXi>196.9</kRSKangXi>
+		<kRSUnicode>196.9</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA0F">
+	<charProp>
+		<kCihaiT>1541.201</kCihaiT>
+		<kCompatibilityVariant>U+9D67</kCompatibilityVariant>
+		<kIRG_TSource>4-626E</kIRG_TSource>
+		<kRSUnicode>196.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA10">
+	<charProp>
+		<kCompatibilityVariant>U+2A0CE</kCompatibilityVariant>
+		<kIRG_TSource>7-5245</kIRG_TSource>
+		<kRSUnicode>196.9</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA11">
+	<charProp>
+		<kCompatibilityVariant>U+4CF8</kCompatibilityVariant>
+		<kIRG_TSource>5-7536</kIRG_TSource>
+		<kRSUnicode>196.11</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA12">
+	<charProp>
+		<kCompatibilityVariant>U+2A105</kCompatibilityVariant>
+		<kIRG_TSource>5-7535</kIRG_TSource>
+		<kRSUnicode>196.10</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA13">
+	<charProp>
+		<kCompatibilityVariant>U+2A20E</kCompatibilityVariant>
+		<kIRG_TSource>F-6C77</kIRG_TSource>
+		<kRSUnicode>196.16</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA14">
+	<charProp>
+		<kCompatibilityVariant>U+2A291</kCompatibilityVariant>
+		<kIRG_TSource>7-3E5C</kIRG_TSource>
+		<kRSUnicode>198.4</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA15">
+	<charProp>
+		<kCihaiT>1552.407</kCihaiT>
+		<kCompatibilityVariant>U+9EBB</kCompatibilityVariant>
+		<kIRG_TSource>6-463E</kIRG_TSource>
+		<kRSUnicode>200.0</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA16">
+	<charProp>
+		<kCompatibilityVariant>U+4D56</kCompatibilityVariant>
+		<kIRG_TSource>5-6F54</kIRG_TSource>
+		<kRSUnicode>202.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA17">
+	<charProp>
+		<kCompatibilityVariant>U+9EF9</kCompatibilityVariant>
+		<kIRG_TSource>6-5A60</kIRG_TSource>
+		<kRSUnicode>204.0</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA18">
+	<charProp>
+		<kCompatibilityVariant>U+9EFE</kCompatibilityVariant>
+		<kIRG_TSource>4-2834</kIRG_TSource>
+		<kRSUnicode>205'.0</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA19">
+	<charProp>
+		<kCompatibilityVariant>U+9F05</kCompatibilityVariant>
+		<kIRG_TSource>3-5C2F</kIRG_TSource>
+		<kRSUnicode>205.8</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA1A">
+	<charProp>
+		<kCompatibilityVariant>U+9F0F</kCompatibilityVariant>
+		<kIRG_TSource>5-5351</kIRG_TSource>
+		<kRSUnicode>206.2</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA1B">
+	<charProp>
+		<kCompatibilityVariant>U+9F16</kCompatibilityVariant>
+		<kIRG_KPSource>KP1-9190</kIRG_KPSource>
+		<kIRG_TSource>7-4D28</kIRG_TSource>
+		<kRSUnicode>207.5</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA1C">
+	<charProp>
+		<kCompatibilityVariant>U+9F3B</kCompatibilityVariant>
+		<kIRG_TSource>4-4877</kIRG_TSource>
+		<kRSUnicode>209.0</kRSUnicode>
+	</charProp>
+</char>
+<char xmlid="U+2FA1D">
+	<charProp>
+		<kCompatibilityVariant>U+2A600</kCompatibilityVariant>
+		<kIRG_TSource>7-5E4D</kIRG_TSource>
+		<kRSUnicode>211.6</kRSUnicode>
+	</charProp>
+</char>
+</unihandb>
