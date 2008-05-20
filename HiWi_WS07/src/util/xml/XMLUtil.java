@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -172,11 +174,19 @@ public class XMLUtil {
 			System.out.println("updating collection:\t"+col.getName());
 			// find out which file to update
 			String[] xml_out = col.listResources();
-			String[] xml_out_mod = new String[xml_out.length];
+			ArrayList<String> xml_out_a = new ArrayList<String>(Arrays.asList(xml_out));
+			for(int i=0; i<xml_out_a.size(); i++){	// clean file list from files with inproper filenames
+				if(!xml_out_a.get(i).startsWith("unicode_") ||
+						!xml_out_a.get(i).contains("_1000.xml"))
+					xml_out_a.remove(i);
+			}
+			xml_out = (String[])xml_out_a.toArray(new String[xml_out_a.size()]);
+			
+			String[] xml_out_mod = new String[xml_out.length]; // create file list, containing extracted starting codepoints as name
 			for(int i=0; i<xml_out.length; i++){
 				xml_out_mod[i] = xml_out[i].substring("unicode_".length(), xml_out[i].length()-"_1000.xml".length());
 			}
-			int index = NumUtil.myIndex(xml_out_mod, id);
+			int index = NumUtil.myIndex(xml_out_mod, id);	// get index of file to update
 			// what if index==-1 -> this char is not in db yet?
 			
 			// update
