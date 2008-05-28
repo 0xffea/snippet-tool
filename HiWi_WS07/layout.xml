@@ -17,7 +17,7 @@
        <int>0</int> 
        <int>0</int> 
        <int>1272</int> 
-       <int>589</int> 
+       <int>504</int> 
       </object> 
      </void> 
      <void id="ArrayList1" property="children"> 
@@ -27,8 +27,8 @@
          <object class="java.awt.Rectangle"> 
           <int>0</int> 
           <int>0</int> 
-          <int>183</int> 
-          <int>589</int> 
+          <int>200</int> 
+          <int>504</int> 
          </object> 
         </void> 
         <void property="name"> 
@@ -37,19 +37,16 @@
         <void property="parent"> 
          <object idref="MultiSplitLayout$Split1"/> 
         </void> 
-        <void property="weight"> 
-         <double>0.2</double> 
-        </void> 
        </object> 
       </void> 
       <void method="add"> 
        <object class="org.jdesktop.swingx.MultiSplitLayout$Divider"> 
         <void property="bounds"> 
          <object class="java.awt.Rectangle"> 
-          <int>183</int> 
+          <int>200</int> 
           <int>0</int> 
           <int>10</int> 
-          <int>589</int> 
+          <int>504</int> 
          </object> 
         </void> 
         <void property="parent"> 
@@ -61,10 +58,10 @@
        <object class="org.jdesktop.swingx.MultiSplitLayout$Leaf"> 
         <void property="bounds"> 
          <object class="java.awt.Rectangle"> 
-          <int>193</int> 
+          <int>210</int> 
           <int>0</int> 
-          <int>752</int> 
-          <int>589</int> 
+          <int>800</int> 
+          <int>504</int> 
          </object> 
         </void> 
         <void property="name"> 
@@ -73,19 +70,16 @@
         <void property="parent"> 
          <object idref="MultiSplitLayout$Split1"/> 
         </void> 
-        <void property="weight"> 
-         <double>0.6</double> 
-        </void> 
        </object> 
       </void> 
       <void method="add"> 
        <object class="org.jdesktop.swingx.MultiSplitLayout$Divider"> 
         <void property="bounds"> 
          <object class="java.awt.Rectangle"> 
-          <int>945</int> 
+          <int>1010</int> 
           <int>0</int> 
           <int>10</int> 
-          <int>589</int> 
+          <int>504</int> 
          </object> 
         </void> 
         <void property="parent"> 
@@ -97,10 +91,10 @@
        <object class="org.jdesktop.swingx.MultiSplitLayout$Leaf"> 
         <void property="bounds"> 
          <object class="java.awt.Rectangle"> 
-          <int>955</int> 
+          <int>1020</int> 
           <int>0</int> 
-          <int>317</int> 
-          <int>589</int> 
+          <int>252</int> 
+          <int>504</int> 
          </object> 
         </void> 
         <void property="name"> 
@@ -108,9 +102,6 @@
         </void> 
         <void property="parent"> 
          <object idref="MultiSplitLayout$Split1"/> 
-        </void> 
-        <void property="weight"> 
-         <double>0.2</double> 
         </void> 
        </object> 
       </void> 
@@ -128,7 +119,7 @@
      <void property="bounds"> 
       <object class="java.awt.Rectangle"> 
        <int>0</int> 
-       <int>589</int> 
+       <int>504</int> 
        <int>1272</int> 
        <int>10</int> 
       </object> 
@@ -139,23 +130,73 @@
     </object> 
    </void> 
    <void method="add"> 
-    <object class="org.jdesktop.swingx.MultiSplitLayout$Leaf"> 
+    <object id="MultiSplitLayout$Split2" class="org.jdesktop.swingx.MultiSplitLayout$Split"> 
      <void property="bounds"> 
       <object class="java.awt.Rectangle"> 
        <int>0</int> 
-       <int>599</int> 
+       <int>514</int> 
        <int>1272</int> 
-       <int>151</int> 
+       <int>236</int> 
       </object> 
      </void> 
-     <void property="name"> 
-      <string>text</string> 
+     <void id="ArrayList2" property="children"> 
+      <void method="add"> 
+       <object class="org.jdesktop.swingx.MultiSplitLayout$Leaf"> 
+        <void property="bounds"> 
+         <object class="java.awt.Rectangle"> 
+          <int>0</int> 
+          <int>514</int> 
+          <int>343</int> 
+          <int>236</int> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>text</string> 
+        </void> 
+        <void property="parent"> 
+         <object idref="MultiSplitLayout$Split2"/> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="org.jdesktop.swingx.MultiSplitLayout$Divider"> 
+        <void property="bounds"> 
+         <object class="java.awt.Rectangle"> 
+          <int>343</int> 
+          <int>514</int> 
+          <int>10</int> 
+          <int>236</int> 
+         </object> 
+        </void> 
+        <void property="parent"> 
+         <object idref="MultiSplitLayout$Split2"/> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="org.jdesktop.swingx.MultiSplitLayout$Leaf"> 
+        <void property="bounds"> 
+         <object class="java.awt.Rectangle"> 
+          <int>353</int> 
+          <int>514</int> 
+          <int>919</int> 
+          <int>236</int> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>log</string> 
+        </void> 
+        <void property="parent"> 
+         <object idref="MultiSplitLayout$Split2"/> 
+        </void> 
+       </object> 
+      </void> 
+     </void> 
+     <void property="children"> 
+      <object idref="ArrayList2"/> 
      </void> 
      <void property="parent"> 
       <object idref="MultiSplitLayout$Split0"/> 
-     </void> 
-     <void property="weight"> 
-      <double>0.2</double> 
      </void> 
     </object> 
    </void> 
@@ -165,13 +206,13 @@
   </void> 
   <void property="parent"> 
    <object class="org.jdesktop.swingx.MultiSplitLayout$Split"> 
-    <void id="ArrayList2" property="children"> 
+    <void id="ArrayList3" property="children"> 
      <void method="add"> 
       <object idref="MultiSplitLayout$Split0"/> 
      </void> 
     </void> 
     <void property="children"> 
-     <object idref="ArrayList2"/> 
+     <object idref="ArrayList3"/> 
     </void> 
    </object> 
   </void> 

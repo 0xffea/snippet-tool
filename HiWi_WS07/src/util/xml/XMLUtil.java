@@ -102,7 +102,16 @@ public class XMLUtil {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static String fetchXML(String hosturi, String user, String pass, String collection, String xml){
+	public static String fetchXML(HiWi_GUI root, String hosturi, String user, String pass, String collection, String xml){
+		//
+		root.addLogEntry("** started fetching XML **", 1, 1);
+		root.addLogEntry("\thosturi="+hosturi, 0, 1);
+		root.addLogEntry("\tuser="+user, 0, 1);
+		root.addLogEntry("\tpass="+pass, 0, 1);
+		root.addLogEntry("\tcollection="+collection, 0, 1);
+		root.addLogEntry("\txml="+xml, 0, 1);
+		//
+		String resultxml = null;
 		try {
 			String driver = "org.exist.xmldb.DatabaseImpl";    
 			Class cl = Class.forName(driver);   
@@ -113,17 +122,19 @@ public class XMLUtil {
 			//Collection col = DatabaseManager.getCollection(hosturi + collection);   
 			Collection col = DatabaseManager.getCollection(collection, user, pass);
 			if(col == null) {
-				System.out.println("Trying to get NULL Collection:\tDatabaseManager.getCollection("+collection+", "+user+", "+pass+")");
-				return null;
-			}
-			//col.setProperty(OutputKeys.INDENT, "yes");
-			XMLResource text = (XMLResource)col.getResource(xml);
-			if(text != null) {
-				return (String) text.getContent();
+				//System.out.println("Trying to get NULL Collection:\tDatabaseManager.getCollection("+collection+", "+user+", "+pass+")");
+				root.addLogEntry("Error fetching XML: trying to get NULL Collection:\tDatabaseManager.getCollection("+collection+", "+user+", "+pass+")", 1, 1);
 			}
 			else{
-				System.out.println("XMLResource is NULL");
-				return null;
+				//col.setProperty(OutputKeys.INDENT, "yes");
+				XMLResource text = (XMLResource)col.getResource(xml);
+				if(text != null) {
+					resultxml = (String) text.getContent();
+				}
+				else{
+					//System.out.println("XMLResource is NULL");
+					root.addLogEntry("Error fetching XML: XMLResource is NULL", 1, 1);
+				}
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -134,7 +145,10 @@ public class XMLUtil {
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
-		return null;
+		//
+		root.addLogEntry("** ended fetching XML **", 1, 1);
+		//
+		return resultxml;
 	}
 
 	public static String transformXML(String xml, String xslt){
@@ -156,7 +170,15 @@ public class XMLUtil {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void updateXML(String id, String xupdate, String hosturi, String user, String pass, String out){
+	public static void updateXML(HiWi_GUI root, String id, String xupdate, String hosturi, String user, String pass, String out){
+		//
+		root.addLogEntry("** started updating XML **", 1, 1);
+		root.addLogEntry("\tid="+id, 0, 1);
+		root.addLogEntry("\txupdate="+xupdate, 0, 1);
+		root.addLogEntry("\thosturi="+hosturi, 0, 1);
+		root.addLogEntry("\tuser="+user, 0, 1);
+		root.addLogEntry("\tpass="+pass, 0, 1);
+		//
 		try {
 			//System.out.println("starting updateXML()");
 			String driver = "org.exist.xmldb.DatabaseImpl";    
@@ -167,33 +189,37 @@ public class XMLUtil {
 			// get the collection
 			Collection col = DatabaseManager.getCollection(hosturi+out, user, pass);
 			if(col == null){
-				System.out.println("Trying to get NULL Collection:\tDatabaseManager.getCollection("+(hosturi+out)+", "+user+", "+pass+")");
-				System.out.println("Aborting operation updateXML");
-				return;
+				//System.out.println("Trying to get NULL Collection:\tDatabaseManager.getCollection("+(hosturi+out)+", "+user+", "+pass+")");
+				//System.out.println("Aborting operation updateXML");
+				root.addLogEntry("Error updating XML: trying to get NULL Collection:\tDatabaseManager.getCollection("+(hosturi+out)+", "+user+", "+pass+")", 1, 1);
 			}
-			System.out.println("updating collection:\t"+col.getName());
-			// find out which file to update
-			String[] xml_out = col.listResources();
-			ArrayList<String> xml_out_a = new ArrayList<String>(Arrays.asList(xml_out));
-			for(int i=0; i<xml_out_a.size(); i++){	// clean file list from files with inproper filenames
-				if(!xml_out_a.get(i).startsWith("unicode_") ||
-						!xml_out_a.get(i).contains("_1000.xml"))
-					xml_out_a.remove(i);
+			else{
+				//System.out.println("updating collection:\t"+col.getName());
+				root.addLogEntry("updating collection:\t"+col.getName(), 0, 1);
+				// find out which file to update
+				String[] xml_out = col.listResources();
+				ArrayList<String> xml_out_a = new ArrayList<String>(Arrays.asList(xml_out));
+				for(int i=0; i<xml_out_a.size(); i++){	// clean file list from files with inproper filenames
+					if(!xml_out_a.get(i).startsWith("unicode_") ||
+							!xml_out_a.get(i).contains("_1000.xml"))
+						xml_out_a.remove(i);
+				}
+				xml_out = (String[])xml_out_a.toArray(new String[xml_out_a.size()]);
+
+				String[] xml_out_mod = new String[xml_out.length]; // create file list, containing extracted starting codepoints as name
+				for(int i=0; i<xml_out.length; i++){
+					xml_out_mod[i] = xml_out[i].substring("unicode_".length(), xml_out[i].length()-"_1000.xml".length());
+				}
+				int index = NumUtil.myIndex(xml_out_mod, id);	// get index of file to update
+				// what if index==-1 -> this char is not in db yet?
+
+				// update
+				XUpdateQueryService service = (XUpdateQueryService) col.getService("XUpdateQueryService", "1.0");
+				service.setCollection(col);
+				long modified = service.updateResource(xml_out[index], xupdate);
+				//System.out.println("updating:\t"+"id = "+id+" in "+xml_out[index]+"; modified:\t"+modified+" nodes");
+				root.addLogEntry("updating:\t"+"id = "+id+" in "+xml_out[index]+"; modified:\t"+modified+" nodes", 1, 1);
 			}
-			xml_out = (String[])xml_out_a.toArray(new String[xml_out_a.size()]);
-			
-			String[] xml_out_mod = new String[xml_out.length]; // create file list, containing extracted starting codepoints as name
-			for(int i=0; i<xml_out.length; i++){
-				xml_out_mod[i] = xml_out[i].substring("unicode_".length(), xml_out[i].length()-"_1000.xml".length());
-			}
-			int index = NumUtil.myIndex(xml_out_mod, id);	// get index of file to update
-			// what if index==-1 -> this char is not in db yet?
-			
-			// update
-			XUpdateQueryService service = (XUpdateQueryService) col.getService("XUpdateQueryService", "1.0");
-			long modified = service.updateResource(xml_out[index], xupdate);
-			System.out.println("updating:\t"+"id = "+id+" in "+xml_out[index]+"; modified:\t"+modified+" nodes");
-			System.out.println(xupdate);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
@@ -203,10 +229,12 @@ public class XMLUtil {
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		} 
+		//
+		root.addLogEntry("** ended updating XML **", 1, 1);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void clearAppearances(String hosturi, String user, String pass, String out, String regexp){
+	public static void clearAppearances(HiWi_GUI root, String hosturi, String user, String pass, String out, String regexp){
 		//System.out.println("starting clearAppearances()");
 		try {
 			String driver = "org.exist.xmldb.DatabaseImpl";
@@ -215,7 +243,8 @@ public class XMLUtil {
 									//"<xu:remove select=\"//*[substring(@id,0,6)='HDS_7'] /> " +
 									//"<xu:remove select=\"//*[string-length(@id)>=0] /> " +
 								"</xu:modifications>";
-			System.out.println(xupdate);
+			//System.out.println(xupdate);
+			root.addLogEntry("xupdate="+xupdate, 0, 1);
 			Class cl = Class.forName(driver);  
 			Database database = (Database) cl.newInstance();   
 			DatabaseManager.registerDatabase(database);   
@@ -228,7 +257,8 @@ public class XMLUtil {
 			//long modified = 0;
 			for(int i=0; i<xml_out.length; i++){
 				long modified = service.updateResource(xml_out[i], xupdate);
-				System.out.println("cleaning:\t"+"in "+xml_out[i]+"; modified:\t"+modified+" nodes");
+				//System.out.println("cleaning:\t"+"in "+xml_out[i]+"; modified:\t"+modified+" nodes");
+				root.addLogEntry("cleaning:\t"+"in "+xml_out[i]+"; modified:\t"+modified+" nodes", 1, 1);
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();

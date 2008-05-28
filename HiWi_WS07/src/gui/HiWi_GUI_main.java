@@ -68,6 +68,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		
 		setLayout(new BorderLayout());
 		setBorder(new TitledBorder("main"));
+		setPreferredSize(new Dimension(800,600));
 		
 		
 		main_navigation.add(zoom_out);
@@ -89,8 +90,8 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		
 
 		main_buttons.add(sign_info);
-		main_buttons.add(load_text);
-		main_buttons.add(load_image);
+		//main_buttons.add(load_text);
+		//main_buttons.add(load_image);
 		main_buttons.add(submit);
 		
 		load_image.addActionListener(this);
@@ -185,8 +186,9 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 			//proceed for each sign - submit coordinates
 			for(int i=0; i<s.sutra_text.size(); i++){
 				for(int j=0; j<s.sutra_text.get(i).size(); j++){
-					System.out.print("nr.="+s.sutra_text.get(i).get(j).number+"\n");
-					XMLUtil.updateXML(NumUtil.dec2hex(s.sutra_text.get(i).get(j).character.codePointAt(0)), s.sutra_text.get(i).get(j).getXUpdate(s.updateOnly), dbURI, dbUser, dbPass, dbOut);
+					//System.out.print("nr.="+s.sutra_text.get(i).get(j).number+"\n");
+					root.addLogEntry("storing coordinates of nr.="+s.sutra_text.get(i).get(j).number, 1, 1);
+					XMLUtil.updateXML(root, NumUtil.dec2hex(s.sutra_text.get(i).get(j).character.codePointAt(0)), s.sutra_text.get(i).get(j).getXUpdate(s.updateOnly), dbURI, dbUser, dbPass, dbOut);
 				}
 			}
 			//proceed for each sign - submit snippet
@@ -198,8 +200,8 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 				img_out_t = img_in.getSubimage((int)Math.max(0,r.getX()), (int)Math.max(0, r.getY()), (int)Math.min(img_in.getWidth()-r.getX(), r.getWidth()), (int)Math.min(img_in.getHeight()-r.getY(), r.getHeight()));
 				try {
 					//write image to local temporary file
-					File f = new File("subimage_"+s.sutra_id+"_"+s.sutra_text.get(i).get(0).getNumber()+".jpg");
-					ImageIO.write(img_out_t, "jpg", f);
+					File f = new File("subimage_"+s.sutra_id+"_"+s.sutra_text.get(i).get(0).getNumber()+".png");
+					ImageIO.write(img_out_t, "png", f);
 					//copy image resource to selected collection
 					String driver = "org.exist.xmldb.DatabaseImpl";    
 					Class cl = Class.forName(driver);  
@@ -214,7 +216,8 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 						current = mgtService.createCollection(root.props.getProperty("db.dir.snippet"));
 					}
 		            BinaryResource resource = (BinaryResource) current.createResource(s.sutra_text.get(i).get(0).sign_path_snippet.substring(s.sutra_text.get(i).get(0).sign_path_snippet.lastIndexOf("/")), "BinaryResource");
-		            System.out.println("storing subimage:\t"+f.getName()+"\tas "+s.sutra_text.get(i).get(0).sign_path_snippet.substring(s.sutra_text.get(i).get(0).sign_path_snippet.lastIndexOf("/")));
+		            //System.out.println("storing subimage:\t"+f.getName()+"\tas "+s.sutra_text.get(i).get(0).sign_path_snippet.substring(s.sutra_text.get(i).get(0).sign_path_snippet.lastIndexOf("/")));
+		            root.addLogEntry("storing subimage:\t"+f.getName()+"\tas "+s.sutra_text.get(i).get(0).sign_path_snippet.substring(s.sutra_text.get(i).get(0).sign_path_snippet.lastIndexOf("/")), 1, 1);
 		            resource.setContent(f);
 		            current.storeResource(resource);
 		            //delete temporary file
@@ -244,6 +247,8 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 	}
 	
 	public void loadText(){
+		//
+		root.addLogEntry("*** started loading text ***", 1, 1);
 		// simple validation of input
 		if(root.explorer.selected == null || root.explorer.selected == "" ||
 				root.explorer.selectedCollection == null || root.explorer.selectedCollection == "" ||
@@ -271,10 +276,10 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		String xslt=new String();
 		String out=new String();
 		// 
-		xml = XMLUtil.fetchXML(dbURI, dbUser, dbPass, col, res);
+		xml = XMLUtil.fetchXML(root, dbURI, dbUser, dbPass, col, res);
 		if(xml == null || xml == "") JOptionPane.showMessageDialog(root, "XML not fetched properly", "Alert!", JOptionPane.ERROR_MESSAGE);
 		// 
-		xslt = XMLUtil.fetchXML(dbURI, dbUser, dbPass, dbURI+dbXSLTDir, dbXSLTFile);
+		xslt = XMLUtil.fetchXML(root, dbURI, dbUser, dbPass, dbURI+dbXSLTDir, dbXSLTFile);
 		if(xslt == null || xslt == "") JOptionPane.showMessageDialog(root, "XSLT not fetched properly", "Alert!", JOptionPane.ERROR_MESSAGE);
 		// 
 		out = XMLUtil.transformXML(xml, xslt);
@@ -285,10 +290,15 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		s.addText(s.sutra_id, out);
 		// repaint
 		if(s.updateOnly) root.repaint();
-		else root.text.repaint();
+		else root.text.repaint();		
+		//
+		root.addLogEntry("*** ended loading text ***", 1, 1);
 	}
 	
 	public void loadImage(){
+		//
+		root.addLogEntry("*** started loading image ***", 1, 1);
+		
 		// simple validation of input
 		if(root.explorer.selected == null || root.explorer.selected == "" ||
 				root.explorer.selectedCollection == null || root.explorer.selectedCollection == "" ||
@@ -303,7 +313,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		String res = root.explorer.selectedResource;
 		
 		//
-		s.sutra_image = ImageUtil.fetchImage(dbURI, col, res);
+		s.sutra_image = ImageUtil.fetchImage(root, dbURI, col, res);
 		s.sutra_path_rubbing = col + res;
 		s.sutra_path_rubbing = s.sutra_path_rubbing.substring(dbURI.length());
 		
@@ -313,9 +323,15 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		
 		// repaint
 		root.main.repaint();
+		
+		//
+		root.addLogEntry("*** ended loaded image ***", 1, 1);
 	}
 	
 	public void loadImage(String col, String res){
+		//
+		root.addLogEntry("*** started loading image ***", 1, 1);
+		
 		// simple validation of input
 		if(root.explorer.selected == null || root.explorer.selected == "" ||
 				root.explorer.selectedCollection == null || root.explorer.selectedCollection == "" ||
@@ -326,12 +342,15 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		String dbURI = root.props.getProperty("db.uri");
 		
 		//
-		s.sutra_image = ImageUtil.fetchImage(dbURI, col, res);
+		s.sutra_image = ImageUtil.fetchImage(root, dbURI, col, res);
 		s.sutra_path_rubbing = col + res;
 		s.sutra_path_rubbing = s.sutra_path_rubbing.substring(dbURI.length());
 		
 		main_image.scale = 1;
 		main_image.sub.setPreferredSize(new Dimension(s.sutra_image.getWidth(main_image), s.sutra_image.getHeight(main_image)));
 		main_image.sub.revalidate();
+
+		//
+		root.addLogEntry("*** ended loaded image ***", 1, 1);
 	}
 }

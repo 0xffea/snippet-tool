@@ -20,7 +20,7 @@ public class NumUtil {
 		for(int j=0; j<file_ids.length; j++){
 			// do not try to convert unicode_suppl_1000.xml
 			if(file_ids[j].equals("suppl")){
-				System.out.println("found supplementary xml db file");
+				//System.out.println("found supplementary xml db file");
 				index_supplementary_file = j;
 				continue;
 			}

@@ -12,13 +12,21 @@ import org.xmldb.api.base.Database;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.BinaryResource;
 
+import src.gui.HiWi_GUI;
+
 import com.sun.image.codec.jpeg.ImageFormatException;
 
 public class ImageUtil {
 	
 	@SuppressWarnings("unchecked")
-	public static BufferedImage fetchImage(String hosturi, String collection, String img){
-		//System.out.println("fetchImage(): "+hosturi+", "+collection+", "+img);
+	public static BufferedImage fetchImage(HiWi_GUI root, String hosturi, String collection, String img){
+		//
+		root.addLogEntry("* started fetching image *", 1, 1);
+		root.addLogEntry("\thosturi="+hosturi, 0, 1);
+		root.addLogEntry("\tcollection="+collection, 0, 1);
+		root.addLogEntry("\timg="+img, 0, 1);
+		//
+		BufferedImage bi = null;
 		try {
 			String driver = "org.exist.xmldb.DatabaseImpl";    
 			Class cl = Class.forName(driver);   
@@ -29,15 +37,16 @@ public class ImageUtil {
 			//Collection col = DatabaseManager.getCollection(hosturi + collection);   
 			Collection col = DatabaseManager.getCollection(collection);
 			if(col == null){
-				System.out.println("NULL COLLECTION, aborting operation fetchImage");
-				return null;
+				//System.out.println("NULL COLLECTION, aborting operation fetchImage");
+				root.addLogEntry("NULL COLLECTION, aborting operation fetchImage", 1, 1);
 			}
-			//col.setProperty(OutputKeys.INDENT, "yes");
-			BinaryResource image = (BinaryResource)col.getResource(img);
-			byte[] bytear = (byte[]) image.getContent();
-			//ByteArrayInputStream bis = new ByteArrayInputStream (bytear,0,bytear.length);
-			BufferedImage bim = ImageIO.read (new ByteArrayInputStream(bytear));
-			return bim;
+			else{
+				//col.setProperty(OutputKeys.INDENT, "yes");
+				BinaryResource image = (BinaryResource)col.getResource(img);
+				byte[] bytear = (byte[]) image.getContent();
+				//ByteArrayInputStream bis = new ByteArrayInputStream (bytear,0,bytear.length);
+				bi = ImageIO.read (new ByteArrayInputStream(bytear));
+			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
@@ -51,7 +60,10 @@ public class ImageUtil {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return null;
+		//
+		root.addLogEntry("* ended fetching image *", 1, 1);
+		//
+		return bi;
 	}
 
 }

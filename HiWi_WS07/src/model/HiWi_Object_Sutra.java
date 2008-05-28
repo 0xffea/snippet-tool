@@ -117,7 +117,8 @@ public class HiWi_Object_Sutra {
 					current_column++;
 					current_number++;
 
-					System.out.println(sign.getInfo()+"sutra text size = "+sutra_text.size());
+					//System.out.println(sign.getInfo()+"sutra text size = "+sutra_text.size());
+					root.addLogEntry(sign.getInfo()+"sutra text size = "+sutra_text.size(), 1, 1);
 				}
 				// handle lem/rdg tags from app
 				if(l.get(i).getName().equals("app")){
@@ -151,7 +152,8 @@ public class HiWi_Object_Sutra {
 								signVariants.add(tempsign);
 							}
 
-							System.out.println(tempsign.getInfo()+"sutra text size = "+sutra_text.size());
+							//System.out.println(tempsign.getInfo()+"sutra text size = "+sutra_text.size());
+							root.addLogEntry(tempsign.getInfo()+"sutra text size = "+sutra_text.size(), 1, 1);
 						}
 						// add variants arraylist to sutra text
 						sutra_text.add(signVariants);
@@ -192,7 +194,8 @@ public class HiWi_Object_Sutra {
 								tempsign = new HiWi_Object_Sign(this, ch, cert, preferred, variantnumber, current_row, current_column, current_number, new Point(0,0), new Dimension(0,0));
 								signVariants.add(tempsign);
 								
-								System.out.println(tempsign.getInfo()+"sutra text size = "+sutra_text.size());
+								//System.out.println(tempsign.getInfo()+"sutra text size = "+sutra_text.size());
+								root.addLogEntry(tempsign.getInfo()+"sutra text size = "+sutra_text.size(), 1, 1);
 							}
 						}
 						// add variants arraylist to sutra text
@@ -281,7 +284,8 @@ public class HiWi_Object_Sutra {
 				}
 			}
 			for(int i=0; i<tarrayOfSigns.size(); i++){
-				System.out.println(tarrayOfSigns.get(i).getInfo());
+				//System.out.println(tarrayOfSigns.get(i).getInfo());
+				root.addLogEntry(tarrayOfSigns.get(i).getInfo(), 1, 1);
 			}
 			
 			System.out.println("Found signs in db after sort: "+tarrayOfSigns.size());
@@ -305,7 +309,8 @@ public class HiWi_Object_Sutra {
 					i--; // hold back current sign
 				}
 			}
-			System.out.println("Sutra text size: "+sutra_text.size());
+			//System.out.println("Sutra text size: "+sutra_text.size());
+			root.addLogEntry("Sutra text size: "+sutra_text.size(), 1, 1);
 			
 		} catch(XMLDBException e){
 			e.printStackTrace();
@@ -328,7 +333,8 @@ public class HiWi_Object_Sutra {
 							"for $appearance in $d/unihandb/char/appearance "+
 							"where $appearance/source='"+id+"' " +
 							" return $appearance";
-			System.out.println(query);
+			//System.out.println(query);
+			root.addLogEntry("query="+query, 0, 1);
 			String driver = "org.exist.xmldb.DatabaseImpl";  
 			Class cl = Class.forName(driver);	           
 			Database database = (Database)cl.newInstance();  
@@ -384,7 +390,8 @@ public class HiWi_Object_Sutra {
 
 	public void setActiveSign(int n){
 		this.activeSign = n;
-		System.out.println("Set active sign #"+this.getActiveSign());
+		//System.out.println("Set active sign #"+this.getActiveSign());
+		root.addLogEntry("Set active sign #"+this.getActiveSign(), 1, 1);
 	}
 	public int getActiveSign(){
 		return this.activeSign;
@@ -510,7 +517,7 @@ public class HiWi_Object_Sutra {
 			this.setRow(r);
 			this.setNumber(n);
 			this.id = this.sutra.sutra_id+"_"+this.row+"_"+this.column;
-			this.sign_path_snippet = dbSnips+"/subimage_"+sutra_id+"_"+r+"_"+c+".jpg";
+			this.sign_path_snippet = dbSnips+"/subimage_"+sutra_id+"_"+r+"_"+c+".png";
 		}
 		public HiWi_Object_Sign(HiWi_Object_Sutra s, String ch, float cert, boolean preferred, int var, int r, int c, int n){
 			// get needed properties
@@ -525,7 +532,7 @@ public class HiWi_Object_Sutra {
 			this.setRow(r);
 			this.setNumber(n);
 			this.id = this.sutra.sutra_id+"_"+this.row+"_"+this.column;
-			this.sign_path_snippet = dbSnips+"/subimage_"+sutra_id+"_"+r+"_"+c+".jpg";
+			this.sign_path_snippet = dbSnips+"/subimage_"+sutra_id+"_"+r+"_"+c+".png";
 		}
 		public HiWi_Object_Sign(HiWi_Object_Sutra s, String ch, int r, int c, int n, Point base, Dimension delta){
 			// get needed properties
@@ -537,7 +544,7 @@ public class HiWi_Object_Sutra {
 			this.setRow(r);
 			this.setNumber(n);
 			this.id = this.sutra.sutra_id+"_"+this.row+"_"+this.column;
-			this.sign_path_snippet = dbSnips+"/subimage_"+sutra_id+"_"+r+"_"+c+".jpg";
+			this.sign_path_snippet = dbSnips+"/subimage_"+sutra_id+"_"+r+"_"+c+".png";
 			// 
 			this.s = new Rectangle(base, delta);
 		}
@@ -554,7 +561,7 @@ public class HiWi_Object_Sutra {
 			this.setRow(r);
 			this.setNumber(n);
 			this.id = this.sutra.sutra_id+"_"+this.row+"_"+this.column;
-			this.sign_path_snippet = dbSnips+"/subimage_"+sutra_id+"_"+r+"_"+c+".jpg";
+			this.sign_path_snippet = dbSnips+"/subimage_"+sutra_id+"_"+r+"_"+c+".png";
 			// 
 			this.s = new Rectangle(base, delta);
 		}
@@ -732,6 +739,14 @@ public class HiWi_Object_Sutra {
 					"       </xu:element>" +
 					"    </xu:append>" +
 					"</xu:modifications>";
+				/*String xupdate = "update insert " +
+									"<appearance character=\""+this.character+"\" id=\""+this.id+"\" preferred_reading=\""+this.preferred_reading+"\" variant=\""+this.variant+"\" cert=\""+this.cert+"\" nr=\""+sutra.sutra_id+"_"+this.number+"\">" +
+									"<source>"+sutra.sutra_id+"</source>" +
+									"<rubbing>"+sutra.sutra_path_rubbing+"</rubbing>" +
+									"<graphic>"+sign_path_snippet+"</graphic>" +
+									"<coordinates x=\""+s.x+"\" y=\""+s.y+"\" width=\""+s.width+"\" height=\""+s.height+"\" />" +
+									"</appearance> " +
+									" into //unihandb/char[@xmlid=\'U+"+NumUtil.dec2hex(character.codePointAt(0)).toUpperCase()+"\']";*/
 				return xupdate;
 			}
 			else{

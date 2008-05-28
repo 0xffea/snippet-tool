@@ -55,7 +55,7 @@ public class HiWi_GUI_menubar extends JMenuBar implements ActionListener{
 			root.exit();
 		}
 		if(e.getActionCommand().equals(mi_clear.getActionCommand())){
-			new HiWi_GUI_clearapp();
+			new HiWi_GUI_clearapp(root);
 		}
 		if(e.getActionCommand().equals(mi_about.getActionCommand())){
 			String text = "Zeichen Tool\n" +

@@ -1,5 +1,6 @@
 package src.gui;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,6 +19,8 @@ import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
 import org.xmldb.api.base.XMLDBException;
 
+import src.util.string.HiWi_StringIO;
+
 @SuppressWarnings("serial")
 public class HiWi_GUI_explorer extends JPanel{
 	
@@ -35,36 +38,12 @@ public class HiWi_GUI_explorer extends JPanel{
 		super();
 		setLayout(new GridLayout(1,1));
 		setBorder(new TitledBorder("explorer"));
+		setPreferredSize(new Dimension(200, 600));
 		
 		root = r;
 		pcname = root.props.getProperty("db.uri");
 		rootnode = new DefaultMutableTreeNode(new String(pcname));
 		explorer = new JTree(rootnode);
-		
-		/*// add custom mouse listener to implement "loading on double-click" feature
-		addMouseListener(new MouseAdapter(){
-			int clicks = 0;	// clicks counter
-			public void mouseClicked(MouseEvent e){
-				// increment click counter
-				clicks++;
-				// if double click
-				if(clicks>1) {
-					//
-					System.out.println("double-click detected");
-					// reset click counter if needed
-					clicks = 0;
-					// perform loading of selected resource
-					if(selectedResource.endsWith(".png") ||	// check whether resource is an image
-							selectedResource.endsWith(".jpeg") ||
-							selectedResource.endsWith(".jpg")){
-						root.main.load_image.setEnabled(true);
-					}
-					if(selectedResource.endsWith(".xml")){
-						root.main.load_text.setEnabled(true);
-					}
-				}
-			}
-		});*/
 		
 		// add custom treeselectionlistener for browsing in directory tree
 		explorer.addTreeSelectionListener(new TreeSelectionListener(){
@@ -88,6 +67,7 @@ public class HiWi_GUI_explorer extends JPanel{
 					//get child collections
 					if(col!=null && col.getChildCollectionCount()>0){
 						String[] children = col.listChildCollections();
+						HiWi_StringIO.sortArrayofString(children);
 						for(int i=0; i<children.length; i++){
 							selectedNode.add(new DefaultMutableTreeNode(children[i]));
 						}
@@ -95,6 +75,7 @@ public class HiWi_GUI_explorer extends JPanel{
 					//get child resources
 					if(col!=null && col.getResourceCount()>0){
 						String[] resources = col.listResources();
+						HiWi_StringIO.sortArrayofString(resources);
 						for(int i=0; i<resources.length; i++){
 							selectedNode.add(new DefaultMutableTreeNode(resources[i]));
 						}

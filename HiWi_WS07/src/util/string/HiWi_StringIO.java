@@ -28,5 +28,17 @@ public class HiWi_StringIO {
 			str_t = str_t.substring(str_t.indexOf(sep)+1);
 		}
 	}
+	
+	public static void sortArrayofString(String[] array){
+		for(int i=0; i<array.length-1; i++){
+			for(int j=i+1; j<array.length; j++){
+				if(array[i].compareToIgnoreCase(array[j])>0){
+					String temp = array[j];
+					array[j] = array[i];
+					array[i] = temp;
+				}
+			}
+		}
+	}
 
 }

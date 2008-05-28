@@ -1,6 +1,7 @@
 package src.gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -66,6 +67,7 @@ public class HiWi_GUI_options extends JPanel implements ActionListener, ItemList
 		super();
 		setLayout(new SpringLayout());
 		setBorder(new TitledBorder("options"));
+		setPreferredSize(new Dimension(100, 600));
 		
 		this.root = r;
 		this.s = su;

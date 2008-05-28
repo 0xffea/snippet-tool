@@ -16,14 +16,19 @@ import src.util.xml.XMLUtil;
 
 public class HiWi_GUI_clearapp extends JFrame implements ActionListener{
 	
+	HiWi_GUI root;
+	
 	JTextField jtf_regexp = new JTextField();
 	
 	JButton jb_ok = new JButton("OK");
 	JButton jb_cancel = new JButton("Cancel");
 	
-	public HiWi_GUI_clearapp(){
+	public HiWi_GUI_clearapp(HiWi_GUI r){
 		// super
 		super("Clear Appearances");
+		
+		//
+		this.root = r;
 		
 		// button <-> action listener
 		jb_ok.addActionListener(this);
@@ -54,7 +59,7 @@ public class HiWi_GUI_clearapp extends JFrame implements ActionListener{
 		    String dbPass = props.getProperty("db.passwd");
 		    String dbOut = props.getProperty("db.dir.out");
 		    // clear appearances
-			XMLUtil.clearAppearances(dbURI, dbUser, dbPass, dbOut, jtf_regexp.getText());
+			XMLUtil.clearAppearances(root, dbURI, dbUser, dbPass, dbOut, jtf_regexp.getText());
 		}
 		if(e.getSource().equals(jb_cancel)){
 			dispose();
