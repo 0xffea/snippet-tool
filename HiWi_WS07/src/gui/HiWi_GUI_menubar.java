@@ -18,7 +18,9 @@ public class HiWi_GUI_menubar extends JMenuBar implements ActionListener{
 	JMenu m_file = new JMenu("File");
 	JMenu m_edit = new JMenu("Edit");
 	JMenu m_help = new JMenu("Help");
-	
+
+	JMenuItem mi_load = new JMenuItem("Load");
+	JMenuItem mi_save = new JMenuItem("Save");
 	JMenuItem mi_pref = new JMenuItem("Preferences");
 	JMenuItem mi_exit = new JMenuItem("Exit");
 	JMenuItem mi_clear = new JMenuItem("Clear Appearance");
@@ -30,11 +32,15 @@ public class HiWi_GUI_menubar extends JMenuBar implements ActionListener{
 		super();
 		this.root = r;
 		this.s = str;
+		mi_save.addActionListener(this);
+		mi_load.addActionListener(this);
 		mi_pref.addActionListener(this);
 		mi_exit.addActionListener(this);
 		mi_clear.addActionListener(this);
 		mi_about.addActionListener(this);
 		mi_help.addActionListener(this);
+		m_file.add(mi_save);
+		m_file.add(mi_load);
 		m_file.add(mi_pref);
 		m_file.add(mi_exit);
 		m_edit.add(mi_clear);
@@ -48,6 +54,12 @@ public class HiWi_GUI_menubar extends JMenuBar implements ActionListener{
 
 	@SuppressWarnings("static-access")
 	public void actionPerformed(ActionEvent e) {
+		if(e.getActionCommand().equals(mi_load.getActionCommand())){
+			s.loadTemp();
+		}
+		if(e.getActionCommand().equals(mi_save.getActionCommand())){
+			s.saveTemp();
+		}
 		if(e.getActionCommand().equals(mi_pref.getActionCommand())){
 			new HiWi_GUI_preferences(root, s);
 		}

@@ -1,17 +1,13 @@
 package src.util.xml;
 
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -239,9 +235,9 @@ public class XMLUtil {
 		try {
 			String driver = "org.exist.xmldb.DatabaseImpl";
 			String xupdate = 	"<xu:modifications version=\'1.0\' xmlns:xu=\'http://www.xmldb.org/xupdate\'> " +
-									"<xu:remove select=\"//*[substring(@id,0,"+(regexp.length()+1)+")='"+regexp+"']\" /> " +
-									//"<xu:remove select=\"//*[substring(@id,0,6)='HDS_7'] /> " +
-									//"<xu:remove select=\"//*[string-length(@id)>=0] /> " +
+									//"<xu:remove select=\"//*[substring(@id,0,"+(regexp.length()+1)+")='"+regexp+"']\" /> " +
+									"<xu:remove select=\"//appearance[substring(@id,0,"+(regexp.length()+1)+")='"+regexp+"']\" /> " +
+									//"<xu:remove select=\"//appearance[contains(@id, '"+regexp+"']\" /> " +
 								"</xu:modifications>";
 			//System.out.println(xupdate);
 			root.addLogEntry("xupdate="+xupdate, 0, 1);

@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
 import org.xml.sax.InputSource;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
@@ -264,7 +267,8 @@ public class HiWi_Object_Sutra {
 				//System.out.println(sign.getInfo());
 			}
 			
-			System.out.println("Found signs in db: "+tarrayOfSigns.size());
+			//System.out.println("Found signs in db: "+tarrayOfSigns.size());
+			root.addLogEntry("found signs in db: "+tarrayOfSigns.size(), 0, 1);
 			// sort tarrayOfSigns after their number
 			for(int i=0; i< tarrayOfSigns.size(); i++){
 				for(int j=i; j<tarrayOfSigns.size(); j++){
@@ -288,7 +292,8 @@ public class HiWi_Object_Sutra {
 				root.addLogEntry(tarrayOfSigns.get(i).getInfo(), 1, 1);
 			}
 			
-			System.out.println("Found signs in db after sort: "+tarrayOfSigns.size());
+			//System.out.println("Found signs in db after sort: "+tarrayOfSigns.size());
+			root.addLogEntry("Found signs in db after sort: "+tarrayOfSigns.size(), 0, 1);
 			// add sign-variants as ArrayList to ArrayList of sutra's signs
 			int index = 1;	// rememebering that numbers start from 1
 			ArrayList<HiWi_Object_Sign> tsignarray = new ArrayList<HiWi_Object_Sign>();
@@ -460,6 +465,154 @@ public class HiWi_Object_Sutra {
 			e.printStackTrace();
 		}
 	}
+	
+	public void saveTemp(){
+		Document docout = new Document(new Element("sutra"));
+		for(int i=0; i<sutra_text.size(); i++){
+			for(int j=0; j<sutra_text.get(i).size(); j++){
+				HiWi_Object_Sign tsign = sutra_text.get(i).get(j);
+				Element app = new Element("appearance");
+				app.setAttribute("character", tsign.character);
+				app.setAttribute("id", tsign.id);
+				app.setAttribute("preferred_reading", String.valueOf(tsign.preferred_reading));
+				app.setAttribute("variant", String.valueOf(tsign.variant));
+				app.setAttribute("cert", String.valueOf(tsign.cert));
+				app.setAttribute("nr", String.valueOf(sutra_id+"_"+tsign.number));
+				
+				Element source = new Element("source");
+				source.setText(sutra_id);
+				
+				Element rubbing = new Element("rubbing");
+				rubbing.setText(sutra_path_rubbing);
+				
+				Element graphic = new Element("graphic");
+				graphic.setText(tsign.sign_path_snippet);
+				
+				Element coordinates = new Element("coordinates");
+				coordinates.setAttribute("x", String.valueOf(tsign.s.x));
+				coordinates.setAttribute("y", String.valueOf(tsign.s.y));
+				coordinates.setAttribute("height", String.valueOf(tsign.s.height));
+				coordinates.setAttribute("width", String.valueOf(tsign.s.width));
+				
+				app.addContent(source);
+				app.addContent(rubbing);
+				app.addContent(graphic);
+				app.addContent(coordinates);
+				
+				docout.getRootElement().addContent(app);
+			}
+		}
+		
+		try {
+			FileOutputStream fos = new FileOutputStream(new File("tmp\\xml\\temporary_"+this.sutra_id+".xml"));
+			XMLOutputter xmlout = new XMLOutputter();
+			xmlout.setFormat(Format.getPrettyFormat());
+			xmlout.output(docout, fos);
+			fos.flush();
+			fos.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void loadTemp(){
+		try {
+			//
+			SAXBuilder builder = new SAXBuilder();
+			Document docin = builder.build(new FileInputStream(new File("tmp\\xml\\temporary_"+this.sutra_id+".xml")));
+			//
+			Element docinroot = docin.getRootElement();
+			List<Element> apps = docinroot.getChildren("appearance");
+			
+			// clear sutra_text
+			this.sutra_text.clear();
+
+			// get markup
+			ArrayList<HiWi_Object_Sign> tarrayOfSigns = new ArrayList<HiWi_Object_Sign>();
+			for(int i=0; i<apps.size(); i++) {
+				Element xmle = apps.get(i);	// it's appearance tag
+				String ch = xmle.getAttributeValue("character");
+				String signid = xmle.getAttributeValue("id");
+				boolean preferred = Boolean.parseBoolean(xmle.getAttributeValue("preferred_reading"));
+				float cert = Float.parseFloat(xmle.getAttributeValue("cert"));
+				int var = Integer.parseInt(xmle.getAttributeValue("variant"));
+				String rc = signid.substring((this.sutra_id+"_").length());
+				int r = Integer.parseInt(rc.substring(0, rc.indexOf("_")));
+				int c = Integer.parseInt(rc.substring(rc.indexOf("_")+1));
+				int n = Integer.parseInt(xmle.getAttributeValue("nr").substring((this.sutra_id+"_").length()));
+				Element xmlc = xmle.getChild("coordinates");
+				int x = Integer.parseInt(xmlc.getAttributeValue("x"));
+				int y = Integer.parseInt(xmlc.getAttributeValue("y"));
+				int width = Integer.parseInt(xmlc.getAttributeValue("width"));
+				int height = Integer.parseInt(xmlc.getAttributeValue("height"));
+
+				HiWi_Object_Sign sign = new HiWi_Object_Sign(this, ch, cert, preferred, var, r, c, n, new Point(x,y), new Dimension(width, height));				
+				sign.id = signid; // just to be sure, since it's the only value not mentioned in constructor explicit
+				
+				tarrayOfSigns.add(sign);
+			}
+			
+			root.addLogEntry("found signs in tempfile: "+tarrayOfSigns.size(), 0, 1);
+			
+			// sort tarrayOfSigns after their number
+			for(int i=0; i< tarrayOfSigns.size(); i++){
+				for(int j=i; j<tarrayOfSigns.size(); j++){
+					if(tarrayOfSigns.get(i).number > tarrayOfSigns.get(j).number){	// handle different signs
+						HiWi_Object_Sign tempsign = tarrayOfSigns.get(i);
+						tarrayOfSigns.set(i, tarrayOfSigns.get(j));
+						tarrayOfSigns.set(j, tempsign);
+					}
+					else{
+						if(tarrayOfSigns.get(i).number == tarrayOfSigns.get(j).number
+								&& tarrayOfSigns.get(i).variant > tarrayOfSigns.get(j).variant){ // handle variants of the same sign
+							HiWi_Object_Sign tempsign = tarrayOfSigns.get(i);
+							tarrayOfSigns.set(i, tarrayOfSigns.get(j));
+							tarrayOfSigns.set(j, tempsign);
+						}
+					}
+				}
+			}
+			for(int i=0; i<tarrayOfSigns.size(); i++){
+				root.addLogEntry(tarrayOfSigns.get(i).getInfo(), 1, 1);
+			}
+			
+			
+			root.addLogEntry("Found signs in tempfile after sort: "+tarrayOfSigns.size(), 0, 1);
+			
+			// add sign-variants as ArrayList to ArrayList of sutra's signs
+			int index = 1;	// rememebering that numbers start from 1
+			ArrayList<HiWi_Object_Sign> tsignarray = new ArrayList<HiWi_Object_Sign>();
+			for(int i=0; i<tarrayOfSigns.size(); i++){
+				if(tarrayOfSigns.get(i).number == index){
+					tsignarray.add(tarrayOfSigns.get(i));
+					// finished iterating through tarrayOfSigns
+					if(i==tarrayOfSigns.size()-1 && tsignarray.size()>0){
+						sutra_text.add((ArrayList<HiWi_Object_Sign>) tsignarray.clone());
+					}
+				}
+				else{
+					if(tsignarray.size()>0) sutra_text.add((ArrayList<HiWi_Object_Sign>) tsignarray.clone());
+					tsignarray = new ArrayList<HiWi_Object_Sign>();
+					index++;
+					i--; // hold back current sign
+				}
+			}
+
+			root.addLogEntry("Sutra text size: "+sutra_text.size(), 1, 1);
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
 
 	/**
 	 * 
@@ -724,7 +877,8 @@ public class HiWi_Object_Sutra {
 			if(!updateOnly){
 				String xupdate = 
 					"<xu:modifications version=\'1.0\' xmlns:xu=\'http://www.xmldb.org/xupdate\'>" +
-					"    <xu:append select=\"//unihandb/char[@xmlid=\'U+"+NumUtil.dec2hex(character.codePointAt(0)).toUpperCase()+"\']\">" +
+					//"    <xu:append select=\"//unihandb/char[@xmlid=\'U+"+NumUtil.dec2hex(character.codePointAt(0)).toUpperCase()+"\']\">" +
+					"    <xu:append select=\"//char[@xmlid=\'U+"+NumUtil.dec2hex(character.codePointAt(0)).toUpperCase()+"\']\">" +
 					"       <xu:element name=\"appearance\">" +
 					"           <xu:attribute name=\"character\">"+this.character+"</xu:attribute>" +
 					"           <xu:attribute name=\"id\">"+this.id+"</xu:attribute>" +

@@ -48,4 +48,7 @@
 +	40. clear db from appearances of specified HDS
 
 +	41. warning message if some markup snippets outside sutra image
-	42. log
++	42. log
++	43. csv - temporary save	=	xml used
++	44. textfile name, imagefile name in border
+	45. scroll speed up (dependant on image size!)

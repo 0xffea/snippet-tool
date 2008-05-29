@@ -200,7 +200,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 				img_out_t = img_in.getSubimage((int)Math.max(0,r.getX()), (int)Math.max(0, r.getY()), (int)Math.min(img_in.getWidth()-r.getX(), r.getWidth()), (int)Math.min(img_in.getHeight()-r.getY(), r.getHeight()));
 				try {
 					//write image to local temporary file
-					File f = new File("subimage_"+s.sutra_id+"_"+s.sutra_text.get(i).get(0).getNumber()+".png");
+					File f = new File("tmp\\img\\subimage_"+s.sutra_id+"_"+s.sutra_text.get(i).get(0).getNumber()+".png");
 					ImageIO.write(img_out_t, "png", f);
 					//copy image resource to selected collection
 					String driver = "org.exist.xmldb.DatabaseImpl";    
@@ -220,8 +220,9 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		            root.addLogEntry("storing subimage:\t"+f.getName()+"\tas "+s.sutra_text.get(i).get(0).sign_path_snippet.substring(s.sutra_text.get(i).get(0).sign_path_snippet.lastIndexOf("/")), 1, 1);
 		            resource.setContent(f);
 		            current.storeResource(resource);
+		            
 		            //delete temporary file
-		            f.delete();
+		            //f.delete();
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (InstantiationException e) {
@@ -267,10 +268,13 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		String res = root.explorer.selectedResource;
 		
 		//
+		root.text.setBorder(new TitledBorder("text"+" - "+res));
+		
+		//
 		s.sutra_path_file = col + res;
 		s.sutra_path_file = s.sutra_path_file.substring(dbURI.length());
 		s.sutra_id = res;
-		s.sutra_id = s.sutra_id.substring(0, s.sutra_id.length()-".xyz".length());
+		s.sutra_id = s.sutra_id.substring(0, s.sutra_id.length()-".xml".length());	// NOTICE: filename containing sutratext must be of form <SUTRA_ID>.xml
 		//perform the transformation and extraction of data
 		String xml=new String();
 		String xslt=new String();
@@ -312,6 +316,9 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		String col = root.explorer.selectedCollection;
 		String res = root.explorer.selectedResource;
 		
+		// 
+		root.main.setBorder(new TitledBorder("main"+" - "+res));
+		
 		//
 		s.sutra_image = ImageUtil.fetchImage(root, dbURI, col, res);
 		s.sutra_path_rubbing = col + res;
@@ -340,6 +347,9 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		}
 		// get needed properties
 		String dbURI = root.props.getProperty("db.uri");
+		
+		// 
+		root.main.setBorder(new TitledBorder("main"+" - "+res));
 		
 		//
 		s.sutra_image = ImageUtil.fetchImage(root, dbURI, col, res);
