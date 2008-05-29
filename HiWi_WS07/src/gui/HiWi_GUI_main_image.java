@@ -56,10 +56,10 @@ public class HiWi_GUI_main_image extends JPanel implements MouseListener, MouseM
 		
 		scroll_image = new JScrollPane(sub);
 		//scroll_image.setPreferredSize(new Dimension(800, 600));
-		scroll_image.getHorizontalScrollBar().setUnitIncrement(100);
+		/*scroll_image.getHorizontalScrollBar().setUnitIncrement(100);
 		scroll_image.getHorizontalScrollBar().setBlockIncrement(200);
 		scroll_image.getVerticalScrollBar().setUnitIncrement(100);
-		scroll_image.getVerticalScrollBar().setBlockIncrement(200);
+		scroll_image.getVerticalScrollBar().setBlockIncrement(200);*/
 		
 		add(scroll_image, BorderLayout.CENTER);
 	}
