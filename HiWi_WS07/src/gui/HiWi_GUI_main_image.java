@@ -71,6 +71,7 @@ public class HiWi_GUI_main_image extends JPanel implements MouseListener, MouseM
 	public class HiWi_GUI_main_image_sub extends JPanel {
         protected void paintComponent(Graphics gg) {
             super.paintComponent(gg);
+            //
             Color rubbingColor = PrefUtil.String2Color(root.props.getProperty("local.color.rubbing"));
             Float rubbingAlpha = Float.parseFloat(root.props.getProperty("local.alpha.rubbing"));
             Graphics2D g = (Graphics2D) gg;
@@ -82,6 +83,16 @@ public class HiWi_GUI_main_image extends JPanel implements MouseListener, MouseM
     			ArrayList<HiWi_Object_Sign> signvariants = s.sutra_text.get(i);
     			HiWi_Object_Sign sign = signvariants.get(0);
     			sign.draw(g);
+    		}
+    		
+    		// adjust scrolling speed
+    		if(s.sutra_image != null){
+    			int hspeed = s.sutra_image.getWidth() / 10;
+    			int vspeed = s.sutra_image.getHeight()/ 10;
+    			scroll_image.getHorizontalScrollBar().setUnitIncrement(hspeed/2);
+    			scroll_image.getVerticalScrollBar().setUnitIncrement(vspeed/2);
+    			//scroll_image.getHorizontalScrollBar().setBlockIncrement(hspeed*2);
+    			//scroll_image.getVerticalScrollBar().setBlockIncrement(hspeed*2);
     		}
         }
     }

@@ -55,7 +55,7 @@ public class HiWi_Object_Sutra {
 	public String sutra_path_file = new String();	//.xml of sutra - correspondance between image and HiWi_Object_Signs
 
 	//	
-	public BufferedImage sutra_image;
+	public BufferedImage sutra_image = null;
 	//public ArrayList<HiWi_Object_Sign> sutra_text = new ArrayList<HiWi_Object_Sign>();
 	public ArrayList<ArrayList<HiWi_Object_Sign>> sutra_text = new ArrayList<ArrayList<HiWi_Object_Sign>>();
 
