@@ -30,6 +30,7 @@ import org.xmldb.api.modules.BinaryResource;
 import org.xmldb.api.modules.CollectionManagementService;
 
 import src.model.HiWi_Object_Sutra;
+import src.model.HiWi_Object_Sutra.HiWi_Object_Sign;
 import src.util.gui.JZoomSlider;
 import src.util.image.ImageUtil;
 import src.util.num.NumUtil;
@@ -186,21 +187,25 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 			//proceed for each sign - submit coordinates
 			for(int i=0; i<s.sutra_text.size(); i++){
 				for(int j=0; j<s.sutra_text.get(i).size(); j++){
-					//System.out.print("nr.="+s.sutra_text.get(i).get(j).number+"\n");
-					root.addLogEntry("storing coordinates of nr.="+s.sutra_text.get(i).get(j).number, 1, 1);
-					XMLUtil.updateXML(root, NumUtil.dec2hex(s.sutra_text.get(i).get(j).character.codePointAt(0)), s.sutra_text.get(i).get(j).getXUpdate(s.updateOnly), dbURI, dbUser, dbPass, dbOut);
+					for(int k=0; k<s.sutra_text.get(i).get(j).size(); k++){
+						HiWi_Object_Sign csign = s.sutra_text.get(i).get(j).get(k);
+						
+						root.addLogEntry("storing coordinates of nr.="+csign.number, 1, 1);
+						
+						XMLUtil.updateXML(root, NumUtil.dec2hex(csign.character.codePointAt(0)), csign.getXUpdate(s.updateOnly), dbURI, dbUser, dbPass, dbOut);
+					}
 				}
 			}
 			//proceed for each sign - submit snippet
 			BufferedImage img_in = s.sutra_image;
 			BufferedImage img_out_t;
 			for(int i=0; i<s.sutra_text.size(); i++){
-				Rectangle2D r = s.sutra_text.get(i).get(0).s.getBounds2D();
+				Rectangle2D r = s.sutra_text.get(i).get(0).get(0).s.getBounds2D();
 				//System.out.println(i+": ("+(int)r.getX()+","+(int)r.getY()+","+(int)r.getWidth()+","+(int)r.getHeight()+")");
 				img_out_t = img_in.getSubimage((int)Math.max(0,r.getX()), (int)Math.max(0, r.getY()), (int)Math.min(img_in.getWidth()-r.getX(), r.getWidth()), (int)Math.min(img_in.getHeight()-r.getY(), r.getHeight()));
 				try {
 					//write image to local temporary file
-					File f = new File("tmp\\img\\subimage_"+s.sutra_id+"_"+s.sutra_text.get(i).get(0).getNumber()+".png");
+					File f = new File("tmp\\img\\subimage_"+s.sutra_id+"_"+s.sutra_text.get(i).get(0).get(0).getNumber()+".png");
 					ImageIO.write(img_out_t, "png", f);
 					//copy image resource to selected collection
 					String driver = "org.exist.xmldb.DatabaseImpl";    
@@ -215,9 +220,9 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 						//current = mgtService.createCollection(Preferences.DB_COLLECTION_SNIPPET);  
 						current = mgtService.createCollection(root.props.getProperty("db.dir.snippet"));
 					}
-		            BinaryResource resource = (BinaryResource) current.createResource(s.sutra_text.get(i).get(0).sign_path_snippet.substring(s.sutra_text.get(i).get(0).sign_path_snippet.lastIndexOf("/")), "BinaryResource");
+		            BinaryResource resource = (BinaryResource) current.createResource(s.sutra_text.get(i).get(0).get(0).sign_path_snippet.substring(s.sutra_text.get(i).get(0).get(0).sign_path_snippet.lastIndexOf("/")), "BinaryResource");
 		            //System.out.println("storing subimage:\t"+f.getName()+"\tas "+s.sutra_text.get(i).get(0).sign_path_snippet.substring(s.sutra_text.get(i).get(0).sign_path_snippet.lastIndexOf("/")));
-		            root.addLogEntry("storing subimage:\t"+f.getName()+"\tas "+s.sutra_text.get(i).get(0).sign_path_snippet.substring(s.sutra_text.get(i).get(0).sign_path_snippet.lastIndexOf("/")), 1, 1);
+		            root.addLogEntry("storing subimage:\t"+f.getName()+"\tas "+s.sutra_text.get(i).get(0).get(0).sign_path_snippet.substring(s.sutra_text.get(i).get(0).get(0).sign_path_snippet.lastIndexOf("/")), 1, 1);
 		            resource.setContent(f);
 		            current.storeResource(resource);
 		            

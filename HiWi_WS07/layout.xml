@@ -17,7 +17,7 @@
        <int>0</int> 
        <int>0</int> 
        <int>1272</int> 
-       <int>490</int> 
+       <int>589</int> 
       </object> 
      </void> 
      <void id="ArrayList1" property="children"> 
@@ -28,7 +28,7 @@
           <int>0</int> 
           <int>0</int> 
           <int>200</int> 
-          <int>490</int> 
+          <int>589</int> 
          </object> 
         </void> 
         <void property="name"> 
@@ -46,7 +46,7 @@
           <int>200</int> 
           <int>0</int> 
           <int>10</int> 
-          <int>490</int> 
+          <int>589</int> 
          </object> 
         </void> 
         <void property="parent"> 
@@ -61,7 +61,7 @@
           <int>210</int> 
           <int>0</int> 
           <int>800</int> 
-          <int>490</int> 
+          <int>589</int> 
          </object> 
         </void> 
         <void property="name"> 
@@ -79,7 +79,7 @@
           <int>1010</int> 
           <int>0</int> 
           <int>10</int> 
-          <int>490</int> 
+          <int>589</int> 
          </object> 
         </void> 
         <void property="parent"> 
@@ -94,7 +94,7 @@
           <int>1020</int> 
           <int>0</int> 
           <int>252</int> 
-          <int>490</int> 
+          <int>589</int> 
          </object> 
         </void> 
         <void property="name"> 
@@ -119,7 +119,7 @@
      <void property="bounds"> 
       <object class="java.awt.Rectangle"> 
        <int>0</int> 
-       <int>490</int> 
+       <int>589</int> 
        <int>1272</int> 
        <int>10</int> 
       </object> 
@@ -134,9 +134,9 @@
      <void property="bounds"> 
       <object class="java.awt.Rectangle"> 
        <int>0</int> 
-       <int>500</int> 
+       <int>599</int> 
        <int>1272</int> 
-       <int>250</int> 
+       <int>151</int> 
       </object> 
      </void> 
      <void id="ArrayList2" property="children"> 
@@ -145,9 +145,9 @@
         <void property="bounds"> 
          <object class="java.awt.Rectangle"> 
           <int>0</int> 
-          <int>500</int> 
+          <int>599</int> 
           <int>343</int> 
-          <int>250</int> 
+          <int>151</int> 
          </object> 
         </void> 
         <void property="name"> 
@@ -163,9 +163,9 @@
         <void property="bounds"> 
          <object class="java.awt.Rectangle"> 
           <int>343</int> 
-          <int>500</int> 
+          <int>599</int> 
           <int>10</int> 
-          <int>250</int> 
+          <int>151</int> 
          </object> 
         </void> 
         <void property="parent"> 
@@ -178,9 +178,9 @@
         <void property="bounds"> 
          <object class="java.awt.Rectangle"> 
           <int>353</int> 
-          <int>500</int> 
+          <int>599</int> 
           <int>919</int> 
-          <int>250</int> 
+          <int>151</int> 
          </object> 
         </void> 
         <void property="name"> 

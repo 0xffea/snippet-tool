@@ -52,3 +52,6 @@
 +	43. csv - temporary save	=	xml used
 +	44. textfile name, imagefile name in border
 +	45. scroll speed up (dependant on image size!)
+
+	46. unicode_hdx_1000.xml - H+00001
+	47. xmlid U+xxxx -> xml:id Uxxxx

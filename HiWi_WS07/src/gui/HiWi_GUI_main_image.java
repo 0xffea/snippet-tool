@@ -80,8 +80,9 @@ public class HiWi_GUI_main_image extends JPanel implements MouseListener, MouseM
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, rubbingAlpha));
     		g.drawImage(s.sutra_image, 0, 0, this);
     		for(int i=0; i<s.sutra_text.size(); i++){
-    			ArrayList<HiWi_Object_Sign> signvariants = s.sutra_text.get(i);
-    			HiWi_Object_Sign sign = signvariants.get(0);
+    			ArrayList<ArrayList<HiWi_Object_Sign>> signvariants = s.sutra_text.get(i);
+    			ArrayList<HiWi_Object_Sign> signs = signvariants.get(0);
+    			HiWi_Object_Sign sign = signs.get(0);
     			sign.draw(g);
     		}
     		
@@ -127,7 +128,7 @@ public class HiWi_GUI_main_image extends JPanel implements MouseListener, MouseM
 			if(sn==null || !sn.s.getBounds2D().contains(mouse_pressed)){	// if not still the same sign used as active
 				for(int i=0; i<s.sutra_text.size(); i++){	// find sign that should be active
 					//System.out.println("Looking for active sign for LEFT_BUTTON_PRESSED");
-					HiWi_Object_Sign sign = s.sutra_text.get(i).get(0);
+					HiWi_Object_Sign sign = s.sutra_text.get(i).get(0).get(0);
 					if(sign.s.getBounds2D().contains(mouse_current_new)){
 						// found existing sign
 						existingSign = true;
@@ -159,7 +160,7 @@ public class HiWi_GUI_main_image extends JPanel implements MouseListener, MouseM
 			if(sn==null || !sn.s.getBounds2D().contains(mouse_pressed)){	// if not still the same sign used as active
 				for(int i=0; i<s.sutra_text.size(); i++){	// find sign that should be active
 					//System.out.println("Looking for active sign for RIGHT_BUTTON_PRESSED");
-					HiWi_Object_Sign sign = s.sutra_text.get(i).get(0);
+					HiWi_Object_Sign sign = s.sutra_text.get(i).get(0).get(0);
 					if(sign.s.contains(mouse_current_new)){
 						// found existing sign
 						existingSign = true;
