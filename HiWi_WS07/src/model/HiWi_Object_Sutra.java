@@ -85,6 +85,7 @@ public class HiWi_Object_Sutra {
 		}
 	}
 
+	
 	@SuppressWarnings("unchecked")
 	public void setTextFromXML(String xml){
 		// clear text
@@ -147,10 +148,6 @@ public class HiWi_Object_Sutra {
 						if(lvariants.get(q).getName().equals("lem")){	// assuming lem is preferred over rdg
 							length = lvariants.get(q).getChildren().size();
 						}
-						/*if(!lvariants.get(q).getName().equals("lem") && !lvariants.get(q).getName().equals("rdg")){
-							lvariants.remove(q);
-							q--;	// set back the counter since the list has lost on element on current position
-						}*/
 					}
 
 					for(int q=0; q<length; q++){
@@ -233,7 +230,7 @@ public class HiWi_Object_Sutra {
 							// create variant number
 							int variantnumber = v;
 							
-							if(j < lvariants.get(variantnumber).getChildren().size()){
+							if(j < lvariants.get(variantnumber).getChildren().size()){ // if there is a sign with indexed j in this variant
 								Element cspan = (Element) lvariants.get(v).getChildren().get(j);
 								if(!cspan.getAttributeValue("class").equals("supplied")){
 									String ch = cspan.getText();
@@ -244,6 +241,7 @@ public class HiWi_Object_Sutra {
 										signVariants.add((ArrayList<HiWi_Object_Sign>) signs.clone());
 									}
 									else{
+										//System.out.println(current_number+"/"+current_row+"/"+current_column);
 										sutra_text.get(current_number-1).get(variantnumber).add(csign);
 									}
 
@@ -257,9 +255,18 @@ public class HiWi_Object_Sutra {
 							// add variants arraylist to sutra text
 							sutra_text.add(signVariants);
 							//
-							if(j < basiclength){
+							if(j == maxlength-1){
 								current_column++;
 								current_number++;
+							}
+							else{
+								if(j >= basiclength-1){
+									
+								}
+								else{
+									current_column++;
+									current_number++;
+								}
 							}
 						}
 						else{//supplied
@@ -749,7 +756,7 @@ public class HiWi_Object_Sutra {
 		public String getInfo(){
 			String out = new String();
 			out += "id="+id+",";
-			out += "ch="+character.codePointAt(0)+",";
+			out += "ch="+character+"/"+character.codePointAt(0)+",";
 			out += "number="+getNumber()+",";
 			out += "cert="+cert+",";
 			out += "variant="+variant+",";

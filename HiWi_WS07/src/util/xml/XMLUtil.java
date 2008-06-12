@@ -255,6 +255,7 @@ public class XMLUtil {
 	
 	@SuppressWarnings("unchecked")
 	public static void clearAppearances(HiWi_GUI root, String hosturi, String user, String pass, String out, String regexp){
+		if(regexp.length() < 2) return;
 		//System.out.println("starting clearAppearances()");
 		try {
 			String driver = "org.exist.xmldb.DatabaseImpl";
