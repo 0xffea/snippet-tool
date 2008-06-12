@@ -295,7 +295,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		out = XMLUtil.transformXML(xml, xslt);
 		if(out == null || out == "") JOptionPane.showMessageDialog(root, "Bad out after transformation xml->xslt->out", "Alert!", JOptionPane.ERROR_MESSAGE);
 		//System.out.println(out);
-		HiWi_FileIO.writeStringToFile("trans.xml", out);
+		//HiWi_FileIO.writeStringToFile("trans.xml", out);
 		// add information to sutra_text
 		s.addText(s.sutra_id, out);
 		// show extracted text in text-window
