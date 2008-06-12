@@ -31,11 +31,35 @@ import org.xmldb.api.modules.XPathQueryService;
 import org.xmldb.api.modules.XUpdateQueryService;
 
 import src.gui.HiWi_GUI;
+import src.model.HiWi_Object_Sutra;
+import src.model.HiWi_Object_Sutra.HiWi_Object_Sign;
 import src.util.file.HiWi_FileIO;
 import src.util.num.NumUtil;
 
 public class XMLUtil {
+	
+	public static String getPlainTextFromApp(HiWi_Object_Sutra sutra){
+		String out = new String();
+		int row = 1;
+		int crow = 1;
+		for(int i=0; i<sutra.sutra_text.size(); i++){
+			HiWi_Object_Sign csign = sutra.sutra_text.get(i).get(0).get(0);
+			crow = csign.row;
+			
+			if(crow != row){	// add breakline
+				out += "\n";
+				row = crow;
+			}
+			
 
+			out += csign.character;
+		}
+		if(out.startsWith("\n")){
+			out = out.substring(1);
+		}
+		return out;
+	}
+	
 	public static String getPlainTextFromXML(String xml){
 		String out = new String();
 		SAXBuilder builder = new SAXBuilder();

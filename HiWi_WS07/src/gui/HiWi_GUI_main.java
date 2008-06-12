@@ -31,6 +31,7 @@ import org.xmldb.api.modules.CollectionManagementService;
 
 import src.model.HiWi_Object_Sutra;
 import src.model.HiWi_Object_Sutra.HiWi_Object_Sign;
+import src.util.file.HiWi_FileIO;
 import src.util.gui.JZoomSlider;
 import src.util.image.ImageUtil;
 import src.util.num.NumUtil;
@@ -293,10 +294,13 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		// 
 		out = XMLUtil.transformXML(xml, xslt);
 		if(out == null || out == "") JOptionPane.showMessageDialog(root, "Bad out after transformation xml->xslt->out", "Alert!", JOptionPane.ERROR_MESSAGE);
-		// show extracted text in text-window
-		root.text.text_in.setText(XMLUtil.getPlainTextFromXML(out));
+		//System.out.println(out);
+		HiWi_FileIO.writeStringToFile("trans.xml", out);
 		// add information to sutra_text
 		s.addText(s.sutra_id, out);
+		// show extracted text in text-window
+		root.text.text_in.setText(XMLUtil.getPlainTextFromApp(s));
+		//root.text.text_in.setText(XMLUtil.getPlainTextFromXML(out));
 		// repaint
 		if(s.updateOnly) root.repaint();
 		else root.text.repaint();		
