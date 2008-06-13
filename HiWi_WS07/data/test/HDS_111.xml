@@ -1,117 +1,227 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <teiHeader>
-        <fileDesc>
-            <titleStmt>
-                <title type="given" xml:lang="zh">《文殊師利所說經》五十四字節文</title>
-                <title type="translated" xml:lang="en">Passage in 54 characters of Sutra spoken by
-                    Mañjuśrī</title>
-                <title type="subordinate">Machine-readable transcript</title>
-            </titleStmt>
-            <editionStmt>
-                <edition>first XML edition, <date>N.N.</date>
-                </edition>
-                <respStmt>
-                    <resp>The excerpt was translated into English by</resp>
-                    <name>N.N.</name>
-                </respStmt>
-            </editionStmt>
-            <publicationStmt>
-                <publisher>N.N.</publisher>
-            </publicationStmt>
-            <sourceDesc>
-                <p>Nearly all the carved characters are clearly readable.</p>
-            </sourceDesc>
-        </fileDesc>
-        <catalog xlink:href="HDS_1"/>
-        <profileDesc>
-            <creation>
-                <date value="0564">around 564</date>
-                <placeName>Dongping, Shangdong</placeName>
-            </creation>
-            <langUsage>
-                <language ident="zh">Chinese</language>
-            </langUsage>
-        </profileDesc>
-        <revisionDesc>
-            <change>
-                <date>11.12.2006</date>
-                <item>header, xml-id, markups revised.</item>
-            </change>
-        </revisionDesc>
-    </teiHeader>
-    <text n="1" xml:id="HDS_1">
-        <front>
-            <div>
-                <witList>
-                    <witness sigil="LF">
-                        <witDetail target="LaiFei2000a" wit="LF">p.262-263</witDetail>
-                    </witness>
-                    <witness sigil="T1">
-                        <witDetail target="T_232" wit="T1">T_232.08.728a-26-29</witDetail>
-                    </witness>
-                    <witness sigil="T2">
-                        <witDetail target="T_310_46" wit="T2">T_310.11.652b16-19</witDetail>
-                    </witness>
-                    <witness sigil="R">
-                        <witDetail target="HDS_rub_JN_1" wit="R"/>
-                    </witness>
-                </witList>
-            </div>
-        </front>
-        <body>
-            <div xml:lang="zh">
-                <p>
-                    <lb n="1"/>
-                    <app>
-                        <lem wit="R">
-                            <persName corresp="en-a1" key="bg0004" reg="Sakyamuni" type="Buddha" xml:id="zh-a1">佛</persName>言</lem>
-                        <rdg wit="LF">佛告</rdg>
-                        <rdg wit="T1 T2">復次</rdg>
-                    </app>： 「<persName corresp="en-a2" key="rh0001" reg="Sariputra" type="disciple of Buddha" xml:id="zh-a02">舍利弗</persName>，汝問云何名<lb n="2"/>
-                    <term xlink:href="DFB10724">佛</term>，云何<term xlink:href="DFB31466">觀佛</term>者。<term xlink:href="DFB04896">不生</term>、不<term xlink:href="DFB24470">滅</term>，<lb n="3"/>
-                    <term xlink:href="DFB05000">不來、不去</term>，非<term xlink:href="DFB09526">名
-                        </term>、非<term xlink:href="DFB16497">相</term>，是名<lb n="4"/>為佛。如自觀身<term xlink:href="DFB26846">實相</term>，觀佛<lb n="5"/>
-                    <supplied reason="damage" source="T1 T2">亦</supplied>然。唯有智者，乃能知耳。<lb n="6"/>是名觀佛
-                    。」</p>
-            </div>
-            <div type="intro">
-                <p>Introduction to the Fifty-Four Character Passage from the <hi rend="italic">Scripture on the Perfection of Wisdom Spoken By Mañjuśrī</hi> on the Nature
-                    of the Buddha and How To Contemplate Him.</p>
-                <p>The text is drawn from Mandrasena's (Mantuoluoxian 曼陀羅仙) translation of the <hi rend="italic">Śaptaśatikā prajñāpāramitā</hi> (the <hi rend="italic">Perfection of Wisdom in 700 Lines</hi>), titled <hi rend="italic">The Great
-                        Perfection of Wisdom as Taught by Mañjuśrī</hi> (<hi rend="italic">Wenshushili suoshuo moheboreboluomi</hi> 文殊師利所說摩訶般若波羅蜜; T #232). Mandrasena
-                    arrived in China in 503 and was active in the Liang Dynasty (502-557) in the
-                    south. He is said to have come from Funan 夫南, a country identified with part of
-                    the region now occupied by modern Cambodia. This scripture was also translated
-                    by Saṃgabhara (Sengqiepolo 僧伽婆羅), who is also said to have hailed from Funan and
-                    to have sometimes worked with Mandrasena. That text, now T #233, was quoted
-                    elsewhere on Hongdingshan (no. 16.1). The passage translated here is located at
-                    T #232, 8:728a26-29. It also occurs within a section of Mandrasena’s text
-                    collected in the early eighth century translation of the <hi rend="italic">Great
-                        Gem Collection Scripture</hi> (<hi rend="italic">Da baoji jing</hi> 大寶積經,
-                    the <hi rend="italic">Mahāratnakūṭa-sūtra</hi>; T #310, 11:652b; on which see
-                        <hi rend="italic">Kaiyuan shijiao lu</hi> 開元釋教錄, T #2154, 55:586b). The
-                    context of the passage is a conversation between Śāriputra and Mañjuśrī about
-                    the nature of the Buddha. The lines that precede our passage are as follows:
-                    “Śāriputra inquired of Mañjuśrī, ‘What is named the Buddha? What is
-                    contemplating the Buddha?’ Mañjuśrī said, ‘What is it that constitutes “I”?’
-                    Śāriputra said, ‘“I” is just a name and names are characterized by emptiness.’
-                    Mañjuśrī said, ‘Just so! Just so! Just as “I” is a name, so as well “Buddha” is
-                    simply a name. Names are characterized by emptiness, which is none other than
-                    bodhi. Do not seek bodhi by means of names. The attributes of bodhi cannot be
-                    put in words, cannot be explained. Why is this? Because words, explanations, and
-                    bodhi are all empty’.” 舍利弗語文殊師利言: “云何名佛？云何觀佛?” 文殊師利言：“云何為我?” 舍利弗言： “我者但有名字，名字相空.”
-                    文殊師利言： “如是，如是！如我但有名字，佛亦但有名字。名字相空，即是菩提，不以名字而求菩提。菩提之相，無言無說。何以故？言說菩提，二俱空故.” (T #
-                    232, 8:728a).</p>
-            </div>
-            <div xml:lang="en">
-                <p>The <persName corresp="zh-a1" key="bg0004" reg="Sakyamuni" type="Buddha" xml:id="en-a1">Buddha</persName> said, “ <persName corresp="zh-a2" key="rh0001" type="disciple of Buddha" xml:id="en-a2">Śāriputra</persName>,
-                    you ask what is it that is named the Buddha? You ask how one contemplates the
-                    Buddha. Not produced, not extinguished, not come, not gone, Not a name, not an
-                    attribute— This is called the Buddha. As one contemplates the real attributes of
-                    the body, just so one contemplates the Buddha. Only those with wisdom can
-                    understand this. This is named contemplating the Buddha.”</p>
-            </div>
-        </body>
-    </text>
+<TEI xmlns="http://www.tei-c.org/ns/1.0"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<teiHeader>
+		<fileDesc>
+			<titleStmt>
+				<title type="given" xml:lang="zh">
+					《文殊師利所說經》五十四字節文
+				</title>
+				<title type="translated" xml:lang="en">
+					Passage in 54 characters of Sutra spoken by Mañjuśrī
+				</title>
+				<title type="subordinate">
+					Machine-readable transcript
+				</title>
+			</titleStmt>
+			<editionStmt>
+				<edition>
+					first XML edition,
+					<date>N.N.</date>
+				</edition>
+				<respStmt>
+					<resp>
+						The excerpt was translated into English by
+					</resp>
+					<name>N.N.</name>
+				</respStmt>
+			</editionStmt>
+			<publicationStmt>
+				<publisher>N.N.</publisher>
+			</publicationStmt>
+			<sourceDesc>
+				<p>
+					Nearly all the carved characters are clearly
+					readable.
+				</p>
+			</sourceDesc>
+		</fileDesc>
+		<catalog xlink:href="HDS_1" />
+		<profileDesc>
+			<creation>
+				<date value="0564">around 564</date>
+				<placeName>Dongping, Shangdong</placeName>
+			</creation>
+			<langUsage>
+				<language ident="zh">Chinese</language>
+			</langUsage>
+		</profileDesc>
+		<revisionDesc>
+			<change>
+				<date>11.12.2006</date>
+				<item>header, xml-id, markups revised.</item>
+			</change>
+		</revisionDesc>
+	</teiHeader>
+	<text n="1" xml:id="HDS_1">
+		<front>
+			<div>
+				<witList>
+					<witness sigil="LF">
+						<witDetail target="LaiFei2000a" wit="LF">
+							p.262-263
+						</witDetail>
+					</witness>
+					<witness sigil="T1">
+						<witDetail target="T_232" wit="T1">
+							T_232.08.728a-26-29
+						</witDetail>
+					</witness>
+					<witness sigil="T2">
+						<witDetail target="T_310_46" wit="T2">
+							T_310.11.652b16-19
+						</witDetail>
+					</witness>
+					<witness sigil="R">
+						<witDetail target="HDS_rub_JN_1" wit="R" />
+					</witness>
+				</witList>
+			</div>
+		</front>
+		<body>
+			<div xml:lang="zh">
+				<p>
+					<lb n="1" />
+					<app>
+						<lem wit="R">
+							<persName corresp="en-a1" key="bg0004"
+								reg="Sakyamuni" type="Buddha" xml:id="zh-a1">
+								佛
+							</persName>
+							言
+						</lem>
+						<rdg wit="LF">佛告</rdg>
+						<rdg wit="T1 T2">復次</rdg>
+					</app>
+					： 「
+					<persName corresp="en-a2" key="rh0001"
+						reg="Sariputra" type="disciple of Buddha" xml:id="zh-a02">
+						舍利弗
+					</persName>
+					，汝問云何名
+					<lb n="2" />
+					<term xlink:href="DFB10724">佛</term>
+					，云何
+					<term xlink:href="DFB31466">觀佛</term>
+					者。
+					<term xlink:href="DFB04896">不生</term>
+					、不
+					<term xlink:href="DFB24470">滅</term>
+					，
+					<lb n="3" />
+					<term xlink:href="DFB05000">不來、不去</term>
+					，非
+					<term xlink:href="DFB09526">名</term>
+					、非
+					<term xlink:href="DFB16497">相</term>
+					，是名
+					<lb n="4" />
+					為佛。如自觀身
+					<term xlink:href="DFB26846">實相</term>
+					，觀佛
+					<lb n="5" />
+					<supplied reason="damage" source="T1 T2">
+						亦
+					</supplied>
+					然。唯有智者，乃能知耳。
+					<lb n="6" />
+					是名觀佛 。」
+				</p>
+			</div>
+			<div type="intro">
+				<p>
+					Introduction to the Fifty-Four Character Passage
+					from the
+					<hi rend="italic">
+						Scripture on the Perfection of Wisdom Spoken By
+						Mañjuśrī
+					</hi>
+					on the Nature of the Buddha and How To Contemplate
+					Him.
+				</p>
+				<p>
+					The text is drawn from Mandrasena's (Mantuoluoxian
+					曼陀羅仙) translation of the
+					<hi rend="italic">Śaptaśatikā prajñāpāramitā</hi>
+					(the
+					<hi rend="italic">
+						Perfection of Wisdom in 700 Lines
+					</hi>
+					), titled
+					<hi rend="italic">
+						The Great Perfection of Wisdom as Taught by
+						Mañjuśrī
+					</hi>
+					(
+					<hi rend="italic">
+						Wenshushili suoshuo moheboreboluomi
+					</hi>
+					文殊師利所說摩訶般若波羅蜜; T #232). Mandrasena arrived in China
+					in 503 and was active in the Liang Dynasty (502-557)
+					in the south. He is said to have come from Funan 夫南,
+					a country identified with part of the region now
+					occupied by modern Cambodia. This scripture was also
+					translated by Saṃgabhara (Sengqiepolo 僧伽婆羅), who is
+					also said to have hailed from Funan and to have
+					sometimes worked with Mandrasena. That text, now T
+					#233, was quoted elsewhere on Hongdingshan (no.
+					16.1). The passage translated here is located at T
+					#232, 8:728a26-29. It also occurs within a section
+					of Mandrasena’s text collected in the early eighth
+					century translation of the
+					<hi rend="italic">
+						Great Gem Collection Scripture
+					</hi>
+					(
+					<hi rend="italic">Da baoji jing</hi>
+					大寶積經, the
+					<hi rend="italic">Mahāratnakūṭa-sūtra</hi>
+					; T #310, 11:652b; on which see
+					<hi rend="italic">Kaiyuan shijiao lu</hi>
+					開元釋教錄, T #2154, 55:586b). The context of the passage
+					is a conversation between Śāriputra and Mañjuśrī
+					about the nature of the Buddha. The lines that
+					precede our passage are as follows: “Śāriputra
+					inquired of Mañjuśrī, ‘What is named the Buddha?
+					What is contemplating the Buddha?’ Mañjuśrī said,
+					‘What is it that constitutes “I”?’ Śāriputra said,
+					‘“I” is just a name and names are characterized by
+					emptiness.’ Mañjuśrī said, ‘Just so! Just so! Just
+					as “I” is a name, so as well “Buddha” is simply a
+					name. Names are characterized by emptiness, which is
+					none other than bodhi. Do not seek bodhi by means of
+					names. The attributes of bodhi cannot be put in
+					words, cannot be explained. Why is this? Because
+					words, explanations, and bodhi are all empty’.”
+					舍利弗語文殊師利言: “云何名佛？云何觀佛?” 文殊師利言：“云何為我?” 舍利弗言：
+					“我者但有名字，名字相空.” 文殊師利言：
+					“如是，如是！如我但有名字，佛亦但有名字。名字相空，即是菩提，不以名字而求菩提。菩提之相，無言無說。何以故？言說菩提，二俱空故.”
+					(T # 232, 8:728a).
+				</p>
+			</div>
+			<div xml:lang="en">
+				<p>
+					The
+					<persName corresp="zh-a1" key="bg0004"
+						reg="Sakyamuni" type="Buddha" xml:id="en-a1">
+						Buddha
+					</persName>
+					said, “
+					<persName corresp="zh-a2" key="rh0001"
+						type="disciple of Buddha" xml:id="en-a2">
+						Śāriputra
+					</persName>
+					, you ask what is it that is named the Buddha? You
+					ask how one contemplates the Buddha. Not produced,
+					not extinguished, not come, not gone, Not a name,
+					not an attribute— This is called the Buddha. As one
+					contemplates the real attributes of the body, just
+					so one contemplates the Buddha. Only those with
+					wisdom can understand this. This is named
+					contemplating the Buddha.”
+				</p>
+			</div>
+		</body>
+	</text>
 </TEI>

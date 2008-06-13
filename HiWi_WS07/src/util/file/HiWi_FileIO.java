@@ -2,14 +2,22 @@ package src.util.file;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+
+import org.jdom.Document;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
 
 public class HiWi_FileIO {
 	
@@ -33,7 +41,7 @@ public class HiWi_FileIO {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				if(str==null || str.length()<1){
+				if(str==null){
 					break;
 				}
 				else{
@@ -109,6 +117,22 @@ public class HiWi_FileIO {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void writeXMLStringToFile(String file, String str){
+		SAXBuilder saxb = new SAXBuilder();
+		StringReader sr = new StringReader(str);
+		try {
+			Document d = saxb.build(sr);
+			
+			XMLOutputter xmlout = new XMLOutputter();
+			xmlout.setFormat(Format.getPrettyFormat());
+			xmlout.output(d, new FileOutputStream(new File(file)));
+		} catch (JDOMException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
