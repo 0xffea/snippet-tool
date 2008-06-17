@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
@@ -84,7 +85,7 @@ public class HiWi_FileIO {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				if(str==null || str.length()<1){
+				if(str==null){
 					break;
 				}
 				else{
@@ -103,6 +104,24 @@ public class HiWi_FileIO {
 		}
 		
 		return out;
+	}
+	
+	public static String readXMLStringFromFile(String file){
+		try {
+			SAXBuilder builder = new SAXBuilder();
+			Document d = builder.build(new FileInputStream(file));
+			StringWriter sw = new StringWriter();
+			XMLOutputter outputter = new XMLOutputter();
+			outputter.output(d, sw);
+			return sw.toString();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public static void writeStringToFile(String file, String str){

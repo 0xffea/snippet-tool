@@ -24,16 +24,13 @@ import org.xml.sax.InputSource;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
-import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XMLResource;
-import org.xmldb.api.modules.XPathQueryService;
 import org.xmldb.api.modules.XUpdateQueryService;
 
 import src.gui.HiWi_GUI;
 import src.model.HiWi_Object_Sutra;
 import src.model.HiWi_Object_Sutra.HiWi_Object_Sign;
-import src.util.file.HiWi_FileIO;
 import src.util.num.NumUtil;
 
 public class XMLUtil {
@@ -122,13 +119,12 @@ public class XMLUtil {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static String fetchXML(HiWi_GUI root, String hosturi, String user, String pass, String collection, String xml){
+	public static String fetchXML(HiWi_GUI root, String user, String pass, String collection, String xml){
 		//
 		root.addLogEntry("** started fetching XML **", 1, 1);
-		root.addLogEntry("\thosturi="+hosturi, 0, 1);
+		root.addLogEntry("\thosturi="+collection, 0, 1);
 		root.addLogEntry("\tuser="+user, 0, 1);
 		root.addLogEntry("\tpass="+pass, 0, 1);
-		root.addLogEntry("\tcollection="+collection, 0, 1);
 		root.addLogEntry("\txml="+xml, 0, 1);
 		//
 		String resultxml = null;
@@ -139,7 +135,6 @@ public class XMLUtil {
 			DatabaseManager.registerDatabase(database);   
 
 			// get the collection   
-			//Collection col = DatabaseManager.getCollection(hosturi + collection);   
 			Collection col = DatabaseManager.getCollection(collection, user, pass);
 			if(col == null) {
 				//System.out.println("Trying to get NULL Collection:\tDatabaseManager.getCollection("+collection+", "+user+", "+pass+")");
@@ -190,12 +185,12 @@ public class XMLUtil {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void updateXML(HiWi_GUI root, String id, String xupdate, String hosturi, String user, String pass, String out){
+	public static void updateXML(HiWi_GUI root, String id, String xupdate, String user, String pass, String out){
 		//
 		root.addLogEntry("** started updating XML **", 1, 1);
 		root.addLogEntry("\tid="+id, 0, 1);
 		root.addLogEntry("\txupdate="+xupdate, 0, 1);
-		root.addLogEntry("\thosturi="+hosturi, 0, 1);
+		root.addLogEntry("\thosturi="+out, 0, 1);
 		root.addLogEntry("\tuser="+user, 0, 1);
 		root.addLogEntry("\tpass="+pass, 0, 1);
 		//
@@ -207,11 +202,11 @@ public class XMLUtil {
 			DatabaseManager.registerDatabase(database);   
 
 			// get the collection
-			Collection col = DatabaseManager.getCollection(hosturi+out, user, pass);
+			Collection col = DatabaseManager.getCollection(out, user, pass);
 			if(col == null){
 				//System.out.println("Trying to get NULL Collection:\tDatabaseManager.getCollection("+(hosturi+out)+", "+user+", "+pass+")");
 				//System.out.println("Aborting operation updateXML");
-				root.addLogEntry("Error updating XML: trying to get NULL Collection:\tDatabaseManager.getCollection("+(hosturi+out)+", "+user+", "+pass+")", 1, 1);
+				root.addLogEntry("Error updating XML: trying to get NULL Collection:\tDatabaseManager.getCollection("+(out)+", "+user+", "+pass+")", 1, 1);
 			}
 			else{
 				//System.out.println("updating collection:\t"+col.getName());
@@ -254,8 +249,8 @@ public class XMLUtil {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void clearAppearances(HiWi_GUI root, String hosturi, String user, String pass, String out, String regexp){
-		if(regexp.length() < 2) return;
+	public static void clearAppearances(HiWi_GUI root, String user, String pass, String out, String regexp){
+		if(regexp.length() < 2) return; // avoid accidentaly deleting all appearances
 		//System.out.println("starting clearAppearances()");
 		try {
 			String driver = "org.exist.xmldb.DatabaseImpl";
@@ -272,7 +267,7 @@ public class XMLUtil {
 
 			// get the collection   
 			//Collection col = DatabaseManager.getCollection(hosturi + collection);   
-			Collection col = DatabaseManager.getCollection(hosturi+out, user, pass);
+			Collection col = DatabaseManager.getCollection(out, user, pass);
 			String[] xml_out = col.listResources();
 			XUpdateQueryService service = (XUpdateQueryService) col.getService("XUpdateQueryService", "1.0");
 			//long modified = 0;

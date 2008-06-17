@@ -109,7 +109,7 @@ public class HiWi_Object_Sutra {
 					if(i!=0) current_row++; // some texts start with leading linebreak, which needs to be eliminated explicitly
 					current_column = 1;	// line break -> start numbering of columns from beginning 
 				}
-				// normal sign
+				// usual sign
 				if(l.get(i).getName().equals("span")){
 					ArrayList<ArrayList<HiWi_Object_Sign>> signVariants = new ArrayList<ArrayList<HiWi_Object_Sign>>();
 					ArrayList<HiWi_Object_Sign> signs = new ArrayList<HiWi_Object_Sign>();
@@ -117,6 +117,34 @@ public class HiWi_Object_Sutra {
 
 					if(!l.get(i).getAttributeValue("class").equals("supplied")){
 						String ch = l.get(i).getText();
+						boolean preferred = true;
+						float cert = 1.0f;
+						int var = 0;
+						sign = new HiWi_Object_Sign(this, ch, cert, preferred, var, current_row, current_column, current_number, new Point(0,0), new Dimension(0,0));
+
+						signs.add(sign);
+						signVariants.add(signs);
+						sutra_text.add(signVariants);
+						//
+						current_column++;
+						current_number++;
+
+						//System.out.println(sign.getInfo()+"sutra text size = "+sutra_text.size());
+						root.addLogEntry(sign.getInfo()+"sutra text size = "+sutra_text.size(), 1, 1);
+					}
+					else{ // do not include supplied characters in db
+						current_column++;
+					}
+				}
+				
+				// normalized sign
+				if(l.get(i).getName().equals("norm")){
+					ArrayList<ArrayList<HiWi_Object_Sign>> signVariants = new ArrayList<ArrayList<HiWi_Object_Sign>>();
+					ArrayList<HiWi_Object_Sign> signs = new ArrayList<HiWi_Object_Sign>();
+					HiWi_Object_Sign sign = new HiWi_Object_Sign();
+
+					if(!((Element) l.get(i).getChildren().get(0)).getAttributeValue("class").equals("supplied")){
+						String ch = ((Element) l.get(i).getChildren().get(0)).getText();
 						boolean preferred = true;
 						float cert = 1.0f;
 						int var = 0;
@@ -331,71 +359,9 @@ public class HiWi_Object_Sutra {
 				//System.out.println(sign.getInfo());
 			}
 			
-			//System.out.println("Found signs in db: "+tarrayOfSigns.size());
 			root.addLogEntry("found signs in db: "+tarrayOfSigns.size(), 0, 1);
-			// sort tarrayOfSigns after their number
-			for(int i=0; i< tarrayOfSigns.size(); i++){
-				for(int j=i; j<tarrayOfSigns.size(); j++){
-					if(tarrayOfSigns.get(i).number > tarrayOfSigns.get(j).number){	// handle different signs
-						HiWi_Object_Sign tempsign = tarrayOfSigns.get(i);
-						tarrayOfSigns.set(i, tarrayOfSigns.get(j));
-						tarrayOfSigns.set(j, tempsign);
-					}
-					else{
-						if(tarrayOfSigns.get(i).number == tarrayOfSigns.get(j).number
-								&& tarrayOfSigns.get(i).variant > tarrayOfSigns.get(j).variant){ // handle variants of the same sign
-							HiWi_Object_Sign tempsign = tarrayOfSigns.get(i);
-							tarrayOfSigns.set(i, tarrayOfSigns.get(j));
-							tarrayOfSigns.set(j, tempsign);
-						}
-					}
-				}
-			}
-			for(int i=0; i<tarrayOfSigns.size(); i++){
-				root.addLogEntry(tarrayOfSigns.get(i).getInfo(), 1, 1);
-			}
 			
-			root.addLogEntry("Found signs in db after sort: "+tarrayOfSigns.size(), 0, 1);
-			
-			// add sign-variants to sutra's signs
-			int lnumber = 0;	// rememebering that numbers start from 1
-			int lvariant = 0;
-			
-			ArrayList<ArrayList<HiWi_Object_Sign>> signVariants = new ArrayList<ArrayList<HiWi_Object_Sign>>();
-			ArrayList<HiWi_Object_Sign> signs = new ArrayList<HiWi_Object_Sign>();
-			HiWi_Object_Sign csign = new HiWi_Object_Sign();
-			
-			for(int i=0; i<tarrayOfSigns.size(); i++){
-				csign = tarrayOfSigns.get(i);
-				int cnumber = csign.number;
-				int cvariant = csign.variant;
-				if(cnumber == lnumber){
-					if(cvariant == lvariant){
-						signVariants = sutra_text.get(cnumber);
-						signs = signVariants.get(cvariant);
-						signs.add(csign);
-					}
-					else{
-						signs = new ArrayList<HiWi_Object_Sign>();
-						
-						signs.add(csign);
-						signVariants.add(signs);
-					}
-				}
-				else{
-					lvariant = 0;
-					
-					signVariants = new ArrayList<ArrayList<HiWi_Object_Sign>>();
-					signs = new ArrayList<HiWi_Object_Sign>();
-					
-					signs.add(csign);
-					signVariants.add(signs);
-					sutra_text.add((ArrayList<ArrayList<HiWi_Object_Sign>>) signVariants.clone());
-				}
-				
-				lnumber = cnumber;				
-				lvariant = cvariant;
-			}
+			setTextFromArrayList(tarrayOfSigns);
 			
 			root.addLogEntry("Sutra text size: "+sutra_text.size(), 1, 1);
 			
@@ -408,6 +374,75 @@ public class HiWi_Object_Sutra {
 		}
 
 	}
+	
+	
+	public void setTextFromArrayList(ArrayList<HiWi_Object_Sign> list){
+		// sort tarrayOfSigns after their number
+		for(int i=0; i< list.size(); i++){
+			for(int j=i; j<list.size(); j++){
+				if(list.get(i).number > list.get(j).number){	// handle different signs
+					HiWi_Object_Sign tempsign = list.get(i);
+					list.set(i, list.get(j));
+					list.set(j, tempsign);
+				}
+				else{
+					if(list.get(i).number == list.get(j).number
+							&& list.get(i).variant > list.get(j).variant){ // handle variants of the same sign
+						HiWi_Object_Sign tempsign = list.get(i);
+						list.set(i, list.get(j));
+						list.set(j, tempsign);
+					}
+				}
+			}
+		}
+		for(int i=0; i<list.size(); i++){
+			root.addLogEntry(list.get(i).getInfo(), 0, 1);
+		}
+		
+		root.addLogEntry("Found signs in db after sort: "+list.size(), 0, 1);
+		
+		// add sign-variants to sutra's signs
+		int lnumber = 0;	// rememebering that numbers start from 1
+		int lvariant = 0;
+		
+		ArrayList<ArrayList<HiWi_Object_Sign>> signVariants = new ArrayList<ArrayList<HiWi_Object_Sign>>();
+		ArrayList<HiWi_Object_Sign> signs = new ArrayList<HiWi_Object_Sign>();
+		HiWi_Object_Sign csign = new HiWi_Object_Sign();
+		
+		for(int i=0; i<list.size(); i++){
+			csign = list.get(i);
+			int cnumber = csign.number;
+			int cvariant = csign.variant;
+			if(cnumber == lnumber){
+				if(cvariant == lvariant){
+					signVariants = sutra_text.get(cnumber);
+					signs = signVariants.get(cvariant);
+					signs.add(csign);
+				}
+				else{
+					signs = new ArrayList<HiWi_Object_Sign>();
+					
+					signs.add(csign);
+					signVariants.add(signs);
+				}
+			}
+			else{
+				lvariant = 0;
+				
+				signVariants = new ArrayList<ArrayList<HiWi_Object_Sign>>();
+				signs = new ArrayList<HiWi_Object_Sign>();
+				
+				signs.add(csign);
+				signVariants.add(signs);
+				sutra_text.add((ArrayList<ArrayList<HiWi_Object_Sign>>) signVariants.clone());
+			}
+			
+			lnumber = cnumber;				
+			lvariant = cvariant;
+		}
+		
+	}
+	
 
 	public void addText(String id, String xml){
 		try {
@@ -648,70 +683,7 @@ public class HiWi_Object_Sutra {
 			
 			root.addLogEntry("found signs in tempfile: "+tarrayOfSigns.size(), 0, 1);
 			
-			// sort tarrayOfSigns after their number
-			for(int i=0; i< tarrayOfSigns.size(); i++){
-				for(int j=i; j<tarrayOfSigns.size(); j++){
-					if(tarrayOfSigns.get(i).number > tarrayOfSigns.get(j).number){	// handle different signs
-						HiWi_Object_Sign tempsign = tarrayOfSigns.get(i);
-						tarrayOfSigns.set(i, tarrayOfSigns.get(j));
-						tarrayOfSigns.set(j, tempsign);
-					}
-					else{
-						if(tarrayOfSigns.get(i).number == tarrayOfSigns.get(j).number
-								&& tarrayOfSigns.get(i).variant > tarrayOfSigns.get(j).variant){ // handle variants of the same sign
-							HiWi_Object_Sign tempsign = tarrayOfSigns.get(i);
-							tarrayOfSigns.set(i, tarrayOfSigns.get(j));
-							tarrayOfSigns.set(j, tempsign);
-						}
-					}
-				}
-			}
-			for(int i=0; i<tarrayOfSigns.size(); i++){
-				root.addLogEntry(tarrayOfSigns.get(i).getInfo(), 1, 1);
-			}
-			
-			
-			root.addLogEntry("Found signs in tempfile after sort: "+tarrayOfSigns.size(), 0, 1);
-			
-			// add sign-variants to sutra's signs
-			int lnumber = 1;	// rememebering that numbers start from 1
-			int lcolumn = 1;
-			int lrow = 1;
-			int lvariant = 0;
-			
-			ArrayList<ArrayList<HiWi_Object_Sign>> signVariants = new ArrayList<ArrayList<HiWi_Object_Sign>>();
-			ArrayList<HiWi_Object_Sign> signs = new ArrayList<HiWi_Object_Sign>();
-			HiWi_Object_Sign csign = new HiWi_Object_Sign();
-			
-			for(int i=0; i<tarrayOfSigns.size(); i++){
-				csign = signs.get(i);
-				int cnumber = csign.number;
-				int ccolumn = csign.column;
-				int crow = csign.row;
-				int cvariant = csign.variant;
-				if(cnumber == lnumber){
-					if(cvariant == lvariant){
-						sutra_text.get(cnumber).get(cvariant).add(csign);
-					}
-					else{
-						signs = new ArrayList<HiWi_Object_Sign>();
-						
-						signs.add(csign);
-						signVariants.add(signs);
-					}
-				}
-				else{
-					sutra_text.add((ArrayList<ArrayList<HiWi_Object_Sign>>) signVariants.clone());
-					
-					lvariant = 0;
-					
-					signVariants = new ArrayList<ArrayList<HiWi_Object_Sign>>();
-					signs = new ArrayList<HiWi_Object_Sign>();
-					
-					signs.add(csign);
-					signVariants.add(signs);
-				}
-			}
+			setTextFromArrayList(tarrayOfSigns);
 
 			root.addLogEntry("Sutra text size: "+sutra_text.size(), 1, 1);
 

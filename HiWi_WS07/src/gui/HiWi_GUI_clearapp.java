@@ -54,12 +54,11 @@ public class HiWi_GUI_clearapp extends JFrame implements ActionListener{
 		        props.load(new FileInputStream(HiWi_GUI.PROPERTIES_FILE));
 		    } catch (IOException ioe) {
 		    }
-		    String dbURI = props.getProperty("db.uri");
+		    String dbOut = props.getProperty("db.dir.out");
 		    String dbUser = props.getProperty("db.user");
 		    String dbPass = props.getProperty("db.passwd");
-		    String dbOut = props.getProperty("db.dir.out");
 		    // clear appearances
-			XMLUtil.clearAppearances(root, dbURI, dbUser, dbPass, dbOut, jtf_regexp.getText());
+			XMLUtil.clearAppearances(root, dbUser, dbPass, dbOut, jtf_regexp.getText());
 		}
 		if(e.getSource().equals(jb_cancel)){
 			dispose();

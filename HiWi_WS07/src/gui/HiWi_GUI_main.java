@@ -176,10 +176,9 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		}
 		if(cmd.equals(submit.getActionCommand())){
 			// get neede properties
-			String dbURI = root.props.getProperty("db.uri");
+			String dbOut = root.props.getProperty("db.dir.out");
 			String dbUser = root.props.getProperty("db.user");
 			String dbPass = root.props.getProperty("db.passwd");
-			String dbOut = root.props.getProperty("db.dir.out");
 			// check whether submit possible, e.g. image and text loaded, text added to image
 			if(s.sutra_text.size()<1){
 				JOptionPane.showMessageDialog(root, "Nothing to submit", "Alert!", JOptionPane.ERROR_MESSAGE);
@@ -193,7 +192,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 						
 						root.addLogEntry("storing coordinates of nr.="+csign.number, 1, 1);
 						
-						XMLUtil.updateXML(root, NumUtil.dec2hex(csign.character.codePointAt(0)), csign.getXUpdate(s.updateOnly), dbURI, dbUser, dbPass, dbOut);
+						XMLUtil.updateXML(root, NumUtil.dec2hex(csign.character.codePointAt(0)), csign.getXUpdate(s.updateOnly), dbUser, dbPass, dbOut);
 					}
 				}
 			}
@@ -269,6 +268,8 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		String dbXSLTDir = root.props.getProperty("db.dir.xslt");
 		String dbXSLTFile = root.props.getProperty("db.file.xslt");
 		
+		String localXSLTFile = root.props.getProperty("local.file.xslt");
+		
 		// 
 		String col = root.explorer.selectedCollection;
 		String res = root.explorer.selectedResource;
@@ -286,10 +287,11 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		String xslt=new String();
 		String out=new String();
 		// 
-		xml = XMLUtil.fetchXML(root, dbURI, dbUser, dbPass, col, res);
+		xml = XMLUtil.fetchXML(root, dbUser, dbPass, col, res);
 		if(xml == null || xml == "") JOptionPane.showMessageDialog(root, "XML not fetched properly", "Alert!", JOptionPane.ERROR_MESSAGE);
 		// 
-		xslt = XMLUtil.fetchXML(root, dbURI, dbUser, dbPass, dbURI+dbXSLTDir, dbXSLTFile);
+		//xslt = XMLUtil.fetchXML(root, dbURI, dbUser, dbPass, dbURI+dbXSLTDir, dbXSLTFile);
+		xslt = HiWi_FileIO.readXMLStringFromFile(localXSLTFile);
 		if(xslt == null || xslt == "") JOptionPane.showMessageDialog(root, "XSLT not fetched properly", "Alert!", JOptionPane.ERROR_MESSAGE);
 		// 
 		out = XMLUtil.transformXML(xml, xslt);
@@ -329,7 +331,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		root.main.setBorder(new TitledBorder("main"+" - "+res));
 		
 		//
-		s.sutra_image = ImageUtil.fetchImage(root, dbURI, col, res);
+		s.sutra_image = ImageUtil.fetchImage(root, col, res);
 		s.sutra_path_rubbing = col + res;
 		s.sutra_path_rubbing = s.sutra_path_rubbing.substring(dbURI.length());
 		
@@ -361,7 +363,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		root.main.setBorder(new TitledBorder("main"+" - "+res));
 		
 		//
-		s.sutra_image = ImageUtil.fetchImage(root, dbURI, col, res);
+		s.sutra_image = ImageUtil.fetchImage(root, col, res);
 		s.sutra_path_rubbing = col + res;
 		s.sutra_path_rubbing = s.sutra_path_rubbing.substring(dbURI.length());
 		

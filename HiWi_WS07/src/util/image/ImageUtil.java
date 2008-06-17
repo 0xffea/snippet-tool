@@ -19,11 +19,10 @@ import com.sun.image.codec.jpeg.ImageFormatException;
 public class ImageUtil {
 	
 	@SuppressWarnings("unchecked")
-	public static BufferedImage fetchImage(HiWi_GUI root, String hosturi, String collection, String img){
+	public static BufferedImage fetchImage(HiWi_GUI root, String collection, String img){
 		//
 		root.addLogEntry("* started fetching image *", 1, 1);
-		root.addLogEntry("\thosturi="+hosturi, 0, 1);
-		root.addLogEntry("\tcollection="+collection, 0, 1);
+		root.addLogEntry("\thosturi="+collection, 0, 1);
 		root.addLogEntry("\timg="+img, 0, 1);
 		//
 		BufferedImage bi = null;
@@ -33,8 +32,7 @@ public class ImageUtil {
 			Database database = (Database) cl.newInstance();   
 			DatabaseManager.registerDatabase(database);   
 
-			// get the collection   
-			//Collection col = DatabaseManager.getCollection(hosturi + collection);   
+			// get the collection 
 			Collection col = DatabaseManager.getCollection(collection);
 			if(col == null){
 				//System.out.println("NULL COLLECTION, aborting operation fetchImage");
