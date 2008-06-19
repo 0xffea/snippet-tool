@@ -10,6 +10,7 @@ import java.awt.FontFormatException;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,6 +38,8 @@ import org.xmldb.api.base.Resource;
 import org.xmldb.api.base.ResourceIterator;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
+import org.xmldb.api.modules.BinaryResource;
+import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XPathQueryService;
 
@@ -44,6 +47,7 @@ import src.gui.HiWi_GUI;
 import src.gui.HiWi_GUI_options;
 import src.util.num.NumUtil;
 import src.util.prefs.PrefUtil;
+import src.util.xml.XMLUtil;
 
 public class HiWi_Object_Sutra {
 	//
@@ -90,8 +94,6 @@ public class HiWi_Object_Sutra {
 	public void setTextFromXML(String xml){
 		// clear text
 		sutra_text.clear();
-		// get information needed for generating default markup
-		//int dim_x = sutra_image.getWidth();
 		// prepare index variables
 		int current_number = 1;
 		int current_row = 1;
@@ -109,114 +111,9 @@ public class HiWi_Object_Sutra {
 					if(i!=0) current_row++; // some texts start with leading linebreak, which needs to be eliminated explicitly
 					current_column = 1;	// line break -> start numbering of columns from beginning 
 				}
-				// usual sign
-				if(l.get(i).getName().equals("span")){
-					ArrayList<ArrayList<HiWi_Object_Sign>> signVariants = new ArrayList<ArrayList<HiWi_Object_Sign>>();
-					ArrayList<HiWi_Object_Sign> signs = new ArrayList<HiWi_Object_Sign>();
-					HiWi_Object_Sign sign = new HiWi_Object_Sign();
-
-					if(!l.get(i).getAttributeValue("class").equals("supplied")){
-						String ch = l.get(i).getText();
-						boolean preferred = true;
-						float cert = 1.0f;
-						int var = 0;
-						sign = new HiWi_Object_Sign(this, ch, cert, preferred, var, current_row, current_column, current_number, new Point(0,0), new Dimension(0,0));
-
-						signs.add(sign);
-						signVariants.add(signs);
-						sutra_text.add(signVariants);
-						//
-						current_column++;
-						current_number++;
-
-						//System.out.println(sign.getInfo()+"sutra text size = "+sutra_text.size());
-						root.addLogEntry(sign.getInfo()+"sutra text size = "+sutra_text.size(), 1, 1);
-					}
-					else{ // do not include supplied characters in db
-						current_column++;
-					}
-				}
 				
-				// normalized sign
-				if(l.get(i).getName().equals("norm")){
-					ArrayList<ArrayList<HiWi_Object_Sign>> signVariants = new ArrayList<ArrayList<HiWi_Object_Sign>>();
-					ArrayList<HiWi_Object_Sign> signs = new ArrayList<HiWi_Object_Sign>();
-					HiWi_Object_Sign sign = new HiWi_Object_Sign();
-
-					if(!((Element) l.get(i).getChildren().get(0)).getAttributeValue("class").equals("supplied")){
-						String ch = ((Element) l.get(i).getChildren().get(0)).getText();
-						boolean preferred = true;
-						float cert = 1.0f;
-						int var = 0;
-						sign = new HiWi_Object_Sign(this, ch, cert, preferred, var, current_row, current_column, current_number, new Point(0,0), new Dimension(0,0));
-
-						signs.add(sign);
-						signVariants.add(signs);
-						sutra_text.add(signVariants);
-						//
-						current_column++;
-						current_number++;
-
-						//System.out.println(sign.getInfo()+"sutra text size = "+sutra_text.size());
-						root.addLogEntry(sign.getInfo()+"sutra text size = "+sutra_text.size(), 1, 1);
-					}
-					else{ // do not include supplied characters in db
-						current_column++;
-					}
-				}
-				
-				// handle lem/rdg tags from app
-				if(l.get(i).getName().equals("app")){
-					// length of app'ed char sequence
-					int length = 0;
-					
-					// get all lem and rdg tags					
-					List<org.jdom.Element> lvariants = l.get(i).getChildren();
-					for(int q=0; q<lvariants.size(); q++){
-						if(lvariants.get(q).getName().equals("lem")){	// assuming lem is preferred over rdg
-							length = lvariants.get(q).getChildren().size();
-						}
-					}
-
-					for(int q=0; q<length; q++){
-						ArrayList<ArrayList<HiWi_Object_Sign>> signVariants = new ArrayList<ArrayList<HiWi_Object_Sign>>();
-						ArrayList<HiWi_Object_Sign> signs = new ArrayList<HiWi_Object_Sign>();
-						HiWi_Object_Sign sign = new HiWi_Object_Sign();
-						
-						for(int p=0; p<lvariants.size(); p++){
-							signs.clear();
-							
-							boolean preferred = false;
-							if (p == 0) preferred = true;
-							// 
-							float cert = 1.0f;
-							int variantnumber = p;
-							Element tempspan = (Element) lvariants.get(p).getChildren().get(q);
-							if(tempspan!=null){
-								if(!tempspan.getAttributeValue("class").equals("supplied")){
-									String ch = tempspan.getText();
-									sign = new HiWi_Object_Sign(this, ch, cert, preferred, variantnumber, current_row, current_column, current_number, new Point(0,0), new Dimension(0,0));
-
-									signs.add(sign);
-									signVariants.add((ArrayList<HiWi_Object_Sign>) signs.clone());
-
-									//System.out.println(tempsign.getInfo()+"sutra text size = "+sutra_text.size());
-									root.addLogEntry(sign.getInfo()+"sutra text size = "+sutra_text.size(), 1, 1);
-								}
-							}
-						}
-						// add variants to sutra text
-						sutra_text.add(signVariants);
-						
-						//
-						current_column++;
-						current_number++;
-					}
-				}
-				
-				//TODO: set length of the reading, using the preferred standard reading,
-				//TODO: map rest of signs to last sign in standard reading
-				// there are several readings
+				// choice, which may possibly mean no choice, but jaust a sign formatted to choice
+				// to achieve compatibility
 				if(l.get(i).getName().equals("choice")){
 					//List<org.jdom.Element> lvariants = l.get(i).getChildren("variant");
 					List<org.jdom.Element> lvariants = l.get(i).getChildren();
@@ -234,6 +131,14 @@ public class HiWi_Object_Sutra {
 						}
 					}
 					
+					// preferred reading should be the first variant
+					if(basicvariant!=0){
+						Element tvariant = lvariants.get(0);
+						lvariants.set(0, lvariants.remove(basicvariant));
+						lvariants.add(tvariant);
+					}
+					
+					
 					// search for variant with maximum stringlength
 					int maxlength = 0;
 					for(int v=0; v<lvariants.size(); v++){
@@ -242,7 +147,7 @@ public class HiWi_Object_Sutra {
 						}
 					}
 					
-					//
+					// proceed
 					for(int j=0; j<maxlength; j++){
 						ArrayList<ArrayList<HiWi_Object_Sign>> signVariants = new ArrayList<ArrayList<HiWi_Object_Sign>>();
 						ArrayList<HiWi_Object_Sign> signs = new ArrayList<HiWi_Object_Sign>();
@@ -259,10 +164,14 @@ public class HiWi_Object_Sutra {
 							int variantnumber = v;
 							
 							if(j < lvariants.get(variantnumber).getChildren().size()){ // if there is a sign with indexed j in this variant
+								
 								Element cspan = (Element) lvariants.get(v).getChildren().get(j);
+								
 								if(!cspan.getAttributeValue("class").equals("supplied")){
 									String ch = cspan.getText();
-									csign = new HiWi_Object_Sign(this, ch, cert, preferred, variantnumber, current_row, current_column, current_number, new Point(0,0), new Dimension(0,0));
+									String chOriginal = (cspan.getAttribute("original") != null)? cspan.getAttributeValue("original") : ch;
+									
+									csign = new HiWi_Object_Sign(this, ch, chOriginal, cert, preferred, variantnumber, current_row, current_column, current_number, new Point(0,0), new Dimension(0,0));
 
 									if(j<basiclength){
 										signs.add(csign);
@@ -274,7 +183,7 @@ public class HiWi_Object_Sutra {
 									}
 
 									//System.out.println(tempsign.getInfo()+"sutra text size = "+sutra_text.size());
-									root.addLogEntry(csign.getInfo()+"sutra text size = "+sutra_text.size(), 1, 1);
+									root.addLogEntry(csign.getInfo(), 1, 1);
 								}
 							}
 						}
@@ -314,13 +223,15 @@ public class HiWi_Object_Sutra {
 		try{
 			// get needed properties
 			String dbURI = root.props.getProperty("db.uri");
-			//load image
+			// build JDOM document from response
 			XMLResource xmlr = (XMLResource) query_result.getResource(0);
 			SAXBuilder builder = new SAXBuilder();
 			Document dr = builder.build(new StringReader((String) xmlr.getContent()));
+			// get/set path to rubbing
 			Element xmlelem = (Element) dr.getRootElement();	// it's appearance tag
 			String rub = xmlelem.getChildText("rubbing");
 			this.sutra_path_rubbing = rub;
+			//load image
 			String path = dbURI+this.sutra_path_rubbing;
 			String collection = path.substring(0, path.lastIndexOf("/"));
 			String resource = path.substring(path.lastIndexOf("/"));
@@ -336,35 +247,13 @@ public class HiWi_Object_Sutra {
 				Resource res = iterator.nextResource();
 				XMLResource xmlres = (XMLResource) res;
 				Document d = builder.build(new StringReader((String) xmlres.getContent()));
-				Element xmle = d.getRootElement();	// it's appearance tag
-				String ch = xmle.getAttributeValue("character");
-				String signid = xmle.getAttributeValue("id");
-				boolean preferred = Boolean.parseBoolean(xmle.getAttributeValue("preferred_reading"));
-				float cert = Float.parseFloat(xmle.getAttributeValue("cert"));
-				int var = Integer.parseInt(xmle.getAttributeValue("variant"));
-				String rc = signid.substring((id+"_").length());
-				int r = Integer.parseInt(rc.substring(0, rc.indexOf("_")));
-				int c = Integer.parseInt(rc.substring(rc.indexOf("_")+1));
-				int n = Integer.parseInt(xmle.getAttributeValue("nr").substring((id+"_").length()));
-				xmle = d.getRootElement().getChild("coordinates");
-				int x = Integer.parseInt(xmle.getAttributeValue("x"));
-				int y = Integer.parseInt(xmle.getAttributeValue("y"));
-				int width = Integer.parseInt(xmle.getAttributeValue("width"));
-				int height = Integer.parseInt(xmle.getAttributeValue("height"));
-
-				HiWi_Object_Sign sign = new HiWi_Object_Sign(this, ch, cert, preferred, var, r, c, n, new Point(x,y), new Dimension(width, height));				
-				sign.id = signid; // just to be sure, since it's the only value not mentioned in constructor explicit
-				
-				tarrayOfSigns.add(sign);
-				//System.out.println(sign.getInfo());
+				Element appearance = d.getRootElement();	// it's appearance tag
+				tarrayOfSigns.add(HiWi_Object_Sign.fromAppearance(this, appearance));
 			}
 			
-			root.addLogEntry("found signs in db: "+tarrayOfSigns.size(), 0, 1);
+			root.addLogEntry("Found appearances in db: "+tarrayOfSigns.size(), 0, 1);
 			
 			setTextFromArrayList(tarrayOfSigns);
-			
-			root.addLogEntry("Sutra text size: "+sutra_text.size(), 1, 1);
-			
 		} catch(XMLDBException e){
 			e.printStackTrace();
 		} catch (JDOMException e) {
@@ -375,6 +264,60 @@ public class HiWi_Object_Sutra {
 
 	}
 	
+	public void setCoordinatesFromDB(ResourceSet query_result){
+		try{
+			SAXBuilder builder = new SAXBuilder();
+			// get appearances
+			ArrayList<HiWi_Object_Sign> tarrayOfSigns = new ArrayList<HiWi_Object_Sign>();
+			ResourceIterator iterator = query_result.getIterator();
+			while(iterator.hasMoreResources()) {  
+				Resource res = iterator.nextResource();
+				XMLResource xmlres = (XMLResource) res;
+				Document d = builder.build(new StringReader((String) xmlres.getContent()));
+				Element appearance = d.getRootElement();	// it's appearance tag
+				tarrayOfSigns.add(HiWi_Object_Sign.fromAppearance(this, appearance));
+			}
+			// use each appearance's number to update coordinates
+			for(int i=0; i<tarrayOfSigns.size(); i++){
+				HiWi_Object_Sign csign = tarrayOfSigns.get(i);
+				Rectangle rectangle = csign.s;
+				int indexTarget = csign.number - 1;
+				int indexSource = indexTarget;
+				this.updateSnippet(indexTarget, indexSource, rectangle);
+			}
+		} catch(XMLDBException e){
+			e.printStackTrace();
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	public void setImageFromDB(String id, ResourceSet query_result){
+		try{
+			// get needed properties
+			String dbURI = root.props.getProperty("db.uri");
+			// build JDOM document from response
+			XMLResource xmlr = (XMLResource) query_result.getResource(0);
+			SAXBuilder builder = new SAXBuilder();
+			Document dr = builder.build(new StringReader((String) xmlr.getContent()));
+			// get/set path to rubbing
+			Element xmlelem = (Element) dr.getRootElement();	// it's appearance tag
+			String rub = xmlelem.getChildText("rubbing");
+			this.sutra_path_rubbing = rub;
+			//load image
+			String path = dbURI+this.sutra_path_rubbing;
+			String collection = path.substring(0, path.lastIndexOf("/"));
+			String resource = path.substring(path.lastIndexOf("/"));
+			root.main.loadImage(collection, resource);
+		} catch(XMLDBException e){
+			e.printStackTrace();
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public void setTextFromArrayList(ArrayList<HiWi_Object_Sign> list){
 		// sort tarrayOfSigns after their number
@@ -444,45 +387,43 @@ public class HiWi_Object_Sutra {
 	}
 	
 
+	@SuppressWarnings("unchecked")
 	public void addText(String id, String xml){
 		try {
 			// get needed properties
-			String dbURI = root.props.getProperty("db.uri");
+			//String dbURI = root.props.getProperty("db.uri");
 			String dbOut = root.props.getProperty("db.dir.out");
-			//
-			/*String query = "for $doc in collection('"+dbOut+"?select=*.xml')" +
-							"let $d := $doc " +
-							"for $appearance in $d/unihandb/char/appearance "+
-							"where $appearance/source='"+id+"' " +
-							" return $appearance";*/
-			String query = "//unihandb/char/appearance[contains(@id, '"+id+"')]";
+			// 
+			String query = "//appearance[contains(@id, '"+id+"')]";
 			
 			root.addLogEntry("query="+query, 0, 1);
 			
 			String driver = "org.exist.xmldb.DatabaseImpl";  
 			Class cl = Class.forName(driver);	           
 			Database database = (Database)cl.newInstance();  
-			DatabaseManager.registerDatabase(database);  
+			DatabaseManager.registerDatabase(database);
 
-			Collection col = DatabaseManager.getCollection(dbURI);  
+			Collection col = DatabaseManager.getCollection(dbOut);  
 			XPathQueryService service = (XPathQueryService) col.getService("XPathQueryService", "1.0");  
 			service.setProperty("indent", "yes");
 
 			ResourceSet result = service.query(query);
 
 			if(result.getSize()<1){
-				//System.out.println("updateOnly=false");
 				updateOnly = false;
 				setTextFromXML(xml);
 			}
 			else{
-				//System.out.println("updateOnly=true");
-				updateOnly = true;
-				setTextFromDB(id, result);
+				//updateOnly = true;
+				updateOnly = false; // experimantal: try to load data from .xml, coordinates from db, delete old appearances on submit
+				//setTextFromDB(id, result);
+				// experimental
+				setTextFromXML(xml);
+				setCoordinatesFromDB(result);
+				setImageFromDB(id, result);
 			}
-
-			// repaint
-			//root.repaint();
+			
+			root.addLogEntry("Inscript size (preferred reading) = "+this.sutra_text.size(), 1, 1);
 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -512,6 +453,13 @@ public class HiWi_Object_Sutra {
 		for(int j=0; j<this.sutra_text.get(index).size(); j++){
 			for(int k=0; k<this.sutra_text.get(index).get(j).size(); k++){
 				this.sutra_text.get(index).get(j).get(k).moveSnippet( dx, dy);
+			}
+		}
+	}
+	public void updateSnippet(int indexTarget, int indexSource, Rectangle rectangle){
+		for(int j=0; j<this.sutra_text.get(indexTarget).size(); j++){
+			for(int k=0; k<this.sutra_text.get(indexTarget).get(j).size(); k++){
+				this.sutra_text.get(indexTarget).get(j).get(k).updateSnippet(rectangle);
 			}
 		}
 	}
@@ -597,35 +545,7 @@ public class HiWi_Object_Sutra {
 			for(int j=0; j<sutra_text.get(i).size(); j++){
 				for(int k=0; k<sutra_text.get(i).get(j).size(); k++){
 					HiWi_Object_Sign csign = sutra_text.get(i).get(j).get(k);
-					Element app = new Element("appearance");
-					app.setAttribute("character", csign.character);
-					app.setAttribute("id", csign.id);
-					app.setAttribute("preferred_reading", String.valueOf(csign.preferred_reading));
-					app.setAttribute("variant", String.valueOf(csign.variant));
-					app.setAttribute("cert", String.valueOf(csign.cert));
-					app.setAttribute("nr", String.valueOf(sutra_id+"_"+csign.number));
-
-					Element source = new Element("source");
-					source.setText(sutra_id);
-
-					Element rubbing = new Element("rubbing");
-					rubbing.setText(sutra_path_rubbing);
-
-					Element graphic = new Element("graphic");
-					graphic.setText(csign.sign_path_snippet);
-
-					Element coordinates = new Element("coordinates");
-					coordinates.setAttribute("x", String.valueOf(csign.s.x));
-					coordinates.setAttribute("y", String.valueOf(csign.s.y));
-					coordinates.setAttribute("height", String.valueOf(csign.s.height));
-					coordinates.setAttribute("width", String.valueOf(csign.s.width));
-
-					app.addContent(source);
-					app.addContent(rubbing);
-					app.addContent(graphic);
-					app.addContent(coordinates);
-
-					docout.getRootElement().addContent(app);
+					docout.getRootElement().addContent(csign.toAppearance());
 				}
 			}
 		}
@@ -659,26 +579,8 @@ public class HiWi_Object_Sutra {
 			// get markup
 			ArrayList<HiWi_Object_Sign> tarrayOfSigns = new ArrayList<HiWi_Object_Sign>();
 			for(int i=0; i<apps.size(); i++) {
-				Element xmle = apps.get(i);	// it's appearance tag
-				String ch = xmle.getAttributeValue("character");
-				String signid = xmle.getAttributeValue("id");
-				boolean preferred = Boolean.parseBoolean(xmle.getAttributeValue("preferred_reading"));
-				float cert = Float.parseFloat(xmle.getAttributeValue("cert"));
-				int var = Integer.parseInt(xmle.getAttributeValue("variant"));
-				String rc = signid.substring((this.sutra_id+"_").length());
-				int r = Integer.parseInt(rc.substring(0, rc.indexOf("_")));
-				int c = Integer.parseInt(rc.substring(rc.indexOf("_")+1));
-				int n = Integer.parseInt(xmle.getAttributeValue("nr").substring((this.sutra_id+"_").length()));
-				Element xmlc = xmle.getChild("coordinates");
-				int x = Integer.parseInt(xmlc.getAttributeValue("x"));
-				int y = Integer.parseInt(xmlc.getAttributeValue("y"));
-				int width = Integer.parseInt(xmlc.getAttributeValue("width"));
-				int height = Integer.parseInt(xmlc.getAttributeValue("height"));
-
-				HiWi_Object_Sign sign = new HiWi_Object_Sign(this, ch, cert, preferred, var, r, c, n, new Point(x,y), new Dimension(width, height));				
-				sign.id = signid; // just to be sure, since it's the only value not mentioned in constructor explicit
-				
-				tarrayOfSigns.add(sign);
+				Element xmle = apps.get(i);	// it's appearance tag								
+				tarrayOfSigns.add(HiWi_Object_Sign.fromAppearance(this, xmle));
 			}
 			
 			root.addLogEntry("found signs in tempfile: "+tarrayOfSigns.size(), 0, 1);
@@ -695,308 +597,73 @@ public class HiWi_Object_Sutra {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
 
-	/**
-	 * 
-	 */
 
-	public class HiWi_Object_Sign {
-		//
-		public HiWi_Object_Sutra sutra;
-		public String sign_path_snippet = new String();
 
-		//
-		public Rectangle s;			//marked area on sutra's .jpg
-
-		//
-		public String character = new String();					// unicode sign
-
-		//
-		public String id;	// id, e.g. HDS_1_2_1
-		public int row;	// numeration starts with 1 because of compatibility with existing scripts and numeration
-		public int column;	// numeration starts with 1 because of compatibility with existing scripts and numeration
-		public int number;	// numeration starts with 1 because of compatibility with existing scripts and numeration
-		public float cert;	// certainty -> max=1.0, min=0.0
-		boolean preferred_reading;	// whether this reading is preferred by heidelberger academy of science
-		int groupnumber;
-		int variant;	// reading variant, numeration starts with 0, no compatibilitiy needed (yet?)
-
-		//
-		public String getInfo(){
-			String out = new String();
-			out += "id="+id+",";
-			out += "ch="+character+"/"+character.codePointAt(0)+",";
-			out += "number="+getNumber()+",";
-			out += "cert="+cert+",";
-			out += "variant="+variant+",";
-			out += "preferred_reading="+preferred_reading+",";
-			out += "row="+getRow()+",";
-			out += "column="+getColumn()+",";
-			out += "point=("+s.x+","+s.y+")"+",";
-			out += "dimension=("+s.width+"x"+s.height+")"+",";
-			out += ";";
-			return out;
-		}
-
-		//
-		public HiWi_Object_Sign(){
-
-		}
-		public HiWi_Object_Sign(HiWi_Object_Sutra s, String ch, int r, int c, int n){
-			// get needed properties
-			String dbSnips = root.props.getProperty("db.dir.snippet");
-			//
-			this.sutra = s;
-			this.character = ch;
-			this.setColumn(c);
-			this.setRow(r);
-			this.setNumber(n);
-			this.id = this.sutra.sutra_id+"_"+this.row+"_"+this.column;
-			this.sign_path_snippet = dbSnips+"/subimage_"+sutra_id+"_"+r+"_"+c+".png";
-		}
-		public HiWi_Object_Sign(HiWi_Object_Sutra s, String ch, float cert, boolean preferred, int var, int r, int c, int n){
-			// get needed properties
-			String dbSnips = root.props.getProperty("db.dir.snippet");
-			//
-			this.sutra = s;
-			this.character = ch;
-			this.cert = cert;
-			this.preferred_reading = preferred;
-			this.variant = var;
-			this.setColumn(c);
-			this.setRow(r);
-			this.setNumber(n);
-			this.id = this.sutra.sutra_id+"_"+this.row+"_"+this.column;
-			this.sign_path_snippet = dbSnips+"/subimage_"+sutra_id+"_"+r+"_"+c+".png";
-		}
-		public HiWi_Object_Sign(HiWi_Object_Sutra s, String ch, int r, int c, int n, Point base, Dimension delta){
-			// get needed properties
-			String dbSnips = root.props.getProperty("db.dir.snippet");
-			//
-			this.sutra = s;
-			this.character = ch;
-			this.setColumn(c);
-			this.setRow(r);
-			this.setNumber(n);
-			this.id = this.sutra.sutra_id+"_"+this.row+"_"+this.column;
-			this.sign_path_snippet = dbSnips+"/subimage_"+sutra_id+"_"+r+"_"+c+".png";
-			// 
-			this.s = new Rectangle(base, delta);
-		}
-		public HiWi_Object_Sign(HiWi_Object_Sutra s, String ch, float cert, boolean preferred, int var, int r, int c, int n, Point base, Dimension delta){
-			// get needed properties
-			String dbSnips = root.props.getProperty("db.dir.snippet");
-			//
-			this.sutra = s;
-			this.character = ch;
-			this.cert = cert;
-			this.preferred_reading = preferred;
-			this.variant = var;
-			this.setColumn(c);
-			this.setRow(r);
-			this.setNumber(n);
-			this.id = this.sutra.sutra_id+"_"+this.row+"_"+this.column;
-			this.sign_path_snippet = dbSnips+"/subimage_"+sutra_id+"_"+r+"_"+c+".png";
-			// 
-			this.s = new Rectangle(base, delta);
-		}
+	public void submit() {
+		// get neede properties
+		String dbOut = root.props.getProperty("db.dir.out");
+		String dbUser = root.props.getProperty("db.user");
+		String dbPass = root.props.getProperty("db.passwd");
 		
-		public void setNumber(int n){
-			this.number = n;
-		}
-		public int getNumber(){
-			return this.number;
-		}
-		public void setColumn(int c){
-			this.column = c;
-		}
-		public int getColumn(){
-			return this.column;
-		}
-		public void setRow(int r){
-			this.row = r;
-		}
-		public int getRow(){
-			return this.row;
-		}
-
-		//
-		public void resizeSnippet(String direction, int dx, int dy){
-			if(direction == null) return;
-			if(direction.equals("nw")){s.setBounds(s.x+dx, s.y+dy, s.width-dx, s.height-dy);return;}
-			if(direction.equals("n")){s.setBounds(s.x, s.y+dy, s.width, s.height-dy);return;}
-			if(direction.equals("ne")){s.setBounds(s.x, s.y+dy, s.width+dx, s.height-dy);return;}
-			if(direction.equals("e")){s.setBounds(s.x, s.y, s.width+dx, s.height);return;}
-			if(direction.equals("se")){s.setBounds(s.x, s.y, s.width+dx, s.height+dy);return;}
-			if(direction.equals("s")){s.setBounds(s.x, s.y, s.width, s.height+dy);return;}
-			if(direction.equals("sw")){s.setBounds(s.x+dx, s.y, s.width-dx, s.height+dy);return;}
-			if(direction.equals("w")){s.setBounds(s.x+dx, s.y, s.width-dx, s.height);return;}
-		}
-		public void moveSnippet(int dx, int dy){
-			s.setLocation(s.x+dx, s.y+dy);
-		}
-		public String computeMoveDirection(Cursor c){
-			if(c.getType() == Cursor.NW_RESIZE_CURSOR) return new String("nw");
-			if(c.getType() == Cursor.N_RESIZE_CURSOR) return new String("n");
-			if(c.getType() == Cursor.NE_RESIZE_CURSOR) return new String("ne");
-			if(c.getType() == Cursor.E_RESIZE_CURSOR) return new String("e");
-			if(c.getType() == Cursor.SE_RESIZE_CURSOR) return new String("se");
-			if(c.getType() == Cursor.S_RESIZE_CURSOR) return new String("s");
-			if(c.getType() == Cursor.SW_RESIZE_CURSOR) return new String("sw");
-			if(c.getType() == Cursor.W_RESIZE_CURSOR) return new String("w");
-			return null;
-		}
-		public String placeOnBorder(Point p){
-			if(!s.contains(p)) return new String("none");
-			//1     2
-			// 11 22
-			// 33 44
-			//3     4			
-			float part = 0.1f;
-			int x0 = s.getLocation().x;
-			int y0 = s.getLocation().y;
-			int x1 = x0 + s.width;
-			int y1 = y0 + s.height;
-			Point p1 = new Point(x0, y0);
-			Point p2 = new Point(x1, y0);
-			Point p3 = new Point(x0, y1);
-			Point p4 = new Point(x1, y1);
-			int x = x1 - x0;
-			int y = y1 - y0;
-			int dx = (int)(x*part);
-			int dy = (int)(y*part);
-			if(new Rectangle(p1.x, p1.y, dx, dy).contains(p)) return new String("nw");
-			if(new Rectangle(p1.x+dx, p1.y, x-dx-dx, dy).contains(p)) return new String("n");
-			if(new Rectangle(p2.x-dx, p2.y, dx, dy).contains(p)) return new String("ne");
-			if(new Rectangle(p2.x-dx, p2.y+dy, dx, y-dy-dy).contains(p)) return new String("e");
-			if(new Rectangle(p4.x-dx, p4.y-dy, dx, dy).contains(p)) return new String("se");
-			if(new Rectangle(p3.x+dx, p3.y-dy, x-dx-dx, dy).contains(p)) return new String("s");
-			if(new Rectangle(p3.x, p3.y-dy, dx, dy).contains(p)) return new String("sw");
-			if(new Rectangle(p1.x, p1.y+dy, dx, y-dy-dy).contains(p)) return new String("w");
-			return null;
-		}
-		public void draw(Graphics2D g){
-			adjustFont();
-			drawBorder(g);
-			drawMarkup(g);
-			if(showId) drawID(g); 
-			if(showNumber) drawN(g);
-			if(showRowColumn) drawRC(g);
-		}
-		public void adjustFont(){
-			if(f != null){
-				Font f2 = f.deriveFont((float)(Math.min(s.width, s.height)));
-				f = f2;
+		// clear old appearances
+		// experimental, to use with setTextFromXML, setCoordinatesFromDB, setImageFromDB
+		XMLUtil.clearAppearances(root, dbUser, dbPass, dbOut, this.sutra_id);
+		
+		//proceed for each sign - submit coordinates
+		for(int i=0; i<this.sutra_text.size(); i++){
+			for(int j=0; j<this.sutra_text.get(i).size(); j++){
+				for(int k=0; k<this.sutra_text.get(i).get(j).size(); k++){
+					HiWi_Object_Sign csign = this.sutra_text.get(i).get(j).get(k);
+					
+					root.addLogEntry("storing coordinates of nr.="+csign.number, 1, 1);
+					
+					XMLUtil.updateXML(root, NumUtil.dec2hex(csign.characterStandard.codePointAt(0)), csign.getXUpdate(this.updateOnly), dbUser, dbPass, dbOut);
+				}
 			}
 		}
-		public void setAlpha(Graphics2D g, float alpha){
-			int rule = AlphaComposite.SRC_OVER;
-			AlphaComposite ac;
-			ac = AlphaComposite.getInstance(rule, alpha);
-			g.setComposite(ac);
-		}
-		public void drawBorder(Graphics2D g){
-			// get needed properties
-			Float alpha = Float.parseFloat(root.props.getProperty("local.alpha.markup.border"));
-			Color color = PrefUtil.String2Color(root.props.getProperty("local.color.markup.border"));
-			// draw
-			setAlpha(g, alpha);
-			g.setColor(color);
-			g.draw(s);
-		}
-		public void drawMarkup(Graphics2D g){
-			if(this.number!=sutra.getActiveSign()) {
-				// get needed properties
-				Float alpha = Float.parseFloat(root.props.getProperty("local.alpha.markup.p"));
-				Color color = PrefUtil.String2Color(root.props.getProperty("local.color.markup.p"));
-				// draw
-				setAlpha(g, alpha);
-				g.setColor(color);
-			}
-			else {
-				// get needed properties
-				Float alpha = Float.parseFloat(root.props.getProperty("local.alpha.markup.a"));
-				Color color = PrefUtil.String2Color(root.props.getProperty("local.color.markup.a"));
-				// draw
-				setAlpha(g, alpha);
-				g.setColor(color);
-			}
-			g.fill(s);
-		}
-		public void drawID(Graphics2D g){
-			// get needed properties
-			Float alpha = Float.parseFloat(root.props.getProperty("local.alpha.text"));
-			Color color = PrefUtil.String2Color(root.props.getProperty("local.color.text"));
-			// draw
-			if(f != null) g.setFont(f);
-			setAlpha(g, alpha);
-			g.setColor(color);
-			g.drawString(character, s.getBounds().x, s.getBounds().y+g.getFontMetrics().getHeight()*25/40);
-		}
-		public void drawN(Graphics2D g){
-			// get needed properties
-			Float alpha = Float.parseFloat(root.props.getProperty("local.alpha.text"));
-			Color color = PrefUtil.String2Color(root.props.getProperty("local.color.text"));
-			// draw
-			if(f != null) g.setFont(f.deriveFont(f.getSize()/3.0f));
-			setAlpha(g, alpha);
-			g.setColor(color);
-			g.drawString(String.valueOf(number), s.getBounds().x, s.getBounds().y+g.getFontMetrics().getAscent());
-		}
-		public void drawRC(Graphics2D g){
-			// get needed properties
-			Float alpha = Float.parseFloat(root.props.getProperty("local.alpha.text"));
-			Color color = PrefUtil.String2Color(root.props.getProperty("local.color.text"));
-			// draw
-			if(f != null) g.setFont(f.deriveFont(f.getSize()/5.0f));
-			setAlpha(g, alpha);
-			g.setColor(color);
-			g.drawString("("+String.valueOf(row)+","+String.valueOf(column)+")", s.getBounds().x, s.getBounds().y+g.getFontMetrics().getAscent());
-		}
-
-		//
-		public String getXUpdate(boolean updateOnly){
-			if(!updateOnly){
-				String xupdate = 
-					"<xu:modifications version=\'1.0\' xmlns:xu=\'http://www.xmldb.org/xupdate\'>" +
-					//"    <xu:append select=\"//unihandb/char[@xmlid=\'U+"+NumUtil.dec2hex(character.codePointAt(0)).toUpperCase()+"\']\">" +
-					"    <xu:append select=\"//char[@xmlid=\'U+"+NumUtil.dec2hex(character.codePointAt(0)).toUpperCase()+"\']\">" +
-					"       <xu:element name=\"appearance\">" +
-					"           <xu:attribute name=\"character\">"+this.character+"</xu:attribute>" +
-					"           <xu:attribute name=\"id\">"+this.id+"</xu:attribute>" +
-					"           <xu:attribute name=\"preferred_reading\">"+this.preferred_reading+"</xu:attribute>" +
-					"           <xu:attribute name=\"variant\">"+this.variant+"</xu:attribute>" +
-					"           <xu:attribute name=\"cert\">"+this.cert+"</xu:attribute>" +
-					"           <xu:attribute name=\"nr\">"+sutra.sutra_id+"_"+this.number+"</xu:attribute>" +
-					"           <source>"+sutra.sutra_id+"</source>" +
-					"           <rubbing>"+sutra.sutra_path_rubbing+"</rubbing>" +
-					"           <graphic>"+sign_path_snippet+"</graphic>" +
-					"           <coordinates x=\""+s.x+"\" y=\""+s.y+"\" width=\""+s.width+"\" height=\""+s.height+"\" />" +
-					"       </xu:element>" +
-					"    </xu:append>" +
-					"</xu:modifications>";
-				/*String xupdate = "update insert " +
-									"<appearance character=\""+this.character+"\" id=\""+this.id+"\" preferred_reading=\""+this.preferred_reading+"\" variant=\""+this.variant+"\" cert=\""+this.cert+"\" nr=\""+sutra.sutra_id+"_"+this.number+"\">" +
-									"<source>"+sutra.sutra_id+"</source>" +
-									"<rubbing>"+sutra.sutra_path_rubbing+"</rubbing>" +
-									"<graphic>"+sign_path_snippet+"</graphic>" +
-									"<coordinates x=\""+s.x+"\" y=\""+s.y+"\" width=\""+s.width+"\" height=\""+s.height+"\" />" +
-									"</appearance> " +
-									" into //unihandb/char[@xmlid=\'U+"+NumUtil.dec2hex(character.codePointAt(0)).toUpperCase()+"\']";*/
-				return xupdate;
-			}
-			else{
-				String xupdate = 
-					"<xu:modifications version=\'1.0\' xmlns:xu=\'http://www.xmldb.org/xupdate\'>" +
-					"	<xu:update select=\"//unihandb/char[@xmlid=\'U+"+NumUtil.dec2hex(character.codePointAt(0)).toUpperCase()+"\']/appearance[@id='"+this.id+"']/coordinates/@x\">" + this.s.x + "</xu:update>" +
-					"	<xu:update select=\"//unihandb/char[@xmlid=\'U+"+NumUtil.dec2hex(character.codePointAt(0)).toUpperCase()+"\']/appearance[@id='"+this.id+"']/coordinates/@y\">" + this.s.y + "</xu:update>" + 
-					"	<xu:update select=\"//unihandb/char[@xmlid=\'U+"+NumUtil.dec2hex(character.codePointAt(0)).toUpperCase()+"\']/appearance[@id='"+this.id+"']/coordinates/@width\">" + this.s.width + "</xu:update>" + 
-					"	<xu:update select=\"//unihandb/char[@xmlid=\'U+"+NumUtil.dec2hex(character.codePointAt(0)).toUpperCase()+"\']/appearance[@id='"+this.id+"']/coordinates/@height\">" + this.s.height + "</xu:update>" + 
-					"</xu:modifications>";
-				return xupdate;
+		//proceed for each sign - submit snippet
+		BufferedImage img_in = this.sutra_image;
+		BufferedImage img_out_t;
+		for(int i=0; i<this.sutra_text.size(); i++){
+			Rectangle2D r = this.sutra_text.get(i).get(0).get(0).s.getBounds2D();
+			//System.out.println(i+": ("+(int)r.getX()+","+(int)r.getY()+","+(int)r.getWidth()+","+(int)r.getHeight()+")");
+			img_out_t = img_in.getSubimage((int)Math.max(0,r.getX()), (int)Math.max(0, r.getY()), (int)Math.min(img_in.getWidth()-r.getX(), r.getWidth()), (int)Math.min(img_in.getHeight()-r.getY(), r.getHeight()));
+			try {
+				//write image to local temporary file
+				File f = new File("tmp\\img\\subimage_"+this.sutra_id+"_"+this.sutra_text.get(i).get(0).get(0).getNumber()+".png");
+				ImageIO.write(img_out_t, "png", f);
+				//copy image resource to selected collection
+				String driver = "org.exist.xmldb.DatabaseImpl";    
+				Class cl = Class.forName(driver);  
+				Database database = (Database) cl.newInstance();   
+				DatabaseManager.registerDatabase(database);
+				Collection current = DatabaseManager.getCollection(root.props.getProperty("db.uri")+root.props.getProperty("db.dir.snippet"), root.props.getProperty("db.user"), root.props.getProperty("db.passwd"));
+				if(current == null){
+					//Collection root = DatabaseManager.getCollection(Preferencethis.DB_URI, Preferencethis.DB_USER, Preferencethis.DB_PASSWD);   
+					Collection rootCollection = DatabaseManager.getCollection(root.props.getProperty("db.uri"), root.props.getProperty("db.user"), root.props.getProperty("db.passwd"));
+					CollectionManagementService mgtService = (CollectionManagementService) rootCollection.getService("CollectionManagementService", "1.0");   
+					//current = mgtService.createCollection(Preferencethis.DB_COLLECTION_SNIPPET);  
+					current = mgtService.createCollection(root.props.getProperty("db.dir.snippet"));
+				}
+	            BinaryResource resource = (BinaryResource) current.createResource(this.sutra_text.get(i).get(0).get(0).sign_path_snippet.substring(this.sutra_text.get(i).get(0).get(0).sign_path_snippet.lastIndexOf("/")), "BinaryResource");
+	            //System.out.println("storing subimage:\t"+f.getName()+"\tas "+this.sutra_text.get(i).get(0).sign_path_snippet.substring(this.sutra_text.get(i).get(0).sign_path_snippet.lastIndexOf("/")));
+	            root.addLogEntry("storing subimage:\t"+f.getName()+"\tas "+this.sutra_text.get(i).get(0).get(0).sign_path_snippet.substring(this.sutra_text.get(i).get(0).get(0).sign_path_snippet.lastIndexOf("/")), 1, 1);
+	            resource.setContent(f);
+	            current.storeResource(resource);
+	            
+	            //delete temporary file
+	            //f.delete();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (XMLDBException e) {
+				e.printStackTrace();
 			}
 		}
 	}

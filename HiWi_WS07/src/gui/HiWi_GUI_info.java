@@ -4,7 +4,7 @@ import java.awt.Graphics;
 
 import javax.swing.JLabel;
 
-import src.model.HiWi_Object_Sutra.HiWi_Object_Sign;
+import src.model.HiWi_Object_Sign;
 
 public class HiWi_GUI_info extends JLabel{
 	

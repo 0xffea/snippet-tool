@@ -20,6 +20,8 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
 import org.xml.sax.InputSource;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
@@ -30,7 +32,7 @@ import org.xmldb.api.modules.XUpdateQueryService;
 
 import src.gui.HiWi_GUI;
 import src.model.HiWi_Object_Sutra;
-import src.model.HiWi_Object_Sutra.HiWi_Object_Sign;
+import src.model.HiWi_Object_Sign;
 import src.util.num.NumUtil;
 
 public class XMLUtil {
@@ -49,7 +51,7 @@ public class XMLUtil {
 			}
 			
 
-			out += csign.character;
+			out += csign.characterStandard;
 		}
 		if(out.startsWith("\n")){
 			out = out.substring(1);
@@ -183,7 +185,7 @@ public class XMLUtil {
 		}
 		return null;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public static void updateXML(HiWi_GUI root, String id, String xupdate, String user, String pass, String out){
 		//
@@ -251,7 +253,7 @@ public class XMLUtil {
 	@SuppressWarnings("unchecked")
 	public static void clearAppearances(HiWi_GUI root, String user, String pass, String out, String regexp){
 		if(regexp.length() < 2) return; // avoid accidentaly deleting all appearances
-		//System.out.println("starting clearAppearances()");
+		// remove appearances
 		try {
 			String driver = "org.exist.xmldb.DatabaseImpl";
 			String xupdate = 	"<xu:modifications version=\'1.0\' xmlns:xu=\'http://www.xmldb.org/xupdate\'> " +
@@ -270,12 +272,14 @@ public class XMLUtil {
 			Collection col = DatabaseManager.getCollection(out, user, pass);
 			String[] xml_out = col.listResources();
 			XUpdateQueryService service = (XUpdateQueryService) col.getService("XUpdateQueryService", "1.0");
-			//long modified = 0;
+			long modifiedTotal = 0;
 			for(int i=0; i<xml_out.length; i++){
 				long modified = service.updateResource(xml_out[i], xupdate);
+				modifiedTotal += modified;
 				//System.out.println("cleaning:\t"+"in "+xml_out[i]+"; modified:\t"+modified+" nodes");
 				root.addLogEntry("cleaning:\t"+"in "+xml_out[i]+"; modified:\t"+modified+" nodes", 1, 1);
 			}
+			root.addLogEntry("cleaned totally:\t"+modifiedTotal+" nodes", 1, 1);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
@@ -285,5 +289,92 @@ public class XMLUtil {
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		} 
+		
+		// TODO: remove snippets
+	}
+
+	public static String standardizeXML(String xml){
+		try {
+			StringWriter sw = new StringWriter();
+			SAXBuilder builder = new SAXBuilder();
+			XMLOutputter outputter = new XMLOutputter();
+			outputter.setFormat(Format.getPrettyFormat());
+			Document docIn = builder.build(new StringReader(xml));
+			Document docOut= new Document(new Element("text"));
+			
+			Element rootIn = docIn.getRootElement();
+			Element rootOut= docOut.getRootElement();
+			
+			rootOut.removeContent();
+			
+			ArrayList<Element> elementsIn = new ArrayList<Element>(rootIn.getChildren());
+			
+			for(int i=0; i<elementsIn.size(); i++){
+				
+				Element element = elementsIn.get(i);
+				
+				if(element.getName().equals("br")){
+					element.getParentElement().removeContent(element);
+					
+					rootOut.addContent(element);
+				}
+				
+				if(element.getName().equals("span")){
+					element.getParentElement().removeContent(element);
+					//outputter.output(element, System.out);
+					//System.out.println();
+					
+					Element choice = new Element("choice");
+					Element variant = new Element("variant");
+					
+					choice.addContent(variant);
+					variant.setAttribute("cert", "1.0");
+					variant.addContent(element);
+					
+					rootOut.addContent(choice);
+				}
+				if(element.getName().equals("norm")){
+					element.getParentElement().removeContent(element);
+					//outputter.output(element, System.out);
+					//System.out.println();
+					
+					//System.out.println("Listing children of:");
+					//for(int j=0; j<element.getChildren().size(); j++){
+					//	outputter.output((Element)element.getChildren().get(j), System.out);
+					//}
+					
+					Element choice = new Element("choice");
+					Element variant = new Element("variant");
+					
+					//Element span = element.getChild("span");
+					Element span = (Element) element.getChildren().get(0);
+					element.removeContent(span);
+										
+					choice.addContent(variant);
+					variant.setAttribute("cert", "1.0");
+					span.setAttribute("class", "normalized");
+					span.setAttribute("original", element.getAttributeValue("orig"));
+					variant.addContent(span);
+					
+					rootOut.addContent(choice);
+				}
+				if(element.getName().equals("choice")){
+					element.getParentElement().removeContent(element);
+					//outputter.output(element, System.out);
+					//System.out.println();
+					
+					rootOut.addContent(element);
+				}
+			}
+			
+			outputter.output(docOut, sw);
+			
+			return sw.toString();
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

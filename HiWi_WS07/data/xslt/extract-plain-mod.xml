@@ -70,18 +70,18 @@
   </xsl:template>
   <!-- AB -->
   <xsl:template match="tei:app">
-    <app>
+    <choice>
       <xsl:for-each select="tei:lem">
-        <lem>
+        <variant cert="1.0">
           <xsl:apply-templates />
-        </lem>
+        </variant>
       </xsl:for-each>
       <xsl:for-each select="tei:rdg">
-        <rdg>
+        <variant cert="0.0">
           <xsl:apply-templates />
-        </rdg>
+        </variant>
       </xsl:for-each>
-    </app>
+    </choice>
   </xsl:template>
   <xsl:template match="tei:g">
     <xsl:variable name="norm">

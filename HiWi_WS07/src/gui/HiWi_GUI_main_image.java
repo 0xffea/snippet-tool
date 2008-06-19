@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import src.model.HiWi_Object_Sutra;
-import src.model.HiWi_Object_Sutra.HiWi_Object_Sign;
+import src.model.HiWi_Object_Sign;
 import src.util.prefs.PrefUtil;
 
 @SuppressWarnings("serial")
