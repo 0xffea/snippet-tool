@@ -236,6 +236,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		s.sutra_path_file = s.sutra_path_file.substring(dbURI.length());
 		s.sutra_id = res;
 		s.sutra_id = s.sutra_id.substring(0, s.sutra_id.length()-".xml".length());	// NOTICE: filename containing sutratext must be of form <SUTRA_ID>.xml
+		
 		//perform the transformation and extraction of data
 		String xml = new String();
 		String xslt = new String();
@@ -244,23 +245,24 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		// 
 		xml = XMLUtil.fetchXML(root, dbUser, dbPass, col, res);
 		if(xml == null || xml == "") JOptionPane.showMessageDialog(root, "XML not fetched properly", "Alert!", JOptionPane.ERROR_MESSAGE);
-		// 
-		//xslt = XMLUtil.fetchXML(root, dbURI, dbUser, dbPass, dbURI+dbXSLTDir, dbXSLTFile);
+		//
 		xslt = HiWi_FileIO.readXMLStringFromFile(localXSLTFile);
 		if(xslt == null || xslt == "") JOptionPane.showMessageDialog(root, "XSLT not fetched properly", "Alert!", JOptionPane.ERROR_MESSAGE);
 		// 
 		out = XMLUtil.transformXML(xml, xslt);
 		if(out == null || out == "") JOptionPane.showMessageDialog(root, "Bad out after transformation xml->xslt->out", "Alert!", JOptionPane.ERROR_MESSAGE);
-		//System.out.println(out);
-		HiWi_FileIO.writeStringToFile("trans.xml", out);
+		//HiWi_FileIO.writeStringToFile("trans.xml", out);
+		
 		// standardize transformed inscript
 		out_st = XMLUtil.standardizeXML(out);
-		HiWi_FileIO.writeStringToFile("trans_standard.xml", out_st);
+		//HiWi_FileIO.writeStringToFile("trans_standard.xml", out_st);
+		
 		// add information to sutra_text
 		s.addText(s.sutra_id, out_st);
+		
 		// show extracted text in text-window
 		root.text.text_in.setText(XMLUtil.getPlainTextFromApp(s));
-		//root.text.text_in.setText(XMLUtil.getPlainTextFromXML(out));
+		
 		// repaint
 		if(s.updateOnly) root.repaint();
 		else root.text.repaint();		
