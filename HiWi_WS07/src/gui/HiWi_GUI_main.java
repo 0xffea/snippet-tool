@@ -59,6 +59,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 	HiWi_GUI_info sign_info= new HiWi_GUI_info();
 	JButton load_image = new JButton("Load Image");
 	JButton load_text  = new JButton("Load Text");
+	JButton clear = new JButton("Clear");
 	JButton submit =  new JButton("Submit");
 	
 	public HiWi_GUI_main(HiWi_GUI jf, HiWi_Object_Sutra sutra){
@@ -94,10 +95,12 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		main_buttons.add(sign_info);
 		//main_buttons.add(load_text);
 		//main_buttons.add(load_image);
+		main_buttons.add(clear);
 		main_buttons.add(submit);
 		
-		load_image.addActionListener(this);
-		load_text.addActionListener(this);
+		//load_image.addActionListener(this);
+		//load_text.addActionListener(this);
+		clear.addActionListener(this);
 		submit.addActionListener(this);
 
 		add(main_navigation, BorderLayout.NORTH);
@@ -174,6 +177,17 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		if(cmd.equals(load_image.getActionCommand())){
 			loadImage();
 		}
+		if(cmd.equals(clear.getActionCommand())){
+			s.clear();
+			
+			//main_image.sub.clear();
+			setBorder(new TitledBorder("main"));
+			
+			//root.text.text_in.setText(new String());
+			root.text.setBorder(new TitledBorder("text"));
+			
+			root.repaint();
+		}
 		if(cmd.equals(submit.getActionCommand())){
 			// check whether submit possible, e.g. image and text loaded, text added to image
 			if(s.sutra_text.size()<1){
@@ -223,9 +237,10 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		s.sutra_id = res;
 		s.sutra_id = s.sutra_id.substring(0, s.sutra_id.length()-".xml".length());	// NOTICE: filename containing sutratext must be of form <SUTRA_ID>.xml
 		//perform the transformation and extraction of data
-		String xml=new String();
-		String xslt=new String();
-		String out=new String();
+		String xml = new String();
+		String xslt = new String();
+		String out = new String();
+		String out_st = new String();
 		// 
 		xml = XMLUtil.fetchXML(root, dbUser, dbPass, col, res);
 		if(xml == null || xml == "") JOptionPane.showMessageDialog(root, "XML not fetched properly", "Alert!", JOptionPane.ERROR_MESSAGE);
@@ -237,11 +252,12 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		out = XMLUtil.transformXML(xml, xslt);
 		if(out == null || out == "") JOptionPane.showMessageDialog(root, "Bad out after transformation xml->xslt->out", "Alert!", JOptionPane.ERROR_MESSAGE);
 		//System.out.println(out);
-		//HiWi_FileIO.writeStringToFile("trans.xml", out);
+		HiWi_FileIO.writeStringToFile("trans.xml", out);
 		// standardize transformed inscript
-		out = XMLUtil.standardizeXML(out);
+		out_st = XMLUtil.standardizeXML(out);
+		HiWi_FileIO.writeStringToFile("trans_standard.xml", out_st);
 		// add information to sutra_text
-		s.addText(s.sutra_id, out);
+		s.addText(s.sutra_id, out_st);
 		// show extracted text in text-window
 		root.text.text_in.setText(XMLUtil.getPlainTextFromApp(s));
 		//root.text.text_in.setText(XMLUtil.getPlainTextFromXML(out));

@@ -311,10 +311,10 @@ public class HiWi_Object_Sign {
 		boolean preferred = Boolean.parseBoolean(appearance.getAttributeValue("preferred_reading"));
 		float cert = Float.parseFloat(appearance.getAttributeValue("cert"));
 		int var = Integer.parseInt(appearance.getAttributeValue("variant"));
+		int n = Integer.parseInt(appearance.getAttributeValue("nr").substring((sutra.sutra_id+"_").length()));
 		String rc = chId.substring((sutra.sutra_id+"_").length());
 		int r = Integer.parseInt(rc.substring(0, rc.indexOf("_")));
 		int c = Integer.parseInt(rc.substring(rc.indexOf("_")+1));
-		int n = Integer.parseInt(appearance.getAttributeValue("nr").substring((sutra.sutra_id+"_").length()));
 		Element xmlc = appearance.getChild("coordinates");
 		int x = Integer.parseInt(xmlc.getAttributeValue("x"));
 		int y = Integer.parseInt(xmlc.getAttributeValue("y"));

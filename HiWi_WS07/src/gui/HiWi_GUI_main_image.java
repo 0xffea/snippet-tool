@@ -30,7 +30,7 @@ public class HiWi_GUI_main_image extends JPanel implements MouseListener, MouseM
 	
 	HiWi_GUI_main_image_sub sub;
 	
-	JScrollPane scroll_image;
+	public JScrollPane scroll_image;
 
 	Point mouse_pressed = new Point();
 	Point mouse_released = new Point();
@@ -69,16 +69,20 @@ public class HiWi_GUI_main_image extends JPanel implements MouseListener, MouseM
 	  * **/
     @SuppressWarnings("serial")
 	public class HiWi_GUI_main_image_sub extends JPanel {
+    	protected void clear(){
+    		super.paintComponent(this.getGraphics());
+    	}
         protected void paintComponent(Graphics gg) {
             super.paintComponent(gg);
             //
             Color rubbingColor = PrefUtil.String2Color(root.props.getProperty("local.color.rubbing"));
             Float rubbingAlpha = Float.parseFloat(root.props.getProperty("local.alpha.rubbing"));
+            
             Graphics2D g = (Graphics2D) gg;
             g.scale(scale, scale);
             g.setBackground(rubbingColor);
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, rubbingAlpha));
-    		g.drawImage(s.sutra_image, 0, 0, this);
+            if(s.sutra_image != null) g.drawImage(s.sutra_image, 0, 0, this);
     		for(int i=0; i<s.sutra_text.size(); i++){
     			ArrayList<ArrayList<HiWi_Object_Sign>> signvariants = s.sutra_text.get(i);
     			ArrayList<HiWi_Object_Sign> signs = signvariants.get(0);

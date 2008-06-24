@@ -112,7 +112,7 @@ public class HiWi_Object_Sutra {
 					current_column = 1;	// line break -> start numbering of columns from beginning 
 				}
 				
-				// choice, which may possibly mean no choice, but jaust a sign formatted to choice
+				// choice, which may possibly mean no choice, but just a sign formatted to choice
 				// to achieve compatibility
 				if(l.get(i).getName().equals("choice")){
 					//List<org.jdom.Element> lvariants = l.get(i).getChildren("variant");
@@ -167,6 +167,9 @@ public class HiWi_Object_Sutra {
 								
 								Element cspan = (Element) lvariants.get(v).getChildren().get(j);
 								
+								if(cspan == null) System.out.println("NULL Element cspan while proceeding.");
+								if(cspan.getAttribute("class") == null) System.out.println("Element doesn't have 'class' attribute;\n"+cspan.toString());
+								
 								if(!cspan.getAttributeValue("class").equals("supplied")){
 									String ch = cspan.getText();
 									String chOriginal = (cspan.getAttribute("original") != null)? cspan.getAttributeValue("original") : ch;
@@ -179,6 +182,8 @@ public class HiWi_Object_Sutra {
 									}
 									else{
 										//System.out.println(current_number+"/"+current_row+"/"+current_column);
+										if(sutra_text.size() == (current_number-1)) System.out.println("current_number problem");
+										if(sutra_text.get(current_number-1).size() == (variantnumber)) System.out.println("variantnumber problem");
 										sutra_text.get(current_number-1).get(variantnumber).add(csign);
 									}
 
@@ -277,6 +282,7 @@ public class HiWi_Object_Sutra {
 				Element appearance = d.getRootElement();	// it's appearance tag
 				tarrayOfSigns.add(HiWi_Object_Sign.fromAppearance(this, appearance));
 			}
+			
 			// use each appearance's number to update coordinates
 			for(int i=0; i<tarrayOfSigns.size(); i++){
 				HiWi_Object_Sign csign = tarrayOfSigns.get(i);
@@ -394,7 +400,7 @@ public class HiWi_Object_Sutra {
 			//String dbURI = root.props.getProperty("db.uri");
 			String dbOut = root.props.getProperty("db.dir.out");
 			// 
-			String query = "//appearance[contains(@id, '"+id+"')]";
+			String query = "//appearance[contains(@id, '"+id+"_')]";
 			
 			root.addLogEntry("query="+query, 0, 1);
 			
@@ -598,7 +604,13 @@ public class HiWi_Object_Sutra {
 		}
 	}
 
-
+	public void clear(){
+		sutra_image = null;
+		sutra_text.clear();
+		sutra_id = new String();
+		sutra_path_file = new String();
+		sutra_path_rubbing = new String();
+	}
 
 	public void submit() {
 		// get neede properties
