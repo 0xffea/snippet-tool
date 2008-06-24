@@ -138,6 +138,11 @@ public class HiWi_Object_Sutra {
 						lvariants.add(tvariant);
 					}
 					
+					// if preferred reading is empty, dismiss the whole choice
+					if(lvariants.get(0).getChildren().size() == 0){
+						continue;
+					}
+					
 					
 					// search for variant with maximum stringlength
 					int maxlength = 0;
@@ -425,8 +430,11 @@ public class HiWi_Object_Sutra {
 				//setTextFromDB(id, result);
 				// experimental
 				setTextFromXML(xml);
+				//System.out.println("set text from xml");
 				setCoordinatesFromDB(result);
+				//System.out.println("set coordinates from db");
 				setImageFromDB(id, result);
+				//System.out.println("set image from db");
 			}
 			
 			root.addLogEntry("Inscript size (preferred reading) = "+this.sutra_text.size(), 1, 1);

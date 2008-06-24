@@ -83,16 +83,13 @@
       </xsl:for-each>
     </choice>
   </xsl:template>
-  <xsl:template match="tei:g//text()">
+  <xsl:template match="tei:g">
     <xsl:variable name="norm">
       <xsl:value-of select="substring(@ref,2,string-length(@ref))" />
     </xsl:variable>
     <xsl:variable name="orig">
       <xsl:value-of select="//tei:glyph[@xml:id=$norm]/tei:mapping[@type='original']" />
     </xsl:variable>
-    <!--norm orig="{$orig}">
-      <xsl:apply-templates />
-    </norm-->
     <xsl:for-each select="string-to-codepoints(translate(.,$interpunktion,''))">
       <span class="normalized" original="{$orig}">
         <xsl:value-of select="codepoints-to-string(.)" />
@@ -132,12 +129,10 @@
       </span>
     </xsl:for-each>
   </xsl:template>
-  <xsl:template match="tei:supplied//text()">
-    <xsl:for-each select="string-to-codepoints(translate(.,$interpunktion,''))">
-      <span class="supplied">
-        <xsl:value-of select="codepoints-to-string(.)" />
-      </span>
-    </xsl:for-each>
+  <xsl:template match="tei:supplied">
+  <supplied>
+	<xsl:apply-templates />
+  </supplied>
   </xsl:template>
   <xsl:template match="element()">
     <xsl:apply-templates />

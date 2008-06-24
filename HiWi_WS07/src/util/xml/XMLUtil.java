@@ -36,7 +36,7 @@ import src.model.HiWi_Object_Sign;
 import src.util.num.NumUtil;
 
 public class XMLUtil {
-	
+
 	public static String getPlainTextFromApp(HiWi_Object_Sutra sutra){
 		String out = new String();
 		int row = 1;
@@ -44,12 +44,12 @@ public class XMLUtil {
 		for(int i=0; i<sutra.sutra_text.size(); i++){
 			HiWi_Object_Sign csign = sutra.sutra_text.get(i).get(0).get(0);
 			crow = csign.row;
-			
+
 			if(crow != row){	// add breakline
 				out += "\n";
 				row = crow;
 			}
-			
+
 
 			out += csign.characterStandard;
 		}
@@ -58,7 +58,7 @@ public class XMLUtil {
 		}
 		return out;
 	}
-	
+
 	public static String getPlainTextFromXML(String xml){
 		String out = new String();
 		SAXBuilder builder = new SAXBuilder();
@@ -115,7 +115,7 @@ public class XMLUtil {
 		if(out.startsWith("\n")){
 			out = out.substring(1);
 		}
-		
+
 		//
 		return out;
 	}
@@ -185,7 +185,7 @@ public class XMLUtil {
 		}
 		return null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static void updateXML(HiWi_GUI root, String id, String xupdate, String user, String pass, String out){
 		//
@@ -249,7 +249,7 @@ public class XMLUtil {
 		//
 		root.addLogEntry("** ended updating XML **", 1, 1);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static void clearAppearances(HiWi_GUI root, String user, String pass, String out, String regexp){
 		if(regexp.length() < 2) return; // avoid accidentaly deleting all appearances
@@ -257,10 +257,10 @@ public class XMLUtil {
 		try {
 			String driver = "org.exist.xmldb.DatabaseImpl";
 			String xupdate = 	"<xu:modifications version=\'1.0\' xmlns:xu=\'http://www.xmldb.org/xupdate\'> " +
-									//"<xu:remove select=\"//*[substring(@id,0,"+(regexp.length()+1)+")='"+regexp+"']\" /> " +
-									"<xu:remove select=\"//appearance[substring(@id,0,"+(regexp.length()+1)+")='"+regexp+"']\" /> " +
-									//"<xu:remove select=\"//appearance[contains(@id, '"+regexp+"']\" /> " +
-								"</xu:modifications>";
+			//"<xu:remove select=\"//*[substring(@id,0,"+(regexp.length()+1)+")='"+regexp+"']\" /> " +
+			"<xu:remove select=\"//appearance[substring(@id,0,"+(regexp.length()+1)+")='"+regexp+"']\" /> " +
+			//"<xu:remove select=\"//appearance[contains(@id, '"+regexp+"']\" /> " +
+			"</xu:modifications>";
 			//System.out.println(xupdate);
 			root.addLogEntry("xupdate="+xupdate, 0, 1);
 			Class cl = Class.forName(driver);  
@@ -289,7 +289,7 @@ public class XMLUtil {
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		} 
-		
+
 		// TODO: remove snippets
 	}
 
@@ -301,74 +301,178 @@ public class XMLUtil {
 			outputter.setFormat(Format.getPrettyFormat());
 			Document docIn = builder.build(new StringReader(xml));
 			Document docOut= new Document(new Element("text"));
-			
+
 			Element rootIn = docIn.getRootElement();
 			Element rootOut= docOut.getRootElement();
-			
+
 			rootOut.removeContent();
-			
+
 			ArrayList<Element> elementsIn = new ArrayList<Element>(rootIn.getChildren());
 			
+			/*
+			 * Possible children:
+			 * 
+			 * <br/>
+			 * 
+			 * <span/>
+			 * 
+			 * <norm/>
+			 * 
+			 * <choice>
+			 * 	<variant>
+			 * 		<span/>
+			 * 		<span/>
+			 * 	</variant>
+			 * 	<variant/>
+			 * </choice>
+			 * 
+			 * <supplied>
+			 * 	<choice>
+			 * 		<variant>
+			 * 			<span/>
+			 * 			<span/>
+			 * 		</variant>
+			 * 		<variant/>
+			 * 	</choice>
+			 * </supplied>
+			 * 
+			 * */
+
 			for(int i=0; i<elementsIn.size(); i++){
-				
+
 				Element element = elementsIn.get(i);
 				
+				//System.out.println("standardizing element:\t"+element.getName());
+
+				// newline
 				if(element.getName().equals("br")){
 					element.getParentElement().removeContent(element);
-					
+
 					rootOut.addContent(element);
 				}
-				
-				if(element.getName().equals("span")){
+
+				// supplied
+				if(element.getName().equals("supplied")){					
 					element.getParentElement().removeContent(element);
-					//outputter.output(element, System.out);
-					//System.out.println();
 					
-					Element choice = new Element("choice");
-					Element variant = new Element("variant");
+					List<Element> suppliedChildren = element.getChildren();
 					
-					choice.addContent(variant);
-					variant.setAttribute("cert", "1.0");
-					variant.addContent(element);
-					
-					rootOut.addContent(choice);
+					int iterations = suppliedChildren.size();
+					for(int j=0; j<iterations; j++){						
+						Element suppliedElement = suppliedChildren.remove(0);
+						
+						//System.out.println("proceeding element(supplied):\t"+suppliedElement.getName());
+						
+						if(suppliedElement.getName().equals("span")){
+							//outputter.output(suppliedElement, System.out);
+							//System.out.println();
+							
+							suppliedElement.setAttribute("class", "supplied");
+
+							Element choice = new Element("choice");
+							Element variant = new Element("variant");
+
+							choice.addContent(variant);
+							variant.setAttribute("cert", "1.0");
+							variant.addContent(suppliedElement);
+
+							rootOut.addContent(choice);
+						}
+						if(suppliedElement.getName().equals("norm")){
+							//outputter.output(suppliedElement, System.out);
+							//System.out.println();
+
+							//System.out.println("Listing children of:");
+							//for(int j=0; j<suppliedElement.getChildren().size(); j++){
+							//	outputter.output((Element)suppliedElement.getChildren().get(j), System.out);
+							//}
+
+							Element choice = new Element("choice");
+							Element variant = new Element("variant");
+
+							//Element span = suppliedElement.getChild("span");
+							Element span = (Element) suppliedElement.getChildren().get(0);
+							suppliedElement.removeContent(span);
+
+							choice.addContent(variant);
+							variant.setAttribute("cert", "1.0");
+							span.setAttribute("class", "supplied");
+							span.setAttribute("original", suppliedElement.getAttributeValue("orig"));
+							variant.addContent(span);
+
+							rootOut.addContent(choice);
+						}
+						if(suppliedElement.getName().equals("choice")){
+							//outputter.output(suppliedElement, System.out);
+							//System.out.println();
+							//System.out.println("\t#variants="+suppliedElement.getChildren().size());
+							for(int k=0; k<suppliedElement.getChildren().size(); k++){
+								Element cvariant = (Element) suppliedElement.getChildren().get(k);
+								//System.out.println("\t\t#spans="+cvariant.getChildren().size());
+								for(int l=0; l<cvariant.getChildren().size(); l++){
+									Element cspan = (Element) cvariant.getChildren().get(l);
+									cspan.setAttribute("class", "supplied");
+								}
+							}
+
+							rootOut.addContent(suppliedElement);
+						}
+					}
 				}
-				if(element.getName().equals("norm")){
-					element.getParentElement().removeContent(element);
-					//outputter.output(element, System.out);
-					//System.out.println();
-					
-					//System.out.println("Listing children of:");
-					//for(int j=0; j<element.getChildren().size(); j++){
-					//	outputter.output((Element)element.getChildren().get(j), System.out);
-					//}
-					
-					Element choice = new Element("choice");
-					Element variant = new Element("variant");
-					
-					//Element span = element.getChild("span");
-					Element span = (Element) element.getChildren().get(0);
-					element.removeContent(span);
-										
-					choice.addContent(variant);
-					variant.setAttribute("cert", "1.0");
-					span.setAttribute("class", "normalized");
-					span.setAttribute("original", element.getAttributeValue("orig"));
-					variant.addContent(span);
-					
-					rootOut.addContent(choice);
+				// other
+				else{
+					if(element.getName().equals("span")){
+						element.getParentElement().removeContent(element);
+						//outputter.output(element, System.out);
+						//System.out.println();
+
+						Element choice = new Element("choice");
+						Element variant = new Element("variant");
+
+						choice.addContent(variant);
+						variant.setAttribute("cert", "1.0");
+						variant.addContent(element);
+
+						rootOut.addContent(choice);
+					}
+					if(element.getName().equals("norm")){
+						element.getParentElement().removeContent(element);
+						//outputter.output(element, System.out);
+						//System.out.println();
+
+						//System.out.println("Listing children of:");
+						//for(int j=0; j<element.getChildren().size(); j++){
+						//	outputter.output((Element)element.getChildren().get(j), System.out);
+						//}
+
+						Element choice = new Element("choice");
+						Element variant = new Element("variant");
+
+						//Element span = element.getChild("span");
+						Element span = (Element) element.getChildren().get(0);
+						element.removeContent(span);
+
+						choice.addContent(variant);
+						variant.setAttribute("cert", "1.0");
+						span.setAttribute("class", "normalized");
+						span.setAttribute("original", element.getAttributeValue("orig"));
+						variant.addContent(span);
+
+						rootOut.addContent(choice);
+					}
+					if(element.getName().equals("choice")){
+						element.getParentElement().removeContent(element);
+						//outputter.output(element, System.out);
+						//System.out.println();
+
+						rootOut.addContent(element);
+					}
 				}
-				if(element.getName().equals("choice")){
-					element.getParentElement().removeContent(element);
-					//outputter.output(element, System.out);
-					//System.out.println();
-					
-					rootOut.addContent(element);
-				}
+
 			}
-			
+
 			outputter.output(docOut, sw);
-			
+
 			return sw.toString();
 		} catch (JDOMException e) {
 			e.printStackTrace();
