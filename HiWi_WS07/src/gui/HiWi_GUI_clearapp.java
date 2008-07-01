@@ -59,6 +59,8 @@ public class HiWi_GUI_clearapp extends JFrame implements ActionListener{
 		    String dbPass = props.getProperty("db.passwd");
 		    // clear appearances
 			XMLUtil.clearAppearances(root, dbUser, dbPass, dbOut, jtf_regexp.getText());
+			// close
+			dispose();
 		}
 		if(e.getSource().equals(jb_cancel)){
 			dispose();
