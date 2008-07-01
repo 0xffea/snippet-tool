@@ -152,13 +152,21 @@ public class HiWi_Object_Sutra {
 						}
 					}
 					
-					// proceed
-					for(int j=0; j<maxlength; j++){
+					//System.out.println("basiclength="+basiclength+"; maxlength="+maxlength);
+					
+					// proceed basic length
+					for(int j=0; j<basiclength; j++){
 						ArrayList<ArrayList<HiWi_Object_Sign>> signVariants = new ArrayList<ArrayList<HiWi_Object_Sign>>();
 						ArrayList<HiWi_Object_Sign> signs = new ArrayList<HiWi_Object_Sign>();
 						HiWi_Object_Sign csign = new HiWi_Object_Sign();
+						boolean supplied = false;
 						
 						for(int v=0; v<lvariants.size(); v++){
+							
+							if(lvariants.get(v).getChildren().size() == 0){
+								continue;
+							}
+							
 							signs.clear();
 							
 							// the first reading in choice schema is preferred
@@ -181,43 +189,71 @@ public class HiWi_Object_Sutra {
 									
 									csign = new HiWi_Object_Sign(this, ch, chOriginal, cert, preferred, variantnumber, current_row, current_column, current_number, new Point(0,0), new Dimension(0,0));
 
-									if(j<basiclength){
-										signs.add(csign);
-										signVariants.add((ArrayList<HiWi_Object_Sign>) signs.clone());
-									}
-									else{
-										//System.out.println(current_number+"/"+current_row+"/"+current_column);
-										if(sutra_text.size() == (current_number-1)) System.out.println("current_number problem");
-										if(sutra_text.get(current_number-1).size() == (variantnumber)) System.out.println("variantnumber problem");
-										sutra_text.get(current_number-1).get(variantnumber).add(csign);
-									}
+									signs.add(csign);
+									signVariants.add((ArrayList<HiWi_Object_Sign>) signs.clone());
+
+									//System.out.println(tempsign.getInfo()+"sutra text size = "+sutra_text.size());
+									root.addLogEntry(csign.getInfo(), 1, 1);
+								}
+								else{
+									supplied = true;
+								}
+							}
+						}
+						
+						if(!supplied){
+							// add variants arraylist to sutra text
+							sutra_text.add((ArrayList<ArrayList<HiWi_Object_Sign>>) signVariants.clone());
+							//
+							current_column++;
+							current_number++;
+						}
+						else{
+							current_column++;
+						}
+					}
+					
+					// proceed extra length
+					for(int j = basiclength; j<maxlength; j++){
+						HiWi_Object_Sign csign = new HiWi_Object_Sign();
+						int current_number_for_extra = current_number -1; // current_number was already incremented
+						int current_column_for_extra = current_column -1;
+						
+						for(int v=0; v<lvariants.size(); v++){
+							
+							if(lvariants.get(v).getChildren().size() < basiclength){
+								continue;
+							}
+							
+							// the first reading in choice schema is preferred
+							boolean preferred = (v==0)? true:false;
+							// load cert form parent tag choice
+							float cert = Float.parseFloat(lvariants.get(v).getAttributeValue("cert"));
+							// create variant number
+							int variantnumber = v;
+							
+							if(j < lvariants.get(variantnumber).getChildren().size()){ // if there is a sign with indexed j in this variant
+								
+								Element cspan = (Element) lvariants.get(v).getChildren().get(j);
+								
+								if(cspan == null) System.out.println("NULL Element cspan while proceeding.");
+								if(cspan.getAttribute("class") == null) System.out.println("Element doesn't have 'class' attribute;\n"+cspan.toString());
+								
+								if(!cspan.getAttributeValue("class").equals("supplied")){
+									String ch = cspan.getText();
+									String chOriginal = (cspan.getAttribute("original") != null)? cspan.getAttributeValue("original") : ch;
+									
+									csign = new HiWi_Object_Sign(this, ch, chOriginal, cert, preferred, variantnumber, current_row, current_column_for_extra, current_number_for_extra, new Point(0,0), new Dimension(0,0));
+
+									// no imagesign -> attach it to last placed sign
+									// -1, current_number starts with 1, not 0 and in arraylist numbering starts with 0
+									sutra_text.get(current_number_for_extra-1).get(variantnumber).add(csign);
+									
 
 									//System.out.println(tempsign.getInfo()+"sutra text size = "+sutra_text.size());
 									root.addLogEntry(csign.getInfo(), 1, 1);
 								}
 							}
-						}
-						
-						if(signVariants.size()>0 && signVariants.get(0).size()>0){
-							// add variants arraylist to sutra text
-							sutra_text.add(signVariants);
-							//
-							if(j == maxlength-1){
-								current_column++;
-								current_number++;
-							}
-							else{
-								if(j >= basiclength-1){
-									
-								}
-								else{
-									current_column++;
-									current_number++;
-								}
-							}
-						}
-						else{//supplied
-							current_column++;
 						}
 					}
 				}
@@ -284,17 +320,19 @@ public class HiWi_Object_Sutra {
 				Resource res = iterator.nextResource();
 				XMLResource xmlres = (XMLResource) res;
 				Document d = builder.build(new StringReader((String) xmlres.getContent()));
-				Element appearance = d.getRootElement();	// it's appearance tag
-				tarrayOfSigns.add(HiWi_Object_Sign.fromAppearance(this, appearance));
+				Element appearance = d.getRootElement();	// it's the appearance tag
+				HiWi_Object_Sign csign = HiWi_Object_Sign.fromAppearance(this, appearance);
+				tarrayOfSigns.add(csign);
+				//System.out.println("fetched sign: "+csign.getInfo());
 			}
 			
 			// use each appearance's number to update coordinates
 			for(int i=0; i<tarrayOfSigns.size(); i++){
 				HiWi_Object_Sign csign = tarrayOfSigns.get(i);
 				Rectangle rectangle = csign.s;
-				int indexTarget = csign.number - 1;
-				int indexSource = indexTarget;
-				this.updateSnippet(indexTarget, indexSource, rectangle);
+				int column = csign.column;
+				int row = csign.row;
+				this.updateSnippet(rectangle, row, column);
 			}
 		} catch(XMLDBException e){
 			e.printStackTrace();
@@ -470,7 +508,42 @@ public class HiWi_Object_Sutra {
 			}
 		}
 	}
-	public void updateSnippet(int indexTarget, int indexSource, Rectangle rectangle){
+	public void updateSnippet(Rectangle rectangle, int r, int c){
+		int indexTarget = -1;
+		// find sign using row,column signature and binary search for row
+		/*int leftIndex = 0;
+		int rightIndex = this.sutra_text.size() - 1;
+		int crow = -1;
+		while(crow != r){
+			int middleIndex = (int)((rightIndex-leftIndex)/2.0f);
+			if(this.sutra_text.get(middleIndex).get(0).get(0).row > crow){
+				rightIndex = middleIndex + 1;
+			}
+			else{
+				leftIndex = middleIndex;
+			}
+		}
+		for(int i=leftIndex; i<rightIndex; i++){
+			if(this.sutra_text.get(i).get(0).get(0).column == c){
+				indexTarget = i;
+				break;
+			}
+		}*/
+		for(int i=0; i<this.sutra_text.size(); i++){
+			//System.out.println("comparing r="+r+", c="+c+" to : "+this.sutra_text.get(i).get(0).get(0).getInfo());
+			if(this.sutra_text.get(i).get(0).get(0).row == r &&
+					this.sutra_text.get(i).get(0).get(0).column == c){
+				indexTarget = i;
+				//System.out.println("found for fetched:"+i);
+				break;
+			}
+		}
+		// check whether indexTarget found
+		if(indexTarget == -1){
+			root.addLogEntry("Couldn't find target sign for setting coordinates from DB for:\trow="+r+", column="+c, 1, 1);
+			return;
+		}
+		// update sign
 		for(int j=0; j<this.sutra_text.get(indexTarget).size(); j++){
 			for(int k=0; k<this.sutra_text.get(indexTarget).get(j).size(); k++){
 				this.sutra_text.get(indexTarget).get(j).get(k).updateSnippet(rectangle);

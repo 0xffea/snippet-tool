@@ -8,14 +8,17 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.util.Properties;
 
 import org.jdom.Element;
 
-import src.gui.HiWi_GUI;
 import src.util.num.NumUtil;
 import src.util.prefs.PrefUtil;
 
+/**
+ * (row, column) - for numeration text is represented in european way 
+ * @author abratuhi
+ *
+ */
 public class HiWi_Object_Sign {
 	//
 	public HiWi_Object_Sutra sutra;
