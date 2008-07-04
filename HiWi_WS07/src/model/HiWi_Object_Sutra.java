@@ -569,25 +569,6 @@ public class HiWi_Object_Sutra {
 		da = Integer.valueOf(options.jtf_da.getText());
 		db = Integer.valueOf(options.jtf_db.getText());
 		
-		// apply parameters
-		for(int i=0; i<sutra_text.size(); i++){
-			ArrayList<ArrayList<HiWi_Object_Sign>> signvariants = sutra_text.get(i);
-			for(int j=0; j<signvariants.size(); j++){
-				for(int k=0; k<signvariants.get(j).size(); k++){
-					HiWi_Object_Sign csign = signvariants.get(j).get(k);
-					int r = csign.getRow()-1;
-					int c = csign.getColumn()-1;
-					if(is_left_to_right){
-						csign.s = new Rectangle(new Point(oa+(a+da)*r, ob+(b+db)*c), new Dimension(a, b));
-					}
-					else {
-						int dim_x = sutra_image.getWidth();
-						csign.s = new Rectangle(new Point(dim_x-oa-a-(a+da)*r, ob+(b+db)*c), new Dimension(a, b));
-					}
-				}
-			}
-		}
-		
 		// check whether all markup snippets are seen
 		// use preferred reading's signs
 		int dim_x = sutra_image.getWidth();
@@ -604,8 +585,28 @@ public class HiWi_Object_Sutra {
 		x_width = ob+(max_row-1)*(b+db)+b;
 		if(x_width > dim_x || y_height > dim_y){	// show warning message
 			JOptionPane.showMessageDialog(root, "Some of markup snippet don't pass on screen!\nPlease use \"Full\" button to see whole image", "Alert!", JOptionPane.ERROR_MESSAGE);
+			return;
 		}
 		
+		// apply parameters if check passed
+		for(int i=0; i<sutra_text.size(); i++){
+			ArrayList<ArrayList<HiWi_Object_Sign>> signvariants = sutra_text.get(i);
+			for(int j=0; j<signvariants.size(); j++){
+				for(int k=0; k<signvariants.get(j).size(); k++){
+					HiWi_Object_Sign csign = signvariants.get(j).get(k);
+					int r = csign.getRow()-1;
+					int c = csign.getColumn()-1;
+					if(is_left_to_right){
+						csign.s = new Rectangle(new Point(oa+(a+da)*r, ob+(b+db)*c), new Dimension(a, b));
+					}
+					else {
+						csign.s = new Rectangle(new Point(dim_x-oa-a-(a+da)*r, ob+(b+db)*c), new Dimension(a, b));
+					}
+				}
+			}
+		}
+		
+				
 		// repaint
 		root.repaint();
 	}

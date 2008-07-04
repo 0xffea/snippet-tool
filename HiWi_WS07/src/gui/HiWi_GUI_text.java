@@ -20,9 +20,7 @@ public class HiWi_GUI_text extends JPanel implements ActionListener, MouseListen
 	
 	HiWi_GUI root;
 	HiWi_Object_Sutra s;
-	
-	JButton button_addtext = new JButton("Add Text to Image");
-	
+		
 	JTextArea text_in = new JTextArea();
 	
 	public HiWi_GUI_text(HiWi_GUI r, HiWi_Object_Sutra su){
@@ -43,14 +41,7 @@ public class HiWi_GUI_text extends JPanel implements ActionListener, MouseListen
 		
 		text_in.addMouseListener(this);
 		
-		Box box4 = new Box(BoxLayout.X_AXIS);
-		//button_save.addActionListener(this);
-		button_addtext.addActionListener(this);
-		//box4.add(button_save);
-		box4.add(button_addtext);
-		
 		add(box3);
-		add(box4);
 		
 		setVisible(true);
 	}
@@ -72,14 +63,6 @@ public class HiWi_GUI_text extends JPanel implements ActionListener, MouseListen
 
 	public void actionPerformed(ActionEvent ae) {
 		String cmd = ae.getActionCommand();
-		if(cmd.equals(button_addtext.getActionCommand())){
-			addText();
-		}
-	}
-	
-	public void addText(){
-		s.loadMarkupSchema(root.options);
-		root.repaint();
 	}
 	
 	public void mouseClicked(MouseEvent arg0) {}
