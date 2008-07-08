@@ -261,11 +261,11 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		// 
 		out = XMLUtil.transformXML(xml, xslt);
 		if(out == null || out == "") JOptionPane.showMessageDialog(root, "Bad out after transformation xml->xslt->out", "Alert!", JOptionPane.ERROR_MESSAGE);
-		HiWi_FileIO.writeStringToFile("trans.xml", out);
+		//HiWi_FileIO.writeStringToFile("trans.xml", out);
 		
 		// standardize transformed inscript
 		out_st = XMLUtil.standardizeXML(out);
-		HiWi_FileIO.writeStringToFile("trans_standard.xml", out_st);
+		//HiWi_FileIO.writeStringToFile("trans_standard.xml", out_st);
 		
 		// add information to sutra_text
 		s.addText(s.sutra_id, out_st);
