@@ -17,25 +17,25 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import src.controller.MouseControllerMainImage1;
+import src.controller.MouseControllerMainImage2;
 import src.model.HiWi_Object_Sutra;
 import src.model.HiWi_Object_Sign;
 import src.util.prefs.PrefUtil;
 
 @SuppressWarnings("serial")
-public class HiWi_GUI_main_image extends JPanel implements MouseListener, MouseMotionListener{
+public class HiWi_GUI_main_image extends JPanel{
 	
-	HiWi_GUI root;	
-	HiWi_Object_Sutra s;	// current sutra
-	HiWi_Object_Sign sn = null;	//	current sign
+	public HiWi_GUI root;	
+	public HiWi_Object_Sutra s;	// current sutra
+	//public HiWi_Object_Sign sn = null;	//	current sign
 	
-	HiWi_GUI_main_image_sub sub;
+	public HiWi_GUI_main_image_sub sub;
 	
 	public JScrollPane scroll_image;
-
-	Point mouse_pressed = new Point();
-	Point mouse_released = new Point();
-	Point mouse_current_old = new Point();
-	Point mouse_current_new = new Point();
+	
+	MouseControllerMainImage1 mouse1;
+	MouseControllerMainImage2 mouse2;
 	
 	public boolean existingSign = false;
 	
@@ -50,9 +50,10 @@ public class HiWi_GUI_main_image extends JPanel implements MouseListener, MouseM
 		this.root = jf;
 		this.s = sutra;
 		
+		this.mouse1 = new MouseControllerMainImage1(this);
+		this.mouse2 = new MouseControllerMainImage2(this);
+		
 		sub = new HiWi_GUI_main_image_sub();
-		sub.addMouseListener(this);
-		sub.addMouseMotionListener(this);
 		
 		scroll_image = new JScrollPane(sub);
 		//scroll_image.setPreferredSize(new Dimension(800, 600));
@@ -102,167 +103,31 @@ public class HiWi_GUI_main_image extends JPanel implements MouseListener, MouseM
         }
     }
     
-    public void setActiveSign(int n){
-    	// set currently active sign
-    	sn = s.getSign(n, 0);
-    	// update reference for showing info about currently active sign
-    	root.main.sign_info.setSign(sn);
-    	root.main.sign_info.showInfo();
+    public void clearMouseControllers(){
+    	for(int i=0; i<sub.getMouseListeners().length; i++){
+    		sub.removeMouseListener(sub.getMouseListeners()[0]);
+    	}
+    	for(int i=0; i<sub.getMouseMotionListeners().length; i++){
+    		sub.removeMouseMotionListener(sub.getMouseMotionListeners()[0]);
+    	}
     }
-    public void setActiveSign(HiWi_Object_Sign ss){
-    	// set currently active sign
-    	sn = ss;
-    	// update reference for showing info about currently active sign
-    	root.main.sign_info.setSign(sn);
-    	root.main.sign_info.showInfo();
+    
+    public void changeMouseController(String type){
+    	if(type.equals("auto")){
+    		clearMouseControllers();
+    		
+    		this.sub.addMouseListener(mouse1);
+    		this.sub.addMouseMotionListener(mouse1);
+    		
+    		//System.out.println("Mouse Controller:\t"+sub.getMouseListeners()[0].getClass().toString());
+    	}
+    	if(type.equals("manual")){
+    		clearMouseControllers();
+    		
+    		this.sub.addMouseListener(mouse2);
+    		this.sub.addMouseMotionListener(mouse2);
+    		
+    		//System.out.println("Mouse Controller:\t"+sub.getMouseListeners()[0].getClass().toString());
+    	}
     }
-	
-	/** 
-	 * handle mouse events 
-	 * **/
-	public void mouseClicked(MouseEvent me) {}
-	public void mouseEntered(MouseEvent me) {}
-	public void mouseExited(MouseEvent me) {}
-	@SuppressWarnings("static-access")
-	public void mousePressed(MouseEvent me) {
-		requestFocusInWindow();
-		mouse_pressed = new Point((int)(me.getX()/scale), (int)(me.getY()/scale));
-		//left button used
-		if(me.getButton() == me.BUTTON1){
-			if(sn==null || !sn.s.getBounds2D().contains(mouse_pressed)){	// if not still the same sign used as active
-				for(int i=0; i<s.sutra_text.size(); i++){	// find sign that should be active
-					//System.out.println("Looking for active sign for LEFT_BUTTON_PRESSED");
-					HiWi_Object_Sign sign = s.sutra_text.get(i).get(0).get(0);
-					if(sign.s.getBounds2D().contains(mouse_current_new)){
-						// found existing sign
-						existingSign = true;
-						// 
-						setActiveSign(sign);
-						// set selected sign as active
-						s.setActiveSign(i+1);
-						// no need to look for a valid sign further
-						break;
-					}
-				}
-			}
-			else{
-				if(sn!=null) existingSign = true;
-				else existingSign = false;
-			}
-			// mark selected sign in text JPanel
-			root.text.setSelected(sn.number, sn.row);
-			// if mouse pressed outside any existing markup field, set the information fields correspondingly
-			if(!existingSign){
-				setActiveSign(null);
-				s.setActiveSign(-1);
-				root.text.setSelected(-1, -1);
-			}
-		}
-		//right button used
-		if(me.getButton() == me.BUTTON3){
-			// select active sign
-			if(sn==null || !sn.s.getBounds2D().contains(mouse_pressed)){	// if not still the same sign used as active
-				for(int i=0; i<s.sutra_text.size(); i++){	// find sign that should be active
-					//System.out.println("Looking for active sign for RIGHT_BUTTON_PRESSED");
-					HiWi_Object_Sign sign = s.sutra_text.get(i).get(0).get(0);
-					if(sign.s.contains(mouse_current_new)){
-						// found existing sign
-						existingSign = true;
-						// 
-						setActiveSign(sign);
-						// set selected sign as active
-						s.setActiveSign(i+1);
-						// no need to look for a valid sign further
-						break;
-					}
-				}
-			}
-			else{
-				if(sn!=null) existingSign = true;
-				else existingSign = false;
-			}
-			// mark selected sign in text JPanel
-			root.text.setSelected(sn.number, sn.row);
-			// if mouse pressed outside any existing markup field, set the information fields correspondingly
-			if(!existingSign){
-				setActiveSign(null);
-				s.setActiveSign(-1);
-				root.text.setSelected(-1, -1);
-			}
-			// change Cursor appearance
-			setCursor(new Cursor(Cursor.MOVE_CURSOR));
-		}
-		// repaint
-		root.main.repaint();
-	}
-	@SuppressWarnings("static-access")
-	public void mouseReleased(MouseEvent me) {
-		mouse_released = new Point((int)(me.getX()/scale), (int)(me.getY()/scale));
-		int dx = mouse_released.x - mouse_current_new.x;
-		int dy = mouse_released.y - mouse_current_new.y;
-		//left button used
-		if(me.getButton() == me.BUTTON1 && sn!=null){
-			//sn.resizeSnippet(sn.computeMoveDirection(getCursor()), dx, dy);
-			s.resizeSnippet(sn, sn.computeMoveDirection(getCursor()), dx, dy);
-		}
-		//right button used
-		if(me.getButton() == me.BUTTON3 && sn!=null){
-			//sn.moveSnippet(dx, dy);
-			s.moveSnippet(sn, dx, dy);
-			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-		}
-		//
-		//existingSign = false;
-		// repaint
-		root.main.repaint();
-	}
-	@SuppressWarnings("static-access")
-	public void mouseDragged(MouseEvent me) {
-		mouse_current_old = new Point(mouse_current_new.x, mouse_current_new.y);
-		mouse_current_new = new Point((int)(me.getX()/scale), (int)(me.getY()/scale));
-		int dx = mouse_current_new.x - mouse_current_old.x;
-		int dy = mouse_current_new.y - mouse_current_old.y;
-		//left button used
-		if(me.getModifiers() == me.BUTTON1_MASK && sn!=null){
-			//sn.resizeSnippet(sn.computeMoveDirection(getCursor()), dx, dy);
-			s.resizeSnippet(sn, sn.computeMoveDirection(getCursor()), dx, dy);
-		}
-		//right button used
-		if(me.getModifiers() == me.BUTTON3_MASK && sn!=null){
-			//sn.moveSnippet(dx, dy);
-			s.moveSnippet(sn, dx, dy);
-		}
-		//
-		root.main.repaint();
-	}
-	public void mouseMoved(MouseEvent me) {
-		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-		mouse_current_old = new Point(mouse_current_new.x, mouse_current_new.y);
-		mouse_current_new = new Point((int)(me.getX()/scale), (int)(me.getY()/scale));
-		// get active sign
-		//if(sn==null || !sn.s.contains(mouse_current_new)){// if not still the same active sign		
-		//	for(int i=0; i<s.sutra_text.size(); i++){	// find out which sing should be active
-		//		HiWi_Object_Sign sign = s.sutra_text.get(i).get(0);
-		//		if(sign.s.getBounds2D().contains(mouse_current_new)){
-					// select the sign the mouse cursor is currently over
-		//			sn = sign;
-		//			s.setActiveSign(i+1);	// matthias: it's annoying and inapplicable in case of one sign's snippet completely covering another 
-		//		}
-		//	}
-		//}
-		// change cursor appearance
-		if(sn!=null){
-			String cursorPlace = sn.placeOnBorder(mouse_current_new);
-			if(cursorPlace!=null && !cursorPlace.equals("none")){
-				if(cursorPlace.equals("nw")) {setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR));return;}
-				if(cursorPlace.equals("n")) {setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));return;}
-				if(cursorPlace.equals("ne")) {setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR));return;}
-				if(cursorPlace.equals("e")) {setCursor(new Cursor(Cursor.E_RESIZE_CURSOR));return;}
-				if(cursorPlace.equals("se")) {setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR));return;}
-				if(cursorPlace.equals("s")) {setCursor(new Cursor(Cursor.S_RESIZE_CURSOR));return;}
-				if(cursorPlace.equals("sw")) {setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR));return;}
-				if(cursorPlace.equals("w")) {setCursor(new Cursor(Cursor.W_RESIZE_CURSOR));return;}
-			}
-		}
-	}
 }

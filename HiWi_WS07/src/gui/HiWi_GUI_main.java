@@ -29,6 +29,7 @@ import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.BinaryResource;
 import org.xmldb.api.modules.CollectionManagementService;
 
+import src.controller.MouseControllerMainImage2;
 import src.model.HiWi_Object_Sutra;
 import src.model.HiWi_Object_Sign;
 import src.util.file.HiWi_FileIO;
@@ -56,11 +57,11 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 	JButton fit_image_max = new JButton("Full");
 	JButton fit_image_min = new JButton("Fit");
 	
-	HiWi_GUI_info sign_info= new HiWi_GUI_info();
+	//public HiWi_GUI_info sign_info= new HiWi_GUI_info();
 	JButton load_image = new JButton("Load Image");
 	JButton load_text  = new JButton("Load Text");
 	JButton clear = new JButton("Clear");
-	JButton button_addtext = new JButton("Add Text to Image");
+	//JButton button_addtext = new JButton("Add Text to Image");
 	JButton submit =  new JButton("Submit");
 	
 	public HiWi_GUI_main(HiWi_GUI jf, HiWi_Object_Sutra sutra){
@@ -93,17 +94,16 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		fit_image_min.addActionListener(this);
 		
 
-		main_buttons.add(sign_info);
 		//main_buttons.add(load_text);
 		//main_buttons.add(load_image);
 		main_buttons.add(clear);
-		main_buttons.add(button_addtext);
+		//main_buttons.add(button_addtext);
 		main_buttons.add(submit);
 		
 		//load_image.addActionListener(this);
 		//load_text.addActionListener(this);
 		clear.addActionListener(this);
-		button_addtext.addActionListener(this);
+		//button_addtext.addActionListener(this);
 		submit.addActionListener(this);
 
 		add(main_navigation, BorderLayout.NORTH);
@@ -117,7 +117,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		super.paintComponent(g);
 		// beginning custom part
 		// print info about currently active sign
-		sign_info.showInfo();
+		//sign_info.showInfo();
 	}
 	
 	public void actionPerformed(ActionEvent ae) {
@@ -183,19 +183,21 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		if(cmd.equals(clear.getActionCommand())){
 			s.clear();
 			
-			//main_image.sub.clear();
 			setBorder(new TitledBorder("main"));
+			
+			if(main_image.getMouseListeners()[0] instanceof MouseControllerMainImage2){
+				main_image.mouse2.currentIndex = 0;
+			}
 			
 			root.text.text_in.setText(new String());
 			root.text.setBorder(new TitledBorder("text"));
 			
 			root.repaint();
 		}
-		if(cmd.equals(button_addtext.getActionCommand())){
-			s.loadMarkupSchema(root.options);
-			
-			root.repaint();
-		}
+		//if(cmd.equals(button_addtext.getActionCommand())){
+		//	s.loadMarkupSchema(root.options);			
+		//	root.repaint();
+		//}
 		if(cmd.equals(submit.getActionCommand())){
 			// check whether submit possible, e.g. image and text loaded, text added to image
 			if(s.sutra_text.size()<1){

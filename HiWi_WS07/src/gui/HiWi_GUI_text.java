@@ -13,6 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
 
+import src.model.HiWi_Object_Sign;
 import src.model.HiWi_Object_Sutra;
 
 @SuppressWarnings("serial")
@@ -46,7 +47,10 @@ public class HiWi_GUI_text extends JPanel implements ActionListener, MouseListen
 		setVisible(true);
 	}
 	
-	public void setSelected(int r, int c){
+	public void setSelected(HiWi_Object_Sign sign){
+		int n = sign.number;
+		int r = sign.row;
+		int c = sign.column;
 		if(r<0 || c<0){
 			text_in.requestFocusInWindow();
 			text_in.setSelectionStart(0);
@@ -55,8 +59,8 @@ public class HiWi_GUI_text extends JPanel implements ActionListener, MouseListen
 		}
 		else{
 			text_in.requestFocusInWindow();
-			text_in.setSelectionStart(r-1+c-1);
-			text_in.setSelectionEnd(r-1+c-1+1);
+			text_in.setSelectionStart(n-1+r-1);
+			text_in.setSelectionEnd(n-1+r-1 + 1);
 			root.text.repaint();
 		}
 	}
@@ -81,8 +85,9 @@ public class HiWi_GUI_text extends JPanel implements ActionListener, MouseListen
 		if(selected==null || selected.equals("")) return;
 		//if(selected.length()>1) {JOptionPane.showMessageDialog(root, "Select single character only!", "Alert!", JOptionPane.ERROR_MESSAGE); text_in.select(0, 0); return;}
 		// adjust active sign number and currently active sign
-		s.setActiveSign(selected_begin-selected_in_row+1);	// +1: added for compatibility of numbering starting from 1 and no from 0 as thougth
-		root.main.main_image.sn = s.getSign(s.getActiveSign()-1, 0);	// -1: added for compatibility of numbering starting from 1 and no from 0 as thougth
+		s.setActiveSignNumber(selected_begin-selected_in_row+1);	// +1: added for compatibility of numbering starting from 1 and no from 0 as thougth
+		root.info.showInfo(selected_begin-selected_in_row);
+		//root.main.main_image.sn = s.getSign(s.getActiveSign()-1, 0);	// -1: added for compatibility of numbering starting from 1 and no from 0 as thougth
 		// repaint
 		root.main.repaint();
 	}

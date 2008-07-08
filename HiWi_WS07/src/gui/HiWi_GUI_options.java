@@ -8,6 +8,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -47,7 +48,9 @@ public class HiWi_GUI_options extends JPanel implements ActionListener, ItemList
 	public JTextField jtf_b = new JTextField(SIZE_FIELD_LENGTH);
 	public JTextField jtf_da = new JTextField(SIZE_FIELD_LENGTH);
 	public JTextField jtf_db = new JTextField(SIZE_FIELD_LENGTH);
-	
+
+	JButton b_addtext = new JButton("Add Text to Image");
+		
 	public HiWi_GUI_colourchooser cc_rubb;// = new HiWi_GUI_colourchooser(Preferences.String2Color(Preferences.LOCAL_COLOR_RUBBING_BACKGROUND), Preferences.LOCAL_ALPHA_RUBBING, this, this);
 	public HiWi_GUI_colourchooser cc_text;// = new HiWi_GUI_colourchooser(Preferences.String2Color(Preferences.LOCAL_COLOR_TEXT), Preferences.LOCAL_ALPHA_TEXT, this, this);
 	public HiWi_GUI_colourchooser cc_back;// = new HiWi_GUI_colourchooser(Preferences.String2Color(Preferences.LOCAL_COLOR_MARKUP_P), Preferences.LOCAL_ALPHA_MARKUP_P, this, this);
@@ -62,6 +65,9 @@ public class HiWi_GUI_options extends JPanel implements ActionListener, ItemList
 	public JRadioButton rb_n = new JRadioButton("number");
 	public JRadioButton rb_rc = new JRadioButton("(row,column)");
 	
+	public ButtonGroup bg_markup = new ButtonGroup();
+	public JRadioButton rb_auto = new JRadioButton("guided");
+	public JRadioButton rb_man = new JRadioButton("manual");
 	
 	public HiWi_GUI_options(HiWi_GUI r, HiWi_Object_Sutra su){
 		super();
@@ -93,10 +99,23 @@ public class HiWi_GUI_options extends JPanel implements ActionListener, ItemList
 		box1.add(jtf_db);
 		SpringUtilities.makeCompactGrid(box1, 3, 4, 3, 3, 3, 3);
 		
-		cc_rubb.setBorder(new TitledBorder("rubbing colour & alpha"));
-		cc_text.setBorder(new TitledBorder("text colour & alpha"));
-		cc_back.setBorder(new TitledBorder("markup back colour & alpha"));
-		cc_fore.setBorder(new TitledBorder("markup fore colour & alpha"));
+		JPanel box2 = new JPanel(new SpringLayout());
+		box2.add(b_addtext);
+		b_addtext.addActionListener(this);
+		SpringUtilities.makeCompactGrid(box2, 1, 1, 3, 3, 3, 3);
+		
+		cc_rubb.setBorder(new TitledBorder("rubbing"));
+		cc_text.setBorder(new TitledBorder("text"));
+		cc_back.setBorder(new TitledBorder("markup back"));
+		cc_fore.setBorder(new TitledBorder("markup fore"));
+		
+		JPanel box3 = new JPanel(new SpringLayout());
+		box3.setBorder(new TitledBorder("colour & alpha"));
+		box3.add(cc_rubb);
+		box3.add(cc_text);
+		box3.add(cc_back);
+		box3.add(cc_fore);
+		SpringUtilities.makeCompactGrid(box3, 2, 2, 3, 3, 3, 3);
 				
 		JPanel box4 = new JPanel(new SpringLayout());
 		box4.setBorder(new TitledBorder("text direction"));
@@ -116,20 +135,36 @@ public class HiWi_GUI_options extends JPanel implements ActionListener, ItemList
 		
 		rb_id.addItemListener(this);
 		rb_n.addItemListener(this);
-		rb_rc.addItemListener(this);
+		rb_rc.addItemListener(this);	
 		
 		SpringUtilities.makeCompactGrid(box5, 3, 1, 3, 3, 3, 3);
+		
+		
+		JPanel box6 = new JPanel(new SpringLayout());
+		box6.add(box4);
+		box6.add(box5);		
+		
+		SpringUtilities.makeCompactGrid(box6, 1, 2, 3, 3, 3, 3);
+		
+		JPanel box7 = new JPanel(new SpringLayout());
+		box7.setBorder(new TitledBorder("markup"));
+		box7.add(rb_auto);
+		box7.add(rb_man);
+		bg_markup.add(rb_auto);
+		bg_markup.add(rb_man);
+		rb_auto.addItemListener(this);
+		rb_man.addItemListener(this);
+		rb_auto.setSelected(true);
+		SpringUtilities.makeCompactGrid(box7, 2, 1, 3, 3, 3, 3);
 			
 		
 		add(box1);
-		add(cc_rubb);
-		add(cc_text);
-		add(cc_back);
-		add(cc_fore);
-		add(box4);
-		add(box5);
+		add(box2);
+		add(box3);
+		add(box6);
+		add(box7);
 		
-		SpringUtilities.makeCompactGrid(this, 7, 1, 0, 0, 0, 0);
+		SpringUtilities.makeCompactGrid(this, 5, 1, 0, 0, 0, 0);
 		
 		rb_right_to_left.setSelected(true);
 		rb_id.setSelected(true);
@@ -145,15 +180,28 @@ public class HiWi_GUI_options extends JPanel implements ActionListener, ItemList
 		if(rb_n.isSelected()) s.showNumber = true; else s.showNumber = false;
 		if(rb_rc.isSelected()) s.showRowColumn = true; else s.showRowColumn = false;
 		
+		if(rb_auto.isSelected()) root.main.main_image.changeMouseController("auto");
+		if(rb_man.isSelected()) root.main.main_image.changeMouseController("manual");
+		
 		root.main.repaint();
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		//
+		String cmd = e.getActionCommand();
+		
 		// set changed properties
 		root.props.setProperty("local.color.rubbing", PrefUtil.Color2String(cc_rubb.cc.getColor()));
 		root.props.setProperty("local.color.text", PrefUtil.Color2String(cc_text.cc.getColor()));
 		root.props.setProperty("local.color.markup.p", PrefUtil.Color2String(cc_back.cc.getColor()));
 		root.props.setProperty("local.color.markup.a", PrefUtil.Color2String(cc_fore.cc.getColor()));
+		
+		// 
+		if(cmd.equals(b_addtext.getActionCommand())){
+			s.loadMarkupSchema(this);			
+			root.repaint();
+		}
+		
 		// repaint
 		root.main.repaint();
 	}

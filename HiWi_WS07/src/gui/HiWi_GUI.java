@@ -36,9 +36,10 @@ public class HiWi_GUI extends JFrame{
 	public HiWi_GUI_log log;
 	public HiWi_GUI_explorer explorer;// = new HiWi_GUI_explorer(this);
 	public HiWi_GUI_options options;// = new HiWi_GUI_options(this, s);
+	public HiWi_GUI_info info;
 	
 	//String defaultModel = "(COLUMN (ROW (LEAF name=explorer weight=0.2) (LEAF name=main weight=0.9) (LEAF name=options weight=0.2)) (ROW (LEAF name=text) (LEAF name=log)))";
-	String defaultModel = "(column (row explorer main options) (row text log))";
+	String defaultModel = "(column (row explorer main options) (row text info log))";
 	Node defaultLayout = MultiSplitLayout.parseModel(defaultModel);
 	MultiSplitPane multiSplitPane = new MultiSplitPane();
 	
@@ -59,6 +60,7 @@ public class HiWi_GUI extends JFrame{
 		log = new HiWi_GUI_log(this, s);
 		explorer = new HiWi_GUI_explorer(this);
 		options = new HiWi_GUI_options(this, s);
+		info = new HiWi_GUI_info(s);
 		// adjust jframe settings
 		setVisible(true);
 		setLocation(0, 0);
@@ -72,6 +74,7 @@ public class HiWi_GUI extends JFrame{
 		multiSplitPane.add(options, "options");
 		multiSplitPane.add(text, "text");
 		multiSplitPane.add(log, "log");
+		multiSplitPane.add(info, "info");
 		setContentPane(multiSplitPane);
 		// add own windowlistener
 		addWindowListener(new WindowAdapter(){

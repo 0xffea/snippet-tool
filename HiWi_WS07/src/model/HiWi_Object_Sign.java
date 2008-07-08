@@ -188,7 +188,7 @@ public class HiWi_Object_Sign {
 		g.draw(s);
 	}
 	public void drawMarkup(Graphics2D g){
-		if(this.number!=sutra.getActiveSign()) {
+		if(this.number!=sutra.getActiveSignNumber()) {
 			// get needed properties
 			Float alpha = Float.parseFloat(sutra.root.props.getProperty("local.alpha.markup.p"));
 			Color color = PrefUtil.String2Color(sutra.root.props.getProperty("local.color.markup.p"));

@@ -550,14 +550,28 @@ public class HiWi_Object_Sutra {
 			}
 		}
 	}
-
-	public void setActiveSign(int n){
-		this.activeSign = n;
-		//System.out.println("Set active sign #"+this.getActiveSign());
-		root.addLogEntry("Set active sign #"+this.getActiveSign(), 1, 1);
+	
+	public void updateSnippet(Rectangle rectangle, int indexTarget){
+		// update sign
+		for(int j=0; j<this.sutra_text.get(indexTarget).size(); j++){
+			for(int k=0; k<this.sutra_text.get(indexTarget).get(j).size(); k++){
+				this.sutra_text.get(indexTarget).get(j).get(k).updateSnippet(rectangle);
+			}
+		}
 	}
-	public int getActiveSign(){
-		return this.activeSign;
+
+	public void setActiveSignNumber(int n){
+		this.activeSign = n-1;
+		//System.out.println("Set active sign #"+this.getActiveSign());
+		root.addLogEntry("Set active sign #"+this.getActiveSignNumber(), 1, 1);
+	}
+	public int getActiveSignNumber(){
+		return this.activeSign+1;
+	}
+	
+	public HiWi_Object_Sign getActiveSign(){
+		if(activeSign == -1) return null;
+		return this.sutra_text.get(activeSign).get(0).get(0);
 	}
 
 	public void loadMarkupSchema(HiWi_GUI_options options){
@@ -581,10 +595,10 @@ public class HiWi_Object_Sutra {
 			if(sutra_text.get(i).get(0).get(0).column > max_column) max_column = sutra_text.get(i).get(0).get(0).column;
 			if(sutra_text.get(i).get(0).get(0).row > max_row) max_row = sutra_text.get(i).get(0).get(0).row;
 		}
-		y_height = oa+(max_column-1)*(a+da)+a;
-		x_width = ob+(max_row-1)*(b+db)+b;
+		y_height = oa+(max_column-1)*(a+da);
+		x_width = ob+(max_row-1)*(b+db);
 		if(x_width > dim_x || y_height > dim_y){	// show warning message
-			JOptionPane.showMessageDialog(root, "Some of markup snippet don't pass on screen!\nPlease use \"Full\" button to see whole image", "Alert!", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(root, "Some of markup snippet don't pass on image!\nPlease use \"Full\" button to see whole image", "Alert!", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		
@@ -692,6 +706,8 @@ public class HiWi_Object_Sutra {
 		sutra_id = new String();
 		sutra_path_file = new String();
 		sutra_path_rubbing = new String();
+		
+		activeSign = -1;
 	}
 
 	public void submit() {
