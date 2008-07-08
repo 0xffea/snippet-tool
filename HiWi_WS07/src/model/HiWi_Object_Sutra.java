@@ -562,8 +562,7 @@ public class HiWi_Object_Sutra {
 
 	public void setActiveSignNumber(int n){
 		this.activeSign = n-1;
-		//System.out.println("Set active sign #"+this.getActiveSign());
-		root.addLogEntry("Set active sign #"+this.getActiveSignNumber(), 1, 1);
+		root.addLogEntry("Set active character #"+this.getActiveSignNumber(), 1, 1);
 	}
 	public int getActiveSignNumber(){
 		return this.activeSign+1;
