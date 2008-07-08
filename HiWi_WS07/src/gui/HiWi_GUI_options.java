@@ -67,7 +67,7 @@ public class HiWi_GUI_options extends JPanel implements ActionListener, ItemList
 	
 	public ButtonGroup bg_markup = new ButtonGroup();
 	public JRadioButton rb_auto = new JRadioButton("guided");
-	public JRadioButton rb_man = new JRadioButton("manual");
+	public JRadioButton rb_man = new JRadioButton("manually");
 	
 	public HiWi_GUI_options(HiWi_GUI r, HiWi_Object_Sutra su){
 		super();
