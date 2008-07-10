@@ -182,6 +182,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		}
 		if(cmd.equals(clear.getActionCommand())){
 			
+			// clear shapes
 			for(int i=0; i<s.sutra_text.size(); i++){
 				for(int j=0; j<s.sutra_text.get(i).size(); j++){
 					for(int k=0; k<s.sutra_text.get(i).get(j).size(); k++){
@@ -191,6 +192,10 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 					}
 				}
 			}
+			
+			// reset mouse2 counter
+			main_image.mouse2.reset();
+			
 			
 			root.repaint();
 		}
