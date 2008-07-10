@@ -130,7 +130,9 @@ public class HiWi_GUI_main_image extends JPanel{
     		this.sub.addMouseListener(mouse2);
     		this.sub.addMouseMotionListener(mouse2);
     		
-    		//mouse2.reset();
+    		s.setActiveNumber(mouse2.currentIndex);
+    		root.info.showInfo(mouse2.currentIndex);
+    		root.text.setSelected(s.getActiveSign());
     		
     		//System.out.println("Mouse Controller:\t"+sub.getMouseListeners()[0].getClass().toString());
     	}

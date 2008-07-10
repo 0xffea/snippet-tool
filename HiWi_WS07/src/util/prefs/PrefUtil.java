@@ -18,6 +18,10 @@ public class PrefUtil {
 		return new Point(hsize, vsize);
 	}
 	
+	public static Integer string2integer(String size){
+		return Integer.valueOf(size);
+	}
+	
 	public static Integer getDividerWidth(String width){
 		return Integer.valueOf(width);
 	}

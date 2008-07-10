@@ -8,8 +8,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import javax.swing.JOptionPane;
+
 import src.gui.HiWi_GUI_main_image;
 import src.model.HiWi_Object_Sign;
+import src.util.prefs.PrefUtil;
 
 public class MouseControllerMainImage2 implements MouseListener, MouseMotionListener{
 	
@@ -65,6 +68,12 @@ public class MouseControllerMainImage2 implements MouseListener, MouseMotionList
 		if(mouse_current_new.y-mouse_pressed.y<0) pr.y -= dr.height;
 		
 		Rectangle r = new Rectangle(pr, dr);
+		
+		int min = PrefUtil.string2integer(main_image.root.props.getProperty("local.snippet.minsize"));
+		if(r.height<min || r.width <min){
+			JOptionPane.showMessageDialog(main_image.root, "Markup rectangle too small!", "Alert!", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 		
 		main_image.s.updateSnippet(r, currentIndex);
 		//
