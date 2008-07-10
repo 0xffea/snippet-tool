@@ -124,6 +124,21 @@ public class HiWi_FileIO {
 		return null;
 	}
 	
+	public static Document readXMLDocumentFromFile(String file){
+		try {
+			SAXBuilder builder = new SAXBuilder();
+			Document d = builder.build(new FileInputStream(file));
+			return d;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public static void writeStringToFile(String file, String str){
 		try {
 			FileOutputStream fos = new FileOutputStream(file);

@@ -184,20 +184,14 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 			s.clear();
 			
 			setBorder(new TitledBorder("main"));
-			
-			if(main_image.getMouseListeners()[0] instanceof MouseControllerMainImage2){
-				main_image.mouse2.currentIndex = 0;
-			}
+						
+			main_image.mouse2.currentIndex = 0;
 			
 			root.text.text_in.setText(new String());
 			root.text.setBorder(new TitledBorder("text"));
 			
 			root.repaint();
 		}
-		//if(cmd.equals(button_addtext.getActionCommand())){
-		//	s.loadMarkupSchema(root.options);			
-		//	root.repaint();
-		//}
 		if(cmd.equals(submit.getActionCommand())){
 			// check whether submit possible, e.g. image and text loaded, text added to image
 			if(s.sutra_text.size()<1){

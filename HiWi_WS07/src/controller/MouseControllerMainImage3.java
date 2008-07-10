@@ -11,7 +11,7 @@ import java.awt.event.MouseMotionListener;
 import src.gui.HiWi_GUI_main_image;
 import src.model.HiWi_Object_Sign;
 
-public class MouseControllerMainImage2 implements MouseListener, MouseMotionListener{
+public class MouseControllerMainImage3 implements MouseListener, MouseMotionListener{
 	
 	HiWi_GUI_main_image main_image;
 	
@@ -20,20 +20,9 @@ public class MouseControllerMainImage2 implements MouseListener, MouseMotionList
 	Point mouse_current_old = new Point();
 	Point mouse_current_new = new Point();
 	
-	public int currentIndex = 0;
-	
-	public MouseControllerMainImage2(HiWi_GUI_main_image mi){
+	public MouseControllerMainImage3(HiWi_GUI_main_image mi){
 		super();
 		this.main_image = mi;
-		
-		this.currentIndex = 0;
-	}
-	
-	public void reset(){
-		this.currentIndex = 0;
-		main_image.s.setActiveNumber(currentIndex);
-		main_image.root.info.showInfo(currentIndex);
-		main_image.root.text.setSelected(main_image.s.getActiveSign());
 	}
 
 	public void mouseClicked(MouseEvent me) {}
@@ -46,8 +35,6 @@ public class MouseControllerMainImage2 implements MouseListener, MouseMotionList
 	public void mousePressed(MouseEvent me) {
 		main_image.requestFocusInWindow();
 		mouse_pressed = new Point((int)(me.getX()/main_image.scale), (int)(me.getY()/main_image.scale));
-		//
-		//main_image.s.setActiveSignNumber(currentIndex+1);
 		
 		// repaint
 		main_image.root.main.repaint();
@@ -56,9 +43,9 @@ public class MouseControllerMainImage2 implements MouseListener, MouseMotionList
 	@SuppressWarnings("static-access")
 	public void mouseReleased(MouseEvent me) {
 		mouse_released = new Point((int)(me.getX()/main_image.scale), (int)(me.getY()/main_image.scale));
-		int dx = mouse_current_new.x - mouse_current_old.x;
-		int dy = mouse_current_new.y - mouse_current_old.y;
-		
+		int dx = mouse_released.x - mouse_current_new.x;
+		int dy = mouse_released.y - mouse_current_new.y;
+		//
 		Dimension dr = new Dimension(Math.abs(mouse_current_new.x-mouse_pressed.x), Math.abs(mouse_current_new.y-mouse_pressed.y));
 		Point pr = (Point) mouse_pressed.clone();
 		if(mouse_current_new.x-mouse_pressed.x<0) pr.x -= dr.width;
@@ -66,15 +53,9 @@ public class MouseControllerMainImage2 implements MouseListener, MouseMotionList
 		
 		Rectangle r = new Rectangle(pr, dr);
 		
-		main_image.s.updateSnippet(r, currentIndex);
-		//
-		currentIndex++;
-		
-		// set next active
-		main_image.s.setActiveSignNumber(currentIndex+1);
-		if(currentIndex<main_image.s.sutra_text.size()) main_image.root.info.showInfo(currentIndex);
-		if(currentIndex<main_image.s.sutra_text.size()) main_image.root.text.setSelected(main_image.s.getActiveSign());
-		
+		main_image.s.updateSnippet(r, main_image.s.getActiveSignNumber()-1);
+		// set active
+		main_image.root.text.setSelected(main_image.s.getActiveSign());
 		// repaint
 		main_image.root.main.repaint();
 	}
@@ -83,10 +64,9 @@ public class MouseControllerMainImage2 implements MouseListener, MouseMotionList
 	public void mouseDragged(MouseEvent me) {
 		mouse_current_old = new Point(mouse_current_new.x, mouse_current_new.y);
 		mouse_current_new = new Point((int)(me.getX()/main_image.scale), (int)(me.getY()/main_image.scale));
-		
 		int dx = mouse_current_new.x - mouse_current_old.x;
 		int dy = mouse_current_new.y - mouse_current_old.y;
-		
+		//
 		Dimension dr = new Dimension(Math.abs(mouse_current_new.x-mouse_pressed.x), Math.abs(mouse_current_new.y-mouse_pressed.y));
 		Point pr = (Point) mouse_pressed.clone();
 		if(mouse_current_new.x-mouse_pressed.x<0) pr.x -= dr.width;
@@ -94,7 +74,9 @@ public class MouseControllerMainImage2 implements MouseListener, MouseMotionList
 		
 		Rectangle r = new Rectangle(pr, dr);
 		
-		main_image.s.updateSnippet(r, currentIndex);
+		main_image.s.updateSnippet(r, main_image.s.getActiveSignNumber()-1);
+		// set active
+		main_image.root.text.setSelected(main_image.s.getActiveSign());
 		// repaint
 		main_image.root.main.repaint();
 	}

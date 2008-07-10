@@ -45,6 +45,7 @@ import org.xmldb.api.modules.XPathQueryService;
 
 import src.gui.HiWi_GUI;
 import src.gui.HiWi_GUI_options;
+import src.util.db.DbUtil;
 import src.util.num.NumUtil;
 import src.util.prefs.PrefUtil;
 import src.util.xml.XMLUtil;
@@ -69,7 +70,7 @@ public class HiWi_Object_Sutra {
 	public boolean showNumber = false;
 	public boolean showRowColumn = false;
 	public boolean updateOnly = false;	//sutra was already loaded in db, now updating appearance
-	public int activeSign = -1;	// initialize a default value
+	public int activeSign = -1;	// initialize a default value, numbered 0 to size-1
 	Font f;
 	int oa, ob, a, b, da, db; //oa=x_offset; ob=y_offset; a=snippet_width; b=snippet_height; da=x_distance_between_snippets; db=y_distance_between_snippets
 
@@ -334,6 +335,18 @@ public class HiWi_Object_Sutra {
 				int row = csign.row;
 				this.updateSnippet(rectangle, row, column);
 			}
+			
+			// check, whether all signs have become coordinates assigned, if not, mark those as missing
+			for(int i=0; i<sutra_text.size(); i++){
+				for(int j=0; j<sutra_text.get(i).size(); j++){
+					for(int k=0; k<sutra_text.get(i).get(j).size(); k++){
+						HiWi_Object_Sign csign = sutra_text.get(i).get(j).get(k);
+						if(csign.s.width == 0 || csign.s.height == 0){
+							csign.missing = true;
+						}
+					}
+				}
+			}
 		} catch(XMLDBException e){
 			e.printStackTrace();
 		} catch (JDOMException e) {
@@ -438,26 +451,15 @@ public class HiWi_Object_Sutra {
 
 	@SuppressWarnings("unchecked")
 	public void addText(String id, String xml){
+		// get needed properties
+		//String dbURI = root.props.getProperty("db.uri");
+		String dbOut = root.props.getProperty("db.dir.out");
+		// 
+		String query = "//appearance[contains(@id, '"+id+"_')]";
+
+		ResourceSet result = DbUtil.executeQuery(dbOut, query);
+
 		try {
-			// get needed properties
-			//String dbURI = root.props.getProperty("db.uri");
-			String dbOut = root.props.getProperty("db.dir.out");
-			// 
-			String query = "//appearance[contains(@id, '"+id+"_')]";
-			
-			root.addLogEntry("query="+query, 0, 1);
-			
-			String driver = "org.exist.xmldb.DatabaseImpl";  
-			Class cl = Class.forName(driver);	           
-			Database database = (Database)cl.newInstance();  
-			DatabaseManager.registerDatabase(database);
-
-			Collection col = DatabaseManager.getCollection(dbOut);  
-			XPathQueryService service = (XPathQueryService) col.getService("XPathQueryService", "1.0");  
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(query);
-
 			if(result.getSize()<1){
 				updateOnly = false;
 				setTextFromXML(xml);
@@ -468,26 +470,17 @@ public class HiWi_Object_Sutra {
 				//setTextFromDB(id, result);
 				// experimental
 				setTextFromXML(xml);
-				//System.out.println("set text from xml");
 				setCoordinatesFromDB(result);
-				//System.out.println("set coordinates from db");
 				setImageFromDB(id, result);
-				//System.out.println("set image from db");
 			}
-			
-			root.addLogEntry("Inscript size (preferred reading) = "+this.sutra_text.size(), 1, 1);
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
+
+		root.addLogEntry("Inscript size (preferred reading) = "+this.sutra_text.size(), 1, 1);
+
 	}
-	
+
 	public HiWi_Object_Sign getSign(int n, int v){
 		return sutra_text.get(n).get(v).get(0);
 	}
@@ -541,14 +534,11 @@ public class HiWi_Object_Sutra {
 		// check whether indexTarget found
 		if(indexTarget == -1){
 			root.addLogEntry("Couldn't find target sign for setting coordinates from DB for:\trow="+r+", column="+c, 1, 1);
+			
 			return;
 		}
 		// update sign
-		for(int j=0; j<this.sutra_text.get(indexTarget).size(); j++){
-			for(int k=0; k<this.sutra_text.get(indexTarget).get(j).size(); k++){
-				this.sutra_text.get(indexTarget).get(j).get(k).updateSnippet(rectangle);
-			}
-		}
+		updateSnippet(rectangle, indexTarget);
 	}
 	
 	public void updateSnippet(Rectangle rectangle, int indexTarget){
@@ -559,7 +549,15 @@ public class HiWi_Object_Sutra {
 			}
 		}
 	}
-
+	
+	public void setActiveNumber(int n){
+		this.activeSign = n;
+	}
+	
+	public int getActiveNumber(){
+		return this.activeSign;
+	}
+	
 	public void setActiveSignNumber(int n){
 		this.activeSign = n-1;
 		root.addLogEntry("Set active character #"+this.getActiveSignNumber(), 1, 1);
@@ -570,10 +568,10 @@ public class HiWi_Object_Sutra {
 	
 	public HiWi_Object_Sign getActiveSign(){
 		if(activeSign == -1) return null;
-		return this.sutra_text.get(activeSign).get(0).get(0);
+		return this.sutra_text.get(this.getActiveNumber()).get(0).get(0);
 	}
 
-	public void loadMarkupSchema(HiWi_GUI_options options){
+	public void loadMarkupSchema(HiWi_GUI_options options, boolean missingOnly){
 		// load markup parameters
 		oa = Integer.valueOf(options.jtf_oa.getText());
 		ob = Integer.valueOf(options.jtf_ob.getText());
@@ -607,14 +605,21 @@ public class HiWi_Object_Sutra {
 			for(int j=0; j<signvariants.size(); j++){
 				for(int k=0; k<signvariants.get(j).size(); k++){
 					HiWi_Object_Sign csign = signvariants.get(j).get(k);
-					int r = csign.getRow()-1;
-					int c = csign.getColumn()-1;
-					if(is_left_to_right){
-						csign.s = new Rectangle(new Point(oa+(a+da)*r, ob+(b+db)*c), new Dimension(a, b));
+					
+					// if dimension greater 0, sign already has coordinates assigned -> no need to generate
+					if(missingOnly && csign.missing){
+						continue;
 					}
-					else {
-						csign.s = new Rectangle(new Point(dim_x-oa-a-(a+da)*r, ob+(b+db)*c), new Dimension(a, b));
-					}
+					else{
+						int r = csign.getRow()-1;
+						int c = csign.getColumn()-1;
+						if(is_left_to_right){
+							csign.s = new Rectangle(new Point(oa+(a+da)*r, ob+(b+db)*c), new Dimension(a, b));
+						}
+						else {
+							csign.s = new Rectangle(new Point(dim_x-oa-a-(a+da)*r, ob+(b+db)*c), new Dimension(a, b));
+						} 
+					 }
 				}
 			}
 		}
@@ -736,7 +741,6 @@ public class HiWi_Object_Sutra {
 		BufferedImage img_out_t;
 		for(int i=0; i<this.sutra_text.size(); i++){
 			Rectangle2D r = this.sutra_text.get(i).get(0).get(0).s.getBounds2D();
-			//System.out.println(i+": ("+(int)r.getX()+","+(int)r.getY()+","+(int)r.getWidth()+","+(int)r.getHeight()+")");
 			img_out_t = img_in.getSubimage((int)Math.max(0,r.getX()), (int)Math.max(0, r.getY()), (int)Math.min(img_in.getWidth()-r.getX(), r.getWidth()), (int)Math.min(img_in.getHeight()-r.getY(), r.getHeight()));
 			try {
 				//write image to local temporary file

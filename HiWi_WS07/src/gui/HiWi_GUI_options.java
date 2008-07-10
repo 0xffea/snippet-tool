@@ -50,6 +50,7 @@ public class HiWi_GUI_options extends JPanel implements ActionListener, ItemList
 	public JTextField jtf_db = new JTextField(SIZE_FIELD_LENGTH);
 
 	JButton b_addtext = new JButton("Add Text to Image");
+	JButton b_addtext2 = new JButton("Add Missing Text to Image");
 		
 	public HiWi_GUI_colourchooser cc_rubb;// = new HiWi_GUI_colourchooser(Preferences.String2Color(Preferences.LOCAL_COLOR_RUBBING_BACKGROUND), Preferences.LOCAL_ALPHA_RUBBING, this, this);
 	public HiWi_GUI_colourchooser cc_text;// = new HiWi_GUI_colourchooser(Preferences.String2Color(Preferences.LOCAL_COLOR_TEXT), Preferences.LOCAL_ALPHA_TEXT, this, this);
@@ -67,7 +68,8 @@ public class HiWi_GUI_options extends JPanel implements ActionListener, ItemList
 	
 	public ButtonGroup bg_markup = new ButtonGroup();
 	public JRadioButton rb_auto = new JRadioButton("guided");
-	public JRadioButton rb_man = new JRadioButton("manually");
+	public JRadioButton rb_man1 = new JRadioButton("manually, continious");
+	public JRadioButton rb_man2 = new JRadioButton("manually, selective");
 	
 	public HiWi_GUI_options(HiWi_GUI r, HiWi_Object_Sutra su){
 		super();
@@ -101,8 +103,10 @@ public class HiWi_GUI_options extends JPanel implements ActionListener, ItemList
 		
 		JPanel box2 = new JPanel(new SpringLayout());
 		box2.add(b_addtext);
+		box2.add(b_addtext2);
 		b_addtext.addActionListener(this);
-		SpringUtilities.makeCompactGrid(box2, 1, 1, 3, 3, 3, 3);
+		b_addtext2.addActionListener(this);
+		SpringUtilities.makeCompactGrid(box2, 2, 1, 3, 3, 3, 3);
 		
 		cc_rubb.setBorder(new TitledBorder("rubbing"));
 		cc_text.setBorder(new TitledBorder("text"));
@@ -149,13 +153,16 @@ public class HiWi_GUI_options extends JPanel implements ActionListener, ItemList
 		JPanel box7 = new JPanel(new SpringLayout());
 		box7.setBorder(new TitledBorder("markup"));
 		box7.add(rb_auto);
-		box7.add(rb_man);
+		box7.add(rb_man1);
+		box7.add(rb_man2);
 		bg_markup.add(rb_auto);
-		bg_markup.add(rb_man);
+		bg_markup.add(rb_man1);
+		bg_markup.add(rb_man2);
 		rb_auto.addItemListener(this);
-		rb_man.addItemListener(this);
+		rb_man1.addItemListener(this);
+		rb_man2.addItemListener(this);
 		rb_auto.setSelected(true);
-		SpringUtilities.makeCompactGrid(box7, 2, 1, 3, 3, 3, 3);
+		SpringUtilities.makeCompactGrid(box7, 3, 1, 3, 3, 3, 3);
 			
 		
 		add(box1);
@@ -181,7 +188,8 @@ public class HiWi_GUI_options extends JPanel implements ActionListener, ItemList
 		if(rb_rc.isSelected()) s.showRowColumn = true; else s.showRowColumn = false;
 		
 		if(rb_auto.isSelected()) root.main.main_image.changeMouseController("auto");
-		if(rb_man.isSelected()) root.main.main_image.changeMouseController("manual");
+		if(rb_man1.isSelected()) root.main.main_image.changeMouseController("manual1");
+		if(rb_man2.isSelected()) root.main.main_image.changeMouseController("manual2");
 		
 		root.main.repaint();
 	}
@@ -198,7 +206,11 @@ public class HiWi_GUI_options extends JPanel implements ActionListener, ItemList
 		
 		// 
 		if(cmd.equals(b_addtext.getActionCommand())){
-			s.loadMarkupSchema(this);			
+			s.loadMarkupSchema(this, false);			
+			root.repaint();
+		}
+		if(cmd.equals(b_addtext2.getActionCommand())){
+			s.loadMarkupSchema(this, true);			
 			root.repaint();
 		}
 		

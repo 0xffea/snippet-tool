@@ -38,6 +38,7 @@ public class HiWi_Object_Sign {
 	public int number;	// numeration starts with 1 because of compatibility with existing scripts and numeration
 	public float cert;	// certainty -> max=1.0, min=0.0
 	boolean preferred_reading;	// whether this reading is preferred by heidelberger academy of science
+	boolean missing = false;	// whether this sign was newly added to inscript and not yet marked up as its colleagues
 	int groupnumber;
 	int variant;	// reading variant, numeration starts with 0, no compatibilitiy needed (yet?)
 

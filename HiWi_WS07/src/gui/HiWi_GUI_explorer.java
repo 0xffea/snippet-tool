@@ -30,25 +30,33 @@ public class HiWi_GUI_explorer extends JPanel{
 	DefaultMutableTreeNode rootnode;// = new DefaultMutableTreeNode(new String(pcname));
 	JTree explorer;// = new JTree(rootnode);
 	
+	boolean autoload = false;
+	
 	public String selected;
 	public String selectedCollection;
 	public String selectedResource;
 	
-	public HiWi_GUI_explorer(HiWi_GUI r){		
+	public HiWi_GUI_explorer(HiWi_GUI r, boolean load){		
 		super();
 		setLayout(new GridLayout(1,1));
 		setBorder(new TitledBorder("explorer"));
-		setPreferredSize(new Dimension(200, 600));
+		setPreferredSize(new Dimension(200, 400));
 		
 		root = r;
 		pcname = root.props.getProperty("db.uri");
 		rootnode = new DefaultMutableTreeNode(new String(pcname));
 		explorer = new JTree(rootnode);
 		
+		this.autoload = load;
+		
 		// add custom treeselectionlistener for browsing in directory tree
 		explorer.addTreeSelectionListener(new TreeSelectionListener(){
 			@SuppressWarnings("unchecked")
 			public void valueChanged(TreeSelectionEvent tse) {
+				String user = root.props.getProperty("db.user");
+				String passwd = root.props.getProperty("db.passwd");
+				
+				
 				TreePath tp = tse.getPath();
 				DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tp.getLastPathComponent();
 				Object[] path = tp.getPath();
@@ -63,7 +71,8 @@ public class HiWi_GUI_explorer extends JPanel{
 					Class cl = Class.forName(driver);   
 					Database database = (Database) cl.newInstance();   
 					DatabaseManager.registerDatabase(database);
-					Collection col = DatabaseManager.getCollection(selectedDir);
+					Collection col = DatabaseManager.getCollection(selectedDir, user, passwd);
+					
 					//get child collections
 					if(col!=null && col.getChildCollectionCount()>0){
 						String[] children = col.listChildCollections();
@@ -72,6 +81,7 @@ public class HiWi_GUI_explorer extends JPanel{
 							selectedNode.add(new DefaultMutableTreeNode(children[i]));
 						}
 					}
+					
 					//get child resources
 					if(col!=null && col.getResourceCount()>0){
 						String[] resources = col.listResources();
@@ -80,6 +90,7 @@ public class HiWi_GUI_explorer extends JPanel{
 							selectedNode.add(new DefaultMutableTreeNode(resources[i]));
 						}
 					}
+					
 					//set selected collection and resource
 					if(col == null){
 						// set selected fields
@@ -88,13 +99,17 @@ public class HiWi_GUI_explorer extends JPanel{
 						selectedResource = selectedDir.substring(selectedDir.lastIndexOf("/")+1);
 						
 						// perform loading of selected resource
-						if(selectedResource.endsWith(".png") ||	// check whether resource is an image
+						if(autoload && 
+								(selectedResource.endsWith(".png") ||	// check whether resource is an image
 								selectedResource.endsWith(".jpeg") ||
-								selectedResource.endsWith(".jpg")){
+								selectedResource.endsWith(".jpg"))){
+							
 							root.main.loadImage();
+							root.main.main_image.mouse2.reset();
 						}
-						if(selectedResource.endsWith(".xml")){
+						if(autoload && selectedResource.endsWith(".xml")){
 							root.main.loadText();
+							root.main.main_image.mouse2.reset();
 						}
 					}
 				} catch (ClassNotFoundException e) {

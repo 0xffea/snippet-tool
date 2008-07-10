@@ -19,6 +19,7 @@ import javax.swing.JScrollPane;
 
 import src.controller.MouseControllerMainImage1;
 import src.controller.MouseControllerMainImage2;
+import src.controller.MouseControllerMainImage3;
 import src.model.HiWi_Object_Sutra;
 import src.model.HiWi_Object_Sign;
 import src.util.prefs.PrefUtil;
@@ -36,6 +37,7 @@ public class HiWi_GUI_main_image extends JPanel{
 	
 	MouseControllerMainImage1 mouse1;
 	MouseControllerMainImage2 mouse2;
+	MouseControllerMainImage3 mouse3;
 	
 	public boolean existingSign = false;
 	
@@ -52,6 +54,7 @@ public class HiWi_GUI_main_image extends JPanel{
 		
 		this.mouse1 = new MouseControllerMainImage1(this);
 		this.mouse2 = new MouseControllerMainImage2(this);
+		this.mouse3 = new MouseControllerMainImage3(this);
 		
 		sub = new HiWi_GUI_main_image_sub();
 		
@@ -121,11 +124,21 @@ public class HiWi_GUI_main_image extends JPanel{
     		
     		//System.out.println("Mouse Controller:\t"+sub.getMouseListeners()[0].getClass().toString());
     	}
-    	if(type.equals("manual")){
+    	if(type.equals("manual1")){
     		clearMouseControllers();
     		
     		this.sub.addMouseListener(mouse2);
     		this.sub.addMouseMotionListener(mouse2);
+    		
+    		mouse2.reset();
+    		
+    		//System.out.println("Mouse Controller:\t"+sub.getMouseListeners()[0].getClass().toString());
+    	}
+    	if(type.equals("manual2")){
+    		clearMouseControllers();
+    		
+    		this.sub.addMouseListener(mouse3);
+    		this.sub.addMouseMotionListener(mouse3);
     		
     		//System.out.println("Mouse Controller:\t"+sub.getMouseListeners()[0].getClass().toString());
     	}

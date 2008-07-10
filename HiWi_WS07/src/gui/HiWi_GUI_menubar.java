@@ -8,6 +8,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import src.imagecutter.ImageCutter;
 import src.model.HiWi_Object_Sutra;
 
 @SuppressWarnings("serial")
@@ -24,6 +25,7 @@ public class HiWi_GUI_menubar extends JMenuBar implements ActionListener{
 	JMenuItem mi_pref = new JMenuItem("Preferences");
 	JMenuItem mi_exit = new JMenuItem("Exit");
 	JMenuItem mi_clear = new JMenuItem("Clear Appearance");
+	JMenuItem mi_cutter = new JMenuItem("Image Cutter");
 	JMenuItem mi_about = new JMenuItem("About");
 	JMenuItem mi_help = new JMenuItem("Help");
 	
@@ -37,13 +39,15 @@ public class HiWi_GUI_menubar extends JMenuBar implements ActionListener{
 		mi_pref.addActionListener(this);
 		mi_exit.addActionListener(this);
 		mi_clear.addActionListener(this);
+		mi_cutter.addActionListener(this);
 		mi_about.addActionListener(this);
 		mi_help.addActionListener(this);
 		m_file.add(mi_save);
 		m_file.add(mi_load);
-		m_file.add(mi_pref);
+		//m_file.add(mi_pref);
 		m_file.add(mi_exit);
 		m_edit.add(mi_clear);
+		m_edit.add(mi_cutter);
 		m_help.add(mi_about);
 		m_help.add(mi_help);
 		add(m_file);
@@ -68,6 +72,9 @@ public class HiWi_GUI_menubar extends JMenuBar implements ActionListener{
 		}
 		if(e.getActionCommand().equals(mi_clear.getActionCommand())){
 			new HiWi_GUI_clearapp(root);
+		}
+		if(e.getActionCommand().equals(mi_cutter.getActionCommand())){
+			new ImageCutter(root);
 		}
 		if(e.getActionCommand().equals(mi_about.getActionCommand())){
 			String text = "Zeichen Tool\n" +
