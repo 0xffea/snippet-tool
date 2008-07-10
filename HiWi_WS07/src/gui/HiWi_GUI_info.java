@@ -40,7 +40,7 @@ public class HiWi_GUI_info extends JPanel{
 		HiWi_Object_Sign sn = s.getSign(i, 0);
 		// print info on label
 		String info = new String();
-		info += "sign:\t"+sn.characterStandard+" ("+sn.characterOriginal+")"+"\n";
+		info += "character:\t"+sn.characterStandard+" ("+sn.characterOriginal+")"+"\n";
 		info += "x, y:\t"+sn.s.x+", "+sn.s.y+"\n";
 		info += "width, height:\t"+sn.s.width+", "+sn.s.height+"\n";
 		info += "number:\t"+sn.number+" (r:"+sn.row+", c:"+sn.column+")"+"\n";
