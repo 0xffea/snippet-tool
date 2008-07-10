@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <layout>
   <panel name="explorer" dimension="200x582" />
-  <panel name="main" dimension="783x582" />
+  <panel name="main" dimension="805x582" />
   <panel name="options" dimension="259x582" />
-  <panel name="text" dimension="343x143" />
-  <panel name="info" dimension="233x143" />
-  <panel name="log" dimension="666x143" />
+  <panel name="text" dimension="343x168" />
+  <panel name="info" dimension="233x168" />
+  <panel name="log" dimension="688x168" />
 </layout>
 

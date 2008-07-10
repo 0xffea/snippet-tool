@@ -63,9 +63,8 @@ public class HiWi_GUI extends JFrame{
 		info = new HiWi_GUI_info(s);
 		// adjust jframe settings
 		setVisible(true);
-		setLocation(0, 0);
 		//setPreferredSize(getToolkit().getScreenSize());
-		setPreferredSize(PrefUtil.getWindowSize(props.getProperty("local.window.size")));
+		setPreferredSize(PrefUtil.string2dimesion(props.getProperty("local.window.size")));
 		setResizable(true);
 		setTitle("HiWi_GUI");
 		
@@ -107,6 +106,7 @@ public class HiWi_GUI extends JFrame{
 	
 	public void saveProperties(){
 		props.setProperty("local.window.size", this.getWidth()+"x"+this.getHeight());
+		props.setProperty("local.window.position", this.getLocation().x+"x"+this.getLocation().y);
 		
 		try {
 	        props.store(new FileOutputStream(PROPERTIES_FILE), null);
@@ -121,7 +121,8 @@ public class HiWi_GUI extends JFrame{
 	    	e.printStackTrace();
 	    }
 
-		this.setSize(PrefUtil.getWindowSize(props.getProperty("local.window.size")));
+		this.setSize(PrefUtil.string2dimesion(props.getProperty("local.window.size")));
+		this.setLocation(PrefUtil.string2point(props.getProperty("local.window.position")));
 	}
 	
 	public void saveLayout(){
@@ -161,22 +162,22 @@ public class HiWi_GUI extends JFrame{
 		for(int i=0; i<panels.size(); i++){
 			Element panel = panels.get(i);
 			if(panel.getAttributeValue("name").equals("main")){
-				main.setPreferredSize(PrefUtil.getWindowSize(panel.getAttributeValue("dimension")));
+				main.setPreferredSize(PrefUtil.string2dimesion(panel.getAttributeValue("dimension")));
 			}
 			if(panel.getAttributeValue("name").equals("explorer")){
-				explorer.setPreferredSize(PrefUtil.getWindowSize(panel.getAttributeValue("dimension")));
+				explorer.setPreferredSize(PrefUtil.string2dimesion(panel.getAttributeValue("dimension")));
 			}
 			if(panel.getAttributeValue("name").equals("options")){
-				options.setPreferredSize(PrefUtil.getWindowSize(panel.getAttributeValue("dimension")));
+				options.setPreferredSize(PrefUtil.string2dimesion(panel.getAttributeValue("dimension")));
 			}
 			if(panel.getAttributeValue("name").equals("text")){
-				text.setPreferredSize(PrefUtil.getWindowSize(panel.getAttributeValue("dimension")));
+				text.setPreferredSize(PrefUtil.string2dimesion(panel.getAttributeValue("dimension")));
 			}
 			if(panel.getAttributeValue("name").equals("info")){
-				info.setPreferredSize(PrefUtil.getWindowSize(panel.getAttributeValue("dimension")));
+				info.setPreferredSize(PrefUtil.string2dimesion(panel.getAttributeValue("dimension")));
 			}
 			if(panel.getAttributeValue("name").equals("log")){
-				log.setPreferredSize(PrefUtil.getWindowSize(panel.getAttributeValue("dimension")));
+				log.setPreferredSize(PrefUtil.string2dimesion(panel.getAttributeValue("dimension")));
 			}
 		}
 	}

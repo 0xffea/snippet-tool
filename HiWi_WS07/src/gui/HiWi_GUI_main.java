@@ -181,14 +181,16 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 			loadImage();
 		}
 		if(cmd.equals(clear.getActionCommand())){
-			s.clear();
 			
-			setBorder(new TitledBorder("main"));
-						
-			main_image.mouse2.currentIndex = 0;
-			
-			root.text.text_in.setText(new String());
-			root.text.setBorder(new TitledBorder("text"));
+			for(int i=0; i<s.sutra_text.size(); i++){
+				for(int j=0; j<s.sutra_text.get(i).size(); j++){
+					for(int k=0; k<s.sutra_text.get(i).get(j).size(); k++){
+						HiWi_Object_Sign csign = s.sutra_text.get(i).get(j).get(k);
+						Rectangle zeroRectangle = new Rectangle(0,0,0,0);
+						csign.s = zeroRectangle;
+					}
+				}
+			}
 			
 			root.repaint();
 		}

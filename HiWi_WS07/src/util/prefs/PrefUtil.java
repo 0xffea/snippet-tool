@@ -2,13 +2,20 @@ package src.util.prefs;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Point;
 
 public class PrefUtil {
 	
-	public static Dimension getWindowSize(String windowSize){
+	public static Dimension string2dimesion(String windowSize){
 		int hsize = Integer.valueOf(windowSize.substring(0, windowSize.indexOf("x")));
 		int vsize = Integer.valueOf(windowSize.substring(windowSize.indexOf("x")+1));
 		return new Dimension(hsize, vsize);
+	}
+	
+	public static Point string2point(String windowSize){
+		int hsize = Integer.valueOf(windowSize.substring(0, windowSize.indexOf("x")));
+		int vsize = Integer.valueOf(windowSize.substring(windowSize.indexOf("x")+1));
+		return new Point(hsize, vsize);
 	}
 	
 	public static Integer getDividerWidth(String width){
