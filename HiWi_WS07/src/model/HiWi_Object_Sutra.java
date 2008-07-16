@@ -184,7 +184,10 @@ public class HiWi_Object_Sutra {
 								if(cspan == null) System.out.println("NULL Element cspan while proceeding.");
 								if(cspan.getAttribute("class") == null) System.out.println("Element doesn't have 'class' attribute;\n"+cspan.toString());
 								
-								if(!cspan.getAttributeValue("class").equals("supplied")){
+								if(cspan.getAttributeValue("class").equals("supplied")){
+									supplied = true;
+								}
+								else{
 									String ch = cspan.getText();
 									String chOriginal = (cspan.getAttribute("original") != null)? cspan.getAttributeValue("original") : ch;
 									
@@ -195,9 +198,6 @@ public class HiWi_Object_Sutra {
 
 									//System.out.println(tempsign.getInfo()+"sutra text size = "+sutra_text.size());
 									root.addLogEntry(csign.getInfo(), 1, 1);
-								}
-								else{
-									supplied = true;
 								}
 							}
 						}
@@ -240,7 +240,10 @@ public class HiWi_Object_Sutra {
 								if(cspan == null) System.out.println("NULL Element cspan while proceeding.");
 								if(cspan.getAttribute("class") == null) System.out.println("Element doesn't have 'class' attribute;\n"+cspan.toString());
 								
-								if(!cspan.getAttributeValue("class").equals("supplied")){
+								if(cspan.getAttributeValue("class").equals("supplied")){
+									
+								}
+								else{
 									String ch = cspan.getText();
 									String chOriginal = (cspan.getAttribute("original") != null)? cspan.getAttributeValue("original") : ch;
 									
@@ -592,9 +595,12 @@ public class HiWi_Object_Sutra {
 			if(sutra_text.get(i).get(0).get(0).column > max_column) max_column = sutra_text.get(i).get(0).get(0).column;
 			if(sutra_text.get(i).get(0).get(0).row > max_row) max_row = sutra_text.get(i).get(0).get(0).row;
 		}
-		y_height = oa+(max_column-1)*(a+da);
-		x_width = ob+(max_row-1)*(b+db);
+		x_width = oa+(max_row-1)*(a+da);
+		y_height = ob+(max_column-1)*(b+db);
 		if(x_width > dim_x || y_height > dim_y){	// show warning message
+			//System.out.println("dim_image = "+dim_x+"x"+dim_y);
+			//System.out.println("dim_markup = "+x_width+"x"+y_height);
+			//System.out.println("max_row="+max_row+", max_column="+max_column);
 			JOptionPane.showMessageDialog(root, "Some of markup snippet don't pass on image!\nPlease use \"Full\" button to see whole image", "Alert!", JOptionPane.ERROR_MESSAGE);
 			return;
 		}

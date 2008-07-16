@@ -326,7 +326,7 @@ public class XMLUtil {
 			 * 	<variant/>
 			 * </choice>
 			 * 
-			 * <supplied>
+			 * <supplied rend="ignore">
 			 * 	<choice>
 			 * 		<variant>
 			 * 			<span/>
@@ -355,6 +355,7 @@ public class XMLUtil {
 				if(element.getName().equals("supplied")){					
 					element.getParentElement().removeContent(element);
 					
+					boolean ignoreSupplied = (element.getAttribute("rend") != null && element.getAttributeValue("rend") != "")? true : false;
 					List<Element> suppliedChildren = element.getChildren();
 					
 					int iterations = suppliedChildren.size();
@@ -367,7 +368,8 @@ public class XMLUtil {
 							//outputter.output(suppliedElement, System.out);
 							//System.out.println();
 							
-							suppliedElement.setAttribute("class", "supplied");
+							if(ignoreSupplied) suppliedElement.setAttribute("class", "supplied");
+							else suppliedElement.setAttribute("class", "quasi-supplied");
 
 							Element choice = new Element("choice");
 							Element variant = new Element("variant");

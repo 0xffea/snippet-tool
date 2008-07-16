@@ -256,17 +256,18 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		// 
 		xml = XMLUtil.fetchXML(root, dbUser, dbPass, col, res);
 		if(xml == null || xml == "") JOptionPane.showMessageDialog(root, "XML not fetched properly", "Alert!", JOptionPane.ERROR_MESSAGE);
+		HiWi_FileIO.writeStringToFile("inscript-original.xml", xml);
 		//
 		xslt = HiWi_FileIO.readXMLStringFromFile(localXSLTFile);
 		if(xslt == null || xslt == "") JOptionPane.showMessageDialog(root, "XSLT not fetched properly", "Alert!", JOptionPane.ERROR_MESSAGE);
 		// 
 		out = XMLUtil.transformXML(xml, xslt);
 		if(out == null || out == "") JOptionPane.showMessageDialog(root, "Bad out after transformation xml->xslt->out", "Alert!", JOptionPane.ERROR_MESSAGE);
-		//HiWi_FileIO.writeStringToFile("trans.xml", out);
+		HiWi_FileIO.writeStringToFile("inscript-transformed.xml", out);
 		
 		// standardize transformed inscript
 		out_st = XMLUtil.standardizeXML(out);
-		//HiWi_FileIO.writeStringToFile("trans_standard.xml", out_st);
+		HiWi_FileIO.writeStringToFile("inscript-transformed-standardized.xml", out_st);
 		
 		// add information to sutra_text
 		s.addText(s.sutra_id, out_st);
