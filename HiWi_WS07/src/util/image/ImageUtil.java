@@ -3,6 +3,7 @@ package src.util.image;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -45,6 +46,11 @@ public class ImageUtil {
 		root.addLogEntry("\timg="+img, 0, 1);
 		//
 		BufferedImage bi = null;
+		/*try {
+			bi = ImageIO.read(new File("C:\\Users\\abratuhi\\Downloads\\tieshan_alleZeichen_2mm_kepeng_cutms SW.jpg"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
 		try {
 			String driver = "org.exist.xmldb.DatabaseImpl";    
 			Class cl = Class.forName(driver);   

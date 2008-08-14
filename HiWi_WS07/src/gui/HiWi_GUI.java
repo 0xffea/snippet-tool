@@ -1,6 +1,7 @@
 package src.gui;
 
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.XMLDecoder;
