@@ -11,7 +11,7 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JOptionPane;
 
 import src.gui.HiWi_GUI_main_image;
-import src.model.HiWi_Object_Sign;
+import src.model.HiWi_Object_Character;
 import src.util.prefs.PrefUtil;
 
 public class MouseControllerMainImage2 implements MouseListener, MouseMotionListener{

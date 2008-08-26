@@ -20,15 +20,15 @@ import javax.swing.JScrollPane;
 import src.controller.MouseControllerMainImage1;
 import src.controller.MouseControllerMainImage2;
 import src.controller.MouseControllerMainImage3;
-import src.model.HiWi_Object_Sutra;
-import src.model.HiWi_Object_Sign;
+import src.model.HiWi_Object_Inscript;
+import src.model.HiWi_Object_Character;
 import src.util.prefs.PrefUtil;
 
 @SuppressWarnings("serial")
 public class HiWi_GUI_main_image extends JPanel{
 	
 	public HiWi_GUI root;	
-	public HiWi_Object_Sutra s;	// current sutra
+	public HiWi_Object_Inscript s;	// current sutra
 	//public HiWi_Object_Sign sn = null;	//	current sign
 	
 	public HiWi_GUI_main_image_sub sub;
@@ -44,7 +44,7 @@ public class HiWi_GUI_main_image extends JPanel{
 	public double scale = 1.0;
 	public double scaleFactor = 1.1;
 
-	public HiWi_GUI_main_image(HiWi_GUI jf, HiWi_Object_Sutra sutra){
+	public HiWi_GUI_main_image(HiWi_GUI jf, HiWi_Object_Inscript sutra){
 		super();
 		setLayout(new BorderLayout());
 		setFocusable(true);
@@ -88,9 +88,9 @@ public class HiWi_GUI_main_image extends JPanel{
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, rubbingAlpha));
             if(s.sutra_image != null) g.drawImage(s.sutra_image, 0, 0, this);
     		for(int i=0; i<s.sutra_text.size(); i++){
-    			ArrayList<ArrayList<HiWi_Object_Sign>> signvariants = s.sutra_text.get(i);
-    			ArrayList<HiWi_Object_Sign> signs = signvariants.get(0);
-    			HiWi_Object_Sign sign = signs.get(0);
+    			ArrayList<ArrayList<HiWi_Object_Character>> signvariants = s.sutra_text.get(i);
+    			ArrayList<HiWi_Object_Character> signs = signvariants.get(0);
+    			HiWi_Object_Character sign = signs.get(0);
     			sign.draw(g);
     		}
     		

@@ -50,7 +50,7 @@ import src.util.num.NumUtil;
 import src.util.prefs.PrefUtil;
 import src.util.xml.XMLUtil;
 
-public class HiWi_Object_Sutra {
+public class HiWi_Object_Inscript {
 	//
 	HiWi_GUI root;
 
@@ -62,7 +62,7 @@ public class HiWi_Object_Sutra {
 	//	
 	public BufferedImage sutra_image = null;
 	//public ArrayList<HiWi_Object_Sign> sutra_text = new ArrayList<HiWi_Object_Sign>();
-	public ArrayList<ArrayList<ArrayList<HiWi_Object_Sign>>> sutra_text = new ArrayList<ArrayList<ArrayList<HiWi_Object_Sign>>>();
+	public ArrayList<ArrayList<ArrayList<HiWi_Object_Character>>> sutra_text = new ArrayList<ArrayList<ArrayList<HiWi_Object_Character>>>();
 
 	//
 	public boolean is_left_to_right = false;
@@ -74,7 +74,7 @@ public class HiWi_Object_Sutra {
 	Font f;
 	int oa, ob, a, b, da, db; //oa=x_offset; ob=y_offset; a=snippet_width; b=snippet_height; da=x_distance_between_snippets; db=y_distance_between_snippets
 
-	public HiWi_Object_Sutra(HiWi_GUI r){
+	public HiWi_Object_Inscript(HiWi_GUI r){
 		this.root = r;
 		//loadFont();
 	}
@@ -157,9 +157,9 @@ public class HiWi_Object_Sutra {
 					
 					// proceed basic length
 					for(int j=0; j<basiclength; j++){
-						ArrayList<ArrayList<HiWi_Object_Sign>> signVariants = new ArrayList<ArrayList<HiWi_Object_Sign>>();
-						ArrayList<HiWi_Object_Sign> signs = new ArrayList<HiWi_Object_Sign>();
-						HiWi_Object_Sign csign = new HiWi_Object_Sign();
+						ArrayList<ArrayList<HiWi_Object_Character>> signVariants = new ArrayList<ArrayList<HiWi_Object_Character>>();
+						ArrayList<HiWi_Object_Character> signs = new ArrayList<HiWi_Object_Character>();
+						HiWi_Object_Character csign = new HiWi_Object_Character();
 						boolean supplied = false;
 						
 						for(int v=0; v<lvariants.size(); v++){
@@ -191,10 +191,10 @@ public class HiWi_Object_Sutra {
 									String ch = cspan.getText();
 									String chOriginal = (cspan.getAttribute("original") != null)? cspan.getAttributeValue("original") : ch;
 									
-									csign = new HiWi_Object_Sign(this, ch, chOriginal, cert, preferred, variantnumber, current_row, current_column, current_number, new Point(0,0), new Dimension(0,0));
+									csign = new HiWi_Object_Character(this, ch, chOriginal, cert, preferred, variantnumber, current_row, current_column, current_number, new Point(0,0), new Dimension(0,0));
 
 									signs.add(csign);
-									signVariants.add((ArrayList<HiWi_Object_Sign>) signs.clone());
+									signVariants.add((ArrayList<HiWi_Object_Character>) signs.clone());
 
 									//System.out.println(tempsign.getInfo()+"sutra text size = "+sutra_text.size());
 									root.addLogEntry(csign.getInfo(), 1, 1);
@@ -204,7 +204,7 @@ public class HiWi_Object_Sutra {
 						
 						if(!supplied){
 							// add variants arraylist to sutra text
-							sutra_text.add((ArrayList<ArrayList<HiWi_Object_Sign>>) signVariants.clone());
+							sutra_text.add((ArrayList<ArrayList<HiWi_Object_Character>>) signVariants.clone());
 							//
 							current_column++;
 							current_number++;
@@ -216,7 +216,7 @@ public class HiWi_Object_Sutra {
 					
 					// proceed extra length
 					for(int j = basiclength; j<maxlength; j++){
-						HiWi_Object_Sign csign = new HiWi_Object_Sign();
+						HiWi_Object_Character csign = new HiWi_Object_Character();
 						int current_number_for_extra = current_number -1; // current_number was already incremented
 						int current_column_for_extra = current_column -1;
 						
@@ -247,7 +247,7 @@ public class HiWi_Object_Sutra {
 									String ch = cspan.getText();
 									String chOriginal = (cspan.getAttribute("original") != null)? cspan.getAttributeValue("original") : ch;
 									
-									csign = new HiWi_Object_Sign(this, ch, chOriginal, cert, preferred, variantnumber, current_row, current_column_for_extra, current_number_for_extra, new Point(0,0), new Dimension(0,0));
+									csign = new HiWi_Object_Character(this, ch, chOriginal, cert, preferred, variantnumber, current_row, current_column_for_extra, current_number_for_extra, new Point(0,0), new Dimension(0,0));
 
 									// no imagesign -> attach it to last placed sign
 									// -1, current_number starts with 1, not 0 and in arraylist numbering starts with 0
@@ -291,14 +291,14 @@ public class HiWi_Object_Sutra {
 			this.sutra_text.clear();
 
 			// get markup
-			ArrayList<HiWi_Object_Sign> tarrayOfSigns = new ArrayList<HiWi_Object_Sign>();
+			ArrayList<HiWi_Object_Character> tarrayOfSigns = new ArrayList<HiWi_Object_Character>();
 			ResourceIterator iterator = query_result.getIterator();
 			while(iterator.hasMoreResources()) {  
 				Resource res = iterator.nextResource();
 				XMLResource xmlres = (XMLResource) res;
 				Document d = builder.build(new StringReader((String) xmlres.getContent()));
 				Element appearance = d.getRootElement();	// it's appearance tag
-				tarrayOfSigns.add(HiWi_Object_Sign.fromAppearance(this, appearance));
+				tarrayOfSigns.add(HiWi_Object_Character.fromAppearance(this, appearance));
 			}
 			
 			root.addLogEntry("Found appearances in db: "+tarrayOfSigns.size(), 0, 1);
@@ -318,21 +318,21 @@ public class HiWi_Object_Sutra {
 		try{
 			SAXBuilder builder = new SAXBuilder();
 			// get appearances
-			ArrayList<HiWi_Object_Sign> tarrayOfSigns = new ArrayList<HiWi_Object_Sign>();
+			ArrayList<HiWi_Object_Character> tarrayOfSigns = new ArrayList<HiWi_Object_Character>();
 			ResourceIterator iterator = query_result.getIterator();
 			while(iterator.hasMoreResources()) {  
 				Resource res = iterator.nextResource();
 				XMLResource xmlres = (XMLResource) res;
 				Document d = builder.build(new StringReader((String) xmlres.getContent()));
 				Element appearance = d.getRootElement();	// it's the appearance tag
-				HiWi_Object_Sign csign = HiWi_Object_Sign.fromAppearance(this, appearance);
+				HiWi_Object_Character csign = HiWi_Object_Character.fromAppearance(this, appearance);
 				tarrayOfSigns.add(csign);
 				//System.out.println("fetched sign: "+csign.getInfo());
 			}
 			
 			// use each appearance's number to update coordinates
 			for(int i=0; i<tarrayOfSigns.size(); i++){
-				HiWi_Object_Sign csign = tarrayOfSigns.get(i);
+				HiWi_Object_Character csign = tarrayOfSigns.get(i);
 				Rectangle rectangle = csign.s;
 				int column = csign.column;
 				int row = csign.row;
@@ -343,7 +343,7 @@ public class HiWi_Object_Sutra {
 			for(int i=0; i<sutra_text.size(); i++){
 				for(int j=0; j<sutra_text.get(i).size(); j++){
 					for(int k=0; k<sutra_text.get(i).get(j).size(); k++){
-						HiWi_Object_Sign csign = sutra_text.get(i).get(j).get(k);
+						HiWi_Object_Character csign = sutra_text.get(i).get(j).get(k);
 						if(csign.s.width == 0 || csign.s.height == 0){
 							csign.missing = true;
 						}
@@ -384,19 +384,19 @@ public class HiWi_Object_Sutra {
 		}
 	}
 	
-	public void setTextFromArrayList(ArrayList<HiWi_Object_Sign> list){
+	public void setTextFromArrayList(ArrayList<HiWi_Object_Character> list){
 		// sort tarrayOfSigns after their number
 		for(int i=0; i< list.size(); i++){
 			for(int j=i; j<list.size(); j++){
 				if(list.get(i).number > list.get(j).number){	// handle different signs
-					HiWi_Object_Sign tempsign = list.get(i);
+					HiWi_Object_Character tempsign = list.get(i);
 					list.set(i, list.get(j));
 					list.set(j, tempsign);
 				}
 				else{
 					if(list.get(i).number == list.get(j).number
 							&& list.get(i).variant > list.get(j).variant){ // handle variants of the same sign
-						HiWi_Object_Sign tempsign = list.get(i);
+						HiWi_Object_Character tempsign = list.get(i);
 						list.set(i, list.get(j));
 						list.set(j, tempsign);
 					}
@@ -413,9 +413,9 @@ public class HiWi_Object_Sutra {
 		int lnumber = 0;	// rememebering that numbers start from 1
 		int lvariant = 0;
 		
-		ArrayList<ArrayList<HiWi_Object_Sign>> signVariants = new ArrayList<ArrayList<HiWi_Object_Sign>>();
-		ArrayList<HiWi_Object_Sign> signs = new ArrayList<HiWi_Object_Sign>();
-		HiWi_Object_Sign csign = new HiWi_Object_Sign();
+		ArrayList<ArrayList<HiWi_Object_Character>> signVariants = new ArrayList<ArrayList<HiWi_Object_Character>>();
+		ArrayList<HiWi_Object_Character> signs = new ArrayList<HiWi_Object_Character>();
+		HiWi_Object_Character csign = new HiWi_Object_Character();
 		
 		for(int i=0; i<list.size(); i++){
 			csign = list.get(i);
@@ -428,7 +428,7 @@ public class HiWi_Object_Sutra {
 					signs.add(csign);
 				}
 				else{
-					signs = new ArrayList<HiWi_Object_Sign>();
+					signs = new ArrayList<HiWi_Object_Character>();
 					
 					signs.add(csign);
 					signVariants.add(signs);
@@ -437,12 +437,12 @@ public class HiWi_Object_Sutra {
 			else{
 				lvariant = 0;
 				
-				signVariants = new ArrayList<ArrayList<HiWi_Object_Sign>>();
-				signs = new ArrayList<HiWi_Object_Sign>();
+				signVariants = new ArrayList<ArrayList<HiWi_Object_Character>>();
+				signs = new ArrayList<HiWi_Object_Character>();
 				
 				signs.add(csign);
 				signVariants.add(signs);
-				sutra_text.add((ArrayList<ArrayList<HiWi_Object_Sign>>) signVariants.clone());
+				sutra_text.add((ArrayList<ArrayList<HiWi_Object_Character>>) signVariants.clone());
 			}
 			
 			lnumber = cnumber;				
@@ -484,11 +484,11 @@ public class HiWi_Object_Sutra {
 
 	}
 
-	public HiWi_Object_Sign getSign(int n, int v){
+	public HiWi_Object_Character getSign(int n, int v){
 		return sutra_text.get(n).get(v).get(0);
 	}
 	
-	public void resizeSnippet(HiWi_Object_Sign sn, String dir, int dx, int dy){
+	public void resizeSnippet(HiWi_Object_Character sn, String dir, int dx, int dy){
 		int index = sn.getNumber()-1;	// all variants must be resized
 		for(int j=0; j<this.sutra_text.get(index).size(); j++){
 			for(int k=0; k<this.sutra_text.get(index).get(j).size(); k++){
@@ -496,7 +496,7 @@ public class HiWi_Object_Sutra {
 			}
 		}
 	}
-	public void moveSnippet(HiWi_Object_Sign sn, int dx, int dy){
+	public void moveSnippet(HiWi_Object_Character sn, int dx, int dy){
 		int index = sn.getNumber()-1;	// all variants must be moved
 		for(int j=0; j<this.sutra_text.get(index).size(); j++){
 			for(int k=0; k<this.sutra_text.get(index).get(j).size(); k++){
@@ -569,7 +569,7 @@ public class HiWi_Object_Sutra {
 		return this.activeSign+1;
 	}
 	
-	public HiWi_Object_Sign getActiveSign(){
+	public HiWi_Object_Character getActiveSign(){
 		if(activeSign == -1) return null;
 		return this.sutra_text.get(this.getActiveNumber()).get(0).get(0);
 	}
@@ -607,10 +607,10 @@ public class HiWi_Object_Sutra {
 		
 		// apply parameters if check passed
 		for(int i=0; i<sutra_text.size(); i++){
-			ArrayList<ArrayList<HiWi_Object_Sign>> signvariants = sutra_text.get(i);
+			ArrayList<ArrayList<HiWi_Object_Character>> signvariants = sutra_text.get(i);
 			for(int j=0; j<signvariants.size(); j++){
 				for(int k=0; k<signvariants.get(j).size(); k++){
-					HiWi_Object_Sign csign = signvariants.get(j).get(k);
+					HiWi_Object_Character csign = signvariants.get(j).get(k);
 					
 					// if dimension greater 0, sign already has coordinates assigned -> no need to generate
 					if(missingOnly && csign.missing){
@@ -656,7 +656,7 @@ public class HiWi_Object_Sutra {
 		for(int i=0; i<sutra_text.size(); i++){
 			for(int j=0; j<sutra_text.get(i).size(); j++){
 				for(int k=0; k<sutra_text.get(i).get(j).size(); k++){
-					HiWi_Object_Sign csign = sutra_text.get(i).get(j).get(k);
+					HiWi_Object_Character csign = sutra_text.get(i).get(j).get(k);
 					docout.getRootElement().addContent(csign.toAppearance());
 				}
 			}
@@ -689,10 +689,10 @@ public class HiWi_Object_Sutra {
 			this.sutra_text.clear();
 
 			// get markup
-			ArrayList<HiWi_Object_Sign> tarrayOfSigns = new ArrayList<HiWi_Object_Sign>();
+			ArrayList<HiWi_Object_Character> tarrayOfSigns = new ArrayList<HiWi_Object_Character>();
 			for(int i=0; i<apps.size(); i++) {
 				Element xmle = apps.get(i);	// it's appearance tag								
-				tarrayOfSigns.add(HiWi_Object_Sign.fromAppearance(this, xmle));
+				tarrayOfSigns.add(HiWi_Object_Character.fromAppearance(this, xmle));
 			}
 			
 			root.addLogEntry("found signs in tempfile: "+tarrayOfSigns.size(), 0, 1);
@@ -734,7 +734,7 @@ public class HiWi_Object_Sutra {
 		for(int i=0; i<this.sutra_text.size(); i++){
 			for(int j=0; j<this.sutra_text.get(i).size(); j++){
 				for(int k=0; k<this.sutra_text.get(i).get(j).size(); k++){
-					HiWi_Object_Sign csign = this.sutra_text.get(i).get(j).get(k);
+					HiWi_Object_Character csign = this.sutra_text.get(i).get(j).get(k);
 					
 					root.addLogEntry("storing coordinates of nr.="+csign.number, 1, 1);
 					

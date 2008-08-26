@@ -31,18 +31,18 @@ import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XUpdateQueryService;
 
 import src.gui.HiWi_GUI;
-import src.model.HiWi_Object_Sutra;
-import src.model.HiWi_Object_Sign;
+import src.model.HiWi_Object_Inscript;
+import src.model.HiWi_Object_Character;
 import src.util.num.NumUtil;
 
 public class XMLUtil {
 
-	public static String getPlainTextFromApp(HiWi_Object_Sutra sutra){
+	public static String getPlainTextFromApp(HiWi_Object_Inscript sutra){
 		String out = new String();
 		int row = 1;
 		int crow = 1;
 		for(int i=0; i<sutra.sutra_text.size(); i++){
-			HiWi_Object_Sign csign = sutra.sutra_text.get(i).get(0).get(0);
+			HiWi_Object_Character csign = sutra.sutra_text.get(i).get(0).get(0);
 			crow = csign.row;
 
 			if(crow != row){	// add breakline

@@ -31,7 +31,7 @@ import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XPathQueryService;
 
 import src.gui.HiWi_GUI;
-import src.model.HiWi_Object_Sign;
+import src.model.HiWi_Object_Character;
 import src.util.db.DbUtil;
 
 import com.sun.image.codec.jpeg.ImageFormatException;

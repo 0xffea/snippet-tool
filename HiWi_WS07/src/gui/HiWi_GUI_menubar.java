@@ -9,12 +9,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import src.imagecutter.ImageCutter;
-import src.model.HiWi_Object_Sutra;
+import src.model.HiWi_Object_Inscript;
 
 @SuppressWarnings("serial")
 public class HiWi_GUI_menubar extends JMenuBar implements ActionListener{
 	HiWi_GUI root;
-	HiWi_Object_Sutra s;
+	HiWi_Object_Inscript s;
 	
 	JMenu m_file = new JMenu("File");
 	JMenu m_edit = new JMenu("Edit");
@@ -30,7 +30,7 @@ public class HiWi_GUI_menubar extends JMenuBar implements ActionListener{
 	JMenuItem mi_help = new JMenuItem("Help");
 	
 	
-	public HiWi_GUI_menubar(HiWi_GUI r, HiWi_Object_Sutra str){
+	public HiWi_GUI_menubar(HiWi_GUI r, HiWi_Object_Inscript str){
 		super();
 		this.root = r;
 		this.s = str;

@@ -11,18 +11,18 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import src.model.HiWi_Object_Sutra;
+import src.model.HiWi_Object_Inscript;
 
 @SuppressWarnings("serial")
 public class HiWi_GUI_preferences extends JFrame implements ActionListener{
 	HiWi_GUI root;
-	HiWi_Object_Sutra s;
+	HiWi_Object_Inscript s;
 	
 	JPanel p = new JPanel();
 	JButton button_ok = new JButton("Ok");
 	JButton button_cancel = new JButton("Cancel");
 	
-	public HiWi_GUI_preferences(HiWi_GUI r, HiWi_Object_Sutra str){
+	public HiWi_GUI_preferences(HiWi_GUI r, HiWi_Object_Inscript str){
 		super("HiWi_GUI Preferences");
 		this.root = r;
 		this.s = str;

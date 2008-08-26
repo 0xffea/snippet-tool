@@ -7,7 +7,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import src.gui.HiWi_GUI_main_image;
-import src.model.HiWi_Object_Sign;
+import src.model.HiWi_Object_Character;
 
 public class MouseControllerMainImage1 implements MouseListener, MouseMotionListener{
 	
@@ -38,7 +38,7 @@ public class MouseControllerMainImage1 implements MouseListener, MouseMotionList
 			if(main_image.s.getActiveSign()==null || !main_image.s.getActiveSign().s.getBounds2D().contains(mouse_pressed)){	// if not still the same sign used as active
 				for(int i=0; i<main_image.s.sutra_text.size(); i++){	// find sign that should be active
 					//System.out.println("Looking for active sign for LEFT_BUTTON_PRESSED");
-					HiWi_Object_Sign sign = main_image.s.sutra_text.get(i).get(0).get(0);
+					HiWi_Object_Character sign = main_image.s.sutra_text.get(i).get(0).get(0);
 					if(sign.s.getBounds2D().contains(mouse_current_new)){
 						// found existing sign
 						main_image.existingSign = true;
@@ -70,7 +70,7 @@ public class MouseControllerMainImage1 implements MouseListener, MouseMotionList
 			if(main_image.s.getActiveSign()==null || !main_image.s.getActiveSign().s.getBounds2D().contains(mouse_pressed)){	// if not still the same sign used as active
 				for(int i=0; i<main_image.s.sutra_text.size(); i++){	// find sign that should be active
 					//System.out.println("Looking for active sign for RIGHT_BUTTON_PRESSED");
-					HiWi_Object_Sign sign = main_image.s.sutra_text.get(i).get(0).get(0);
+					HiWi_Object_Character sign = main_image.s.sutra_text.get(i).get(0).get(0);
 					if(sign.s.contains(mouse_current_new)){
 						// found existing sign
 						main_image.existingSign = true;

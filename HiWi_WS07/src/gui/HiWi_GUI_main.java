@@ -30,8 +30,8 @@ import org.xmldb.api.modules.BinaryResource;
 import org.xmldb.api.modules.CollectionManagementService;
 
 import src.controller.MouseControllerMainImage2;
-import src.model.HiWi_Object_Sutra;
-import src.model.HiWi_Object_Sign;
+import src.model.HiWi_Object_Inscript;
+import src.model.HiWi_Object_Character;
 import src.util.file.HiWi_FileIO;
 import src.util.gui.JZoomSlider;
 import src.util.image.ImageUtil;
@@ -42,7 +42,7 @@ import src.util.xml.XMLUtil;
 public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListener{
 	
 	HiWi_GUI root;	
-	HiWi_Object_Sutra s;
+	HiWi_Object_Inscript s;
 	
 	HiWi_GUI_main_image main_image;
 	
@@ -64,7 +64,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 	//JButton button_addtext = new JButton("Add Text to Image");
 	JButton submit =  new JButton("Submit");
 	
-	public HiWi_GUI_main(HiWi_GUI jf, HiWi_Object_Sutra sutra){
+	public HiWi_GUI_main(HiWi_GUI jf, HiWi_Object_Inscript sutra){
 		super();
 		
 		this.main_image = new HiWi_GUI_main_image(jf, sutra);
@@ -186,7 +186,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 			for(int i=0; i<s.sutra_text.size(); i++){
 				for(int j=0; j<s.sutra_text.get(i).size(); j++){
 					for(int k=0; k<s.sutra_text.get(i).get(j).size(); k++){
-						HiWi_Object_Sign csign = s.sutra_text.get(i).get(j).get(k);
+						HiWi_Object_Character csign = s.sutra_text.get(i).get(j).get(k);
 						Rectangle zeroRectangle = new Rectangle(0,0,0,0);
 						csign.s = zeroRectangle;
 					}
@@ -256,18 +256,18 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		// 
 		xml = XMLUtil.fetchXML(root, dbUser, dbPass, col, res);
 		if(xml == null || xml == "") JOptionPane.showMessageDialog(root, "XML not fetched properly", "Alert!", JOptionPane.ERROR_MESSAGE);
-		//HiWi_FileIO.writeStringToFile("inscript-original.xml", xml);
+		HiWi_FileIO.writeStringToFile("inscript-original.xml", xml);
 		//
 		xslt = HiWi_FileIO.readXMLStringFromFile(localXSLTFile);
 		if(xslt == null || xslt == "") JOptionPane.showMessageDialog(root, "XSLT not fetched properly", "Alert!", JOptionPane.ERROR_MESSAGE);
 		// 
 		out = XMLUtil.transformXML(xml, xslt);
 		if(out == null || out == "") JOptionPane.showMessageDialog(root, "Bad out after transformation xml->xslt->out", "Alert!", JOptionPane.ERROR_MESSAGE);
-		//HiWi_FileIO.writeStringToFile("inscript-transformed.xml", out);
+		HiWi_FileIO.writeStringToFile("inscript-transformed.xml", out);
 		
 		// standardize transformed inscript
 		out_st = XMLUtil.standardizeXML(out);
-		//HiWi_FileIO.writeStringToFile("inscript-transformed-standardized.xml", out_st);
+		HiWi_FileIO.writeStringToFile("inscript-transformed-standardized.xml", out_st);
 		
 		// add information to sutra_text
 		s.addText(s.sutra_id, out_st);

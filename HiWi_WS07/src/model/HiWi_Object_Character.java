@@ -19,9 +19,9 @@ import src.util.prefs.PrefUtil;
  * @author abratuhi
  *
  */
-public class HiWi_Object_Sign {
+public class HiWi_Object_Character {
 	//
-	public HiWi_Object_Sutra sutra;
+	public HiWi_Object_Inscript sutra;
 	public String sign_path_snippet = new String();
 
 	//
@@ -61,11 +61,11 @@ public class HiWi_Object_Sign {
 	}
 
 	// empty constructor, needed sometimes in texhnical procedures
-	public HiWi_Object_Sign(){
+	public HiWi_Object_Character(){
 
 	}
 	// basic constructor
-	public HiWi_Object_Sign(HiWi_Object_Sutra s, String chStandard, String chOriginal, float cert, boolean preferred, int var, int r, int c, int n, Point base, Dimension delta){
+	public HiWi_Object_Character(HiWi_Object_Inscript s, String chStandard, String chOriginal, float cert, boolean preferred, int var, int r, int c, int n, Point base, Dimension delta){
 		// initialize parent sutra
 		this.sutra = s;
 		// get needed properties
@@ -308,7 +308,7 @@ public class HiWi_Object_Sign {
 		return appearance;
 	}
 
-	public static HiWi_Object_Sign fromAppearance(HiWi_Object_Sutra sutra, Element appearance){
+	public static HiWi_Object_Character fromAppearance(HiWi_Object_Inscript sutra, Element appearance){
 		String chStandard = appearance.getAttributeValue("character");
 		String chOriginal = appearance.getAttributeValue("original");
 		String chId = appearance.getAttributeValue("id");
@@ -325,7 +325,7 @@ public class HiWi_Object_Sign {
 		int width = Integer.parseInt(xmlc.getAttributeValue("width"));
 		int height = Integer.parseInt(xmlc.getAttributeValue("height"));
 
-		HiWi_Object_Sign sign = new HiWi_Object_Sign(sutra, chStandard, chOriginal, cert, preferred, var, r, c, n, new Point(x,y), new Dimension(width, height));				
+		HiWi_Object_Character sign = new HiWi_Object_Character(sutra, chStandard, chOriginal, cert, preferred, var, r, c, n, new Point(x,y), new Dimension(width, height));				
 		sign.id = chId; // just to be sure, since it's the only value not mentioned in constructor explicit
 
 		return sign;

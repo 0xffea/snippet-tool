@@ -24,28 +24,39 @@ import org.jdesktop.swingx.MultiSplitLayout.Node;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import src.model.HiWi_Object_Sutra;
+import src.model.HiWi_Object_Inscript;
 import src.util.file.HiWi_FileIO;
 import src.util.prefs.PrefUtil;
 
 @SuppressWarnings("serial")
 public class HiWi_GUI extends JFrame{
 	
+	/** File storing all application vital properties, like database address, username, passwords, etc. **/
 	public final static String PROPERTIES_FILE = "snippet-tool.properties";
 	
-	HiWi_Object_Sutra s = new HiWi_Object_Sutra(this);
+	/** Application is initialized together with an Inscript Object **/
+	HiWi_Object_Inscript s = new HiWi_Object_Inscript(this);
 	
 	public Properties props = new Properties();
 	
-	public HiWi_GUI_menubar menubar;// = new HiWi_GUI_menubar(this, s);
-	public HiWi_GUI_main main;// = new HiWi_GUI_main(this, s);
-	public HiWi_GUI_text text;// = new HiWi_GUI_text(this, s);
+	/** Menubar **/
+	public HiWi_GUI_menubar menubar;
+	/** Main panel, marking is done here **/
+	public HiWi_GUI_main main;
+	/** Text panel, inscript text is shown here **/
+	public HiWi_GUI_text text;
+	/** Log panel, all log messages are shown here (except for exceptions and errors that occure) **/
 	public HiWi_GUI_log log;
-	public HiWi_GUI_explorer explorer;// = new HiWi_GUI_explorer(this);
-	public HiWi_GUI_options options;// = new HiWi_GUI_options(this, s);
+	/** Explorer panel, tree-like explorer of eXist database for selecting and loading resources **/
+	public HiWi_GUI_explorer explorer;
+	/** Options panel, all adjustments for automatic marking, opacities, colors, text direction and displayed information are done here**/
+	public HiWi_GUI_options options;
+	/** Info panel, information about currently selected character is shown here **/
 	public HiWi_GUI_info info;
 	
+	/** Stores all USER level log messages **/
 	public String log_user = new String();
+	/** Stores all DEVELOPER level log messages **/
 	public String log_dev = new String();
 	
 	public HiWi_GUI(){

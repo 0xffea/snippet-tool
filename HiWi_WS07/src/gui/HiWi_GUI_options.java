@@ -23,7 +23,7 @@ import javax.swing.event.ChangeListener;
 
 import net.java.dev.colorchooser.ColorChooser;
 
-import src.model.HiWi_Object_Sutra;
+import src.model.HiWi_Object_Inscript;
 import src.util.prefs.PrefUtil;
 import src.util.spring.SpringUtilities;
 
@@ -33,7 +33,7 @@ public class HiWi_GUI_options extends JPanel implements ActionListener, ItemList
 	public final static int SIZE_FIELD_LENGTH = 4;
 	
 	HiWi_GUI root;
-	HiWi_Object_Sutra s;
+	HiWi_Object_Inscript s;
 	
 	JLabel label_oa = new JLabel("x offset:");
 	JLabel label_ob = new JLabel("y offset:");
@@ -71,7 +71,7 @@ public class HiWi_GUI_options extends JPanel implements ActionListener, ItemList
 	public JRadioButton rb_man1 = new JRadioButton("manually, continious");
 	public JRadioButton rb_man2 = new JRadioButton("manually, selective");
 	
-	public HiWi_GUI_options(HiWi_GUI r, HiWi_Object_Sutra su){
+	public HiWi_GUI_options(HiWi_GUI r, HiWi_Object_Inscript su){
 		super();
 		setLayout(new SpringLayout());
 		setBorder(new TitledBorder("options"));

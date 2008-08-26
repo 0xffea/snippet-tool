@@ -13,18 +13,18 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
 
-import src.model.HiWi_Object_Sign;
-import src.model.HiWi_Object_Sutra;
+import src.model.HiWi_Object_Character;
+import src.model.HiWi_Object_Inscript;
 
 @SuppressWarnings("serial")
 public class HiWi_GUI_text extends JPanel implements ActionListener, MouseListener{
 	
 	HiWi_GUI root;
-	HiWi_Object_Sutra s;
+	HiWi_Object_Inscript s;
 		
 	JTextArea text_in = new JTextArea();
 	
-	public HiWi_GUI_text(HiWi_GUI r, HiWi_Object_Sutra su){
+	public HiWi_GUI_text(HiWi_GUI r, HiWi_Object_Inscript su){
 		super();
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBorder(new TitledBorder("text"));
@@ -47,7 +47,7 @@ public class HiWi_GUI_text extends JPanel implements ActionListener, MouseListen
 		setVisible(true);
 	}
 	
-	public void setSelected(HiWi_Object_Sign sign){
+	public void setSelected(HiWi_Object_Character sign){
 		int n = sign.number;
 		int r = sign.row;
 		int c = sign.column;
