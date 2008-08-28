@@ -1,15 +1,9 @@
 package src.gui;
 
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.beans.XMLDecoder;
-import java.beans.XMLEncoder;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -18,9 +12,6 @@ import java.util.Properties;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 
-import org.jdesktop.swingx.MultiSplitLayout;
-import org.jdesktop.swingx.MultiSplitPane;
-import org.jdesktop.swingx.MultiSplitLayout.Node;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -28,6 +19,13 @@ import src.model.HiWi_Object_Inscript;
 import src.util.file.HiWi_FileIO;
 import src.util.prefs.PrefUtil;
 
+/**
+ * Snippet-tool application window. Contains all other components and a reference to Inscript Object
+ * Reference to HiWi_GUI is contained in every sub-component to provide the possibility to influence one component from the other.
+ * 
+ * @author Alexei Bratuhin
+ *
+ */
 @SuppressWarnings("serial")
 public class HiWi_GUI extends JFrame{
 	
@@ -62,9 +60,11 @@ public class HiWi_GUI extends JFrame{
 	public HiWi_GUI(){
 		// call superconstuctor
 		super();
+		
 		// load all user settings
 		loadProperties();
-		s.loadFont();	// first then, when properties are loaded and application knows the path to font
+		s.loadFont();	// must be calles only after loadProperties(), since path_to_font is one of the properties specified
+		
 		// initialize subparts
 		menubar = new HiWi_GUI_menubar(this, s);
 		main = new HiWi_GUI_main(this, s);
@@ -73,15 +73,14 @@ public class HiWi_GUI extends JFrame{
 		explorer = new HiWi_GUI_explorer(this, true);
 		options = new HiWi_GUI_options(this, s);
 		info = new HiWi_GUI_info(s);
+		
 		// adjust jframe settings
 		setVisible(true);
-		//setPreferredSize(getToolkit().getScreenSize());
 		setPreferredSize(PrefUtil.string2dimesion(props.getProperty("local.window.size")));
 		setResizable(true);
 		setTitle("HiWi_GUI");
 		
-		
-		// construct GUI
+		// construct GUI as consisting of JSplitPanes
 		setJMenuBar(menubar);
 		
 		JSplitPane mainoption = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, main, options);
@@ -112,10 +111,14 @@ public class HiWi_GUI extends JFrame{
 				exit();
 			}
 		});
+		
 		// end
 		pack();
 	}
 	
+	/**
+	 * Save application properties back to PROPERTIES_FILE, since some of the properties can be changed during runtime 
+	 */
 	public void saveProperties(){
 		props.setProperty("local.window.size", this.getWidth()+"x"+this.getHeight());
 		props.setProperty("local.window.position", this.getLocation().x+"x"+this.getLocation().y);
@@ -126,6 +129,10 @@ public class HiWi_GUI extends JFrame{
 	    	e.printStackTrace();
 	    }
 	}
+	
+	/**
+	 * Load application properties from PROPERTIES_FILE
+	 */
 	public void loadProperties(){
 		try {
 	        props.load(new FileInputStream(PROPERTIES_FILE));
@@ -137,6 +144,9 @@ public class HiWi_GUI extends JFrame{
 		this.setLocation(PrefUtil.string2point(props.getProperty("local.window.position")));
 	}
 	
+	/**
+	 * Save Layout of application window. Saved are the sizes of each of JPanel parts of GUI
+	 */
 	public void saveLayout(){
 		/*Dimension dim_main = main.getPreferredSize();
 		Dimension dim_explorer = explorer.getPreferredSize();
@@ -164,6 +174,11 @@ public class HiWi_GUI extends JFrame{
 		
 		HiWi_FileIO.writeXMLStringToFile(props.getProperty("local.window.layout"), layout);
 	}
+	
+	/**
+	 * Load Layout of application window. Size of each JPnale part of GUI is restores from previous session
+	 */
+	@SuppressWarnings("unchecked")
 	public void loadLayout(){
 		Document d = HiWi_FileIO.readXMLDocumentFromFile(props.getProperty("local.window.layout"));
 		if(d == null) return;
@@ -194,6 +209,12 @@ public class HiWi_GUI extends JFrame{
 		}
 	}
 	
+	/**
+	 * Adds log entry - as string - to log panel of the application
+	 * @param logmsg	message
+	 * @param u			whether message is shown to USER level, 0/1
+	 * @param d			whether message is shown to DEVELOPER level, 0/1
+	 */
 	public void addLogEntry(String logmsg, int u, int d){
 		// user log
 		if(u>0){
@@ -209,6 +230,9 @@ public class HiWi_GUI extends JFrame{
 		this.repaint();
 	}
 	
+	/**
+	 * Overriden exit(). Layout and properties changed must be saved before exiting.
+	 */
 	public void exit(){
 		saveLayout();
 		saveProperties();

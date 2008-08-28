@@ -41,29 +41,43 @@ import src.util.xml.XMLUtil;
 @SuppressWarnings("serial")
 public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListener{
 	
-	HiWi_GUI root;	
+	/** as reference **/
+	HiWi_GUI root;
+	/** as reference **/
 	HiWi_Object_Inscript s;
 	
+	/** Sub JPanel containing image, where the marking is done **/
 	HiWi_GUI_main_image main_image;
 	
+	/** JPanel containing Zoom functionality **/
 	JPanel main_navigation = new JPanel();
+	
+	/** JPanel containing CLEAR ad SUBMIT Buttons**/
 	JPanel main_buttons = new JPanel();
+	
+	/** JPanel containing 2 further buttons for scaling image to one of predefined sizes **/
 	JPanel main_workspace = new JPanel();
 	
 	JButton zoom_in = new JButton("+");
 	JButton zoom_out = new JButton("-");
 	JZoomSlider zoomer = new JZoomSlider(JZoomSlider.HORIZONTAL, -10, 10, 0);
 	
+	/** Fit whole image in Sub JPanel **/
 	JButton fit_image_max = new JButton("Full");
+	/** Fit width image in Sub JPanel **/
 	JButton fit_image_min = new JButton("Fit");
 	
-	//public HiWi_GUI_info sign_info= new HiWi_GUI_info();
-	JButton load_image = new JButton("Load Image");
-	JButton load_text  = new JButton("Load Text");
+	/** Clear marking **/
 	JButton clear = new JButton("Clear");
-	//JButton button_addtext = new JButton("Add Text to Image");
+	/** Submit marking **/
 	JButton submit =  new JButton("Submit");
 	
+	
+	/**
+	 * 
+	 * @param jf reference to parent JFrame
+	 * @param sutra refernce to parent's inscript
+	 */
 	public HiWi_GUI_main(HiWi_GUI jf, HiWi_Object_Inscript sutra){
 		super();
 		
@@ -75,7 +89,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		setBorder(new TitledBorder("main"));
 		setPreferredSize(new Dimension(800,600));
 		
-		
+		/* creating Zoom JPanel */
 		main_navigation.add(zoom_out);
 		main_navigation.add(zoomer);
 		main_navigation.add(zoom_in);
@@ -84,6 +98,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		zoomer.addChangeListener(this);
 		zoom_out.addActionListener(this);
 		
+		/* creating extra Zoom options JPanel */
 		main_workspace.setLayout(new BoxLayout(main_workspace, BoxLayout.Y_AXIS));
 		Box box1 = new Box(BoxLayout.Y_AXIS);
 		box1.add(fit_image_max);
@@ -93,32 +108,24 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		fit_image_max.addActionListener(this);
 		fit_image_min.addActionListener(this);
 		
-
-		//main_buttons.add(load_text);
-		//main_buttons.add(load_image);
+		
+		/* creating CLEAR/SUBMIT JPanel*/
 		main_buttons.add(clear);
-		//main_buttons.add(button_addtext);
 		main_buttons.add(submit);
 		
-		//load_image.addActionListener(this);
-		//load_text.addActionListener(this);
 		clear.addActionListener(this);
-		//button_addtext.addActionListener(this);
 		submit.addActionListener(this);
-
+		
+		/* creating overall layout */
 		add(main_navigation, BorderLayout.NORTH);
 		add(main_image, BorderLayout.CENTER);
 		add(main_buttons, BorderLayout.SOUTH);
 		add(main_workspace, BorderLayout.EAST);
 	}
 	
-	public void paintComponent(Graphics g){
-		// super 
+	/*public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		// beginning custom part
-		// print info about currently active sign
-		//sign_info.showInfo();
-	}
+	}*/
 	
 	public void actionPerformed(ActionEvent ae) {
 		String cmd = ae.getActionCommand();
@@ -173,12 +180,6 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 			main_image.sub.setPreferredSize(new Dimension((int)(main_image.scale*s.sutra_image.getWidth(main_image)), (int)(main_image.scale*s.sutra_image.getHeight(main_image))));
 			main_image.sub.revalidate();
 			root.main.main_image.repaint();
-		}
-		if(cmd.equals(load_text.getActionCommand())){
-			loadText();
-		}
-		if(cmd.equals(load_image.getActionCommand())){
-			loadImage();
 		}
 		if(cmd.equals(clear.getActionCommand())){
 			

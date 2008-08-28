@@ -14,10 +14,20 @@ import javax.swing.JTextField;
 
 import src.util.xml.XMLUtil;
 
+/**
+ * GUI interface for cleaning appearances from the database.
+ * Use with care! Could potentially destroy all saved appearances data.
+ * 
+ * @author Alexei Bratuhin
+ *
+ */
+@SuppressWarnings("serial")
 public class HiWi_GUI_clearapp extends JFrame implements ActionListener{
 	
+	/** Reference to parent component **/
 	HiWi_GUI root;
 	
+	/** Regular Expression to search for appearances to remove **/
 	JTextField jtf_regexp = new JTextField();
 	
 	JButton jb_ok = new JButton("OK");
@@ -57,8 +67,10 @@ public class HiWi_GUI_clearapp extends JFrame implements ActionListener{
 		    String dbOut = props.getProperty("db.dir.out");
 		    String dbUser = props.getProperty("db.user");
 		    String dbPass = props.getProperty("db.passwd");
+		    
 		    // clear appearances
 			XMLUtil.clearAppearances(root, dbUser, dbPass, dbOut, jtf_regexp.getText());
+			
 			// close
 			dispose();
 		}

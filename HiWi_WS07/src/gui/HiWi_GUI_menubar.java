@@ -11,9 +11,30 @@ import javax.swing.JOptionPane;
 import src.imagecutter.ImageCutter;
 import src.model.HiWi_Object_Inscript;
 
+/**
+ * Snippet-Tool menubar component.
+ * File -> 
+ * 		+ Load - load marking from file stored locally in /tmp/xml
+ * 		+ Save - save marking to file stores locally in /tmp/xml
+ * 		//+ Preferences
+ * 		+ Exit - leave application
+ * Edit -> 
+ * 		+ Clear Appearances - open HiWi_GUI_clearapp Window
+ * 		+ Image Cutter - open ImageCutter Window
+ * Help ->
+ * 		+ About
+ * 		+ Help
+ * 
+ * @author Alexei Bratuhin
+ *
+ */
 @SuppressWarnings("serial")
 public class HiWi_GUI_menubar extends JMenuBar implements ActionListener{
+	
+	/** Reference to parent component **/
 	HiWi_GUI root;
+	
+	/** Reference to Inscript Object, connected to HiWi_GUI **/
 	HiWi_Object_Inscript s;
 	
 	JMenu m_file = new JMenu("File");
@@ -34,14 +55,18 @@ public class HiWi_GUI_menubar extends JMenuBar implements ActionListener{
 		super();
 		this.root = r;
 		this.s = str;
+		
+		// 
 		mi_save.addActionListener(this);
 		mi_load.addActionListener(this);
-		mi_pref.addActionListener(this);
+		//mi_pref.addActionListener(this);
 		mi_exit.addActionListener(this);
 		mi_clear.addActionListener(this);
 		mi_cutter.addActionListener(this);
 		mi_about.addActionListener(this);
 		mi_help.addActionListener(this);
+		
+		// 
 		m_file.add(mi_save);
 		m_file.add(mi_load);
 		//m_file.add(mi_pref);
@@ -50,6 +75,8 @@ public class HiWi_GUI_menubar extends JMenuBar implements ActionListener{
 		m_edit.add(mi_cutter);
 		m_help.add(mi_about);
 		m_help.add(mi_help);
+		
+		// 
 		add(m_file);
 		add(m_edit);
 		add(m_help);
@@ -64,9 +91,9 @@ public class HiWi_GUI_menubar extends JMenuBar implements ActionListener{
 		if(e.getActionCommand().equals(mi_save.getActionCommand())){
 			s.saveTemp();
 		}
-		if(e.getActionCommand().equals(mi_pref.getActionCommand())){
+		/*if(e.getActionCommand().equals(mi_pref.getActionCommand())){
 			new HiWi_GUI_preferences(root, s);
-		}
+		}*/
 		if(e.getActionCommand().equals(mi_exit.getActionCommand())){
 			root.exit();
 		}

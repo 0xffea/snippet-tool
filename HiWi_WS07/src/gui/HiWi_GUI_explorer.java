@@ -2,10 +2,6 @@ package src.gui;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -21,20 +17,42 @@ import org.xmldb.api.base.XMLDBException;
 
 import src.util.string.HiWi_StringIO;
 
+/**
+ * Snippet-tool Explorer Component.
+ * Represents database structure in tree view for navigation and selection purposes.
+ * Double-click on file forces this file to be loaded into application either as image or as .xml inscript text.
+ * 
+ * @author Alexei Bratuhin
+ *
+ */
 @SuppressWarnings("serial")
 public class HiWi_GUI_explorer extends JPanel{
 	
+	/** Reference to parent component **/
 	HiWi_GUI root;
 	
+	/** Address of the database containing inscript .xml files and .png or .jpeg images**/
 	String pcname;
-	DefaultMutableTreeNode rootnode;// = new DefaultMutableTreeNode(new String(pcname));
-	JTree explorer;// = new JTree(rootnode);
 	
+	/** Root node of file tree structure of the database **/
+	DefaultMutableTreeNode rootnode;
+	
+	/**  **/
+	JTree explorer;
+	
+	/** Flag indicating, whether files should be loaded on double-click.
+	 *  Inserted because of the extended ImageCutter functionality**/
 	boolean autoload = false;
 	
+	/** absolute path to selected resource of the database **/
 	public String selected;
+	
+	/** absolute path to selected collection of the database **/
 	public String selectedCollection;
+	
+	/** relative path to selected resource of the database (realtive to selectedCollection) **/
 	public String selectedResource;
+	
 	
 	public HiWi_GUI_explorer(HiWi_GUI r, boolean load){		
 		super();
