@@ -102,7 +102,7 @@ public class HiWi_GUI_text extends JPanel implements MouseListener{
 		String selected = text_in.getSelectedText();
 		if(selected==null || selected.equals("")) return;
 		//if(selected.length()>1) {JOptionPane.showMessageDialog(root, "Select single character only!", "Alert!", JOptionPane.ERROR_MESSAGE); text_in.select(0, 0); return;}
-		s.setActiveSignNumber(selected_begin-selected_in_row+1);	// +1: added for compatibility of numbering starting from 1 and no from 0 as thougth
+		s.setActiveCharacterNumber(selected_begin-selected_in_row+1);	// +1: added for compatibility of numbering starting from 1 and no from 0 as thougth
 		root.info.showInfo(selected_begin-selected_in_row);
 		
 		// repaint

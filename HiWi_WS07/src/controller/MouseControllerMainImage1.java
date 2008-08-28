@@ -9,14 +9,32 @@ import java.awt.event.MouseMotionListener;
 import src.gui.HiWi_GUI_main_image;
 import src.model.HiWi_Object_Character;
 
+/**
+ * 'Main' mouse controllerr.
+ * Used for drag-n-resize of marking snippets.
+ * Left button is used for selecting and resizing.
+ * Right button is used for moving.
+ * 
+ * @author Alexei Bratuhin.
+ *
+ */
 public class MouseControllerMainImage1 implements MouseListener, MouseMotionListener{
 	
+	/** Refernce to parent component **/
 	HiWi_GUI_main_image main_image;
 	
+	/** Holds the last mousePressed event coordinates **/
 	Point mouse_pressed = new Point();
+	
+	/** Holds the last mouseReleased event coordinates **/
 	Point mouse_released = new Point();
+	
+	/** Holds the prelast mouse event coordinates **/
 	Point mouse_current_old = new Point();
+	
+	/** Holds the last mouseevent coordinates **/
 	Point mouse_current_new = new Point();
+	
 	
 	public MouseControllerMainImage1(HiWi_GUI_main_image mi){
 		super();
@@ -24,80 +42,93 @@ public class MouseControllerMainImage1 implements MouseListener, MouseMotionList
 	}
 
 	public void mouseClicked(MouseEvent me) {}
-
 	public void mouseEntered(MouseEvent me) {}
-
 	public void mouseExited(MouseEvent me) {}
 
 	@SuppressWarnings("static-access")
 	public void mousePressed(MouseEvent me) {
+		//
 		main_image.requestFocusInWindow();
 		mouse_pressed = new Point((int)(me.getX()/main_image.scale), (int)(me.getY()/main_image.scale));
+		
 		//left button used
 		if(me.getButton() == me.BUTTON1){
-			if(main_image.s.getActiveSign()==null || !main_image.s.getActiveSign().s.getBounds2D().contains(mouse_pressed)){	// if not still the same sign used as active
-				for(int i=0; i<main_image.s.sutra_text.size(); i++){	// find sign that should be active
-					//System.out.println("Looking for active sign for LEFT_BUTTON_PRESSED");
+			// if not still the same sign used as active
+			if(main_image.s.getActiveCharacter()==null || !main_image.s.getActiveCharacter().s.getBounds2D().contains(mouse_pressed)){
+				// find sign that should be active
+				for(int i=0; i<main_image.s.sutra_text.size(); i++){
+					// check, whether marking bounds contain mousePressed coordinates
 					HiWi_Object_Character sign = main_image.s.sutra_text.get(i).get(0).get(0);
 					if(sign.s.getBounds2D().contains(mouse_current_new)){
-						// found existing sign
+						// set flag: found existing sign
 						main_image.existingSign = true;
-						// 
-						setActiveSign(i);
+						// set character
+						setActiveCharacter(i);
 						// set selected sign as active
-						main_image.s.setActiveSignNumber(i+1);
+						main_image.s.setActiveCharacterNumber(i+1);
 						// no need to look for a valid sign further
 						break;
 					}
 				}
 			}
+			// same (old) sign used as active
 			else{
-				if(main_image.s.getActiveSign()!=null) main_image.existingSign = true;
+				if(main_image.s.getActiveCharacter()!=null) main_image.existingSign = true;
 				else main_image.existingSign = false;
 			}
+			
 			// mark selected sign in text JPanel
-			if(main_image.s.getActiveSign() != null) main_image.root.text.setSelected(main_image.s.getActiveSign());
+			if(main_image.s.getActiveCharacter() != null) main_image.root.text.setSelected(main_image.s.getActiveCharacter());
+			
 			// if mouse pressed outside any existing markup field, set the information fields correspondingly
 			if(!main_image.existingSign){
-				setActiveSign(-1);
-				main_image.s.setActiveSignNumber(-1);
-				main_image.root.text.setSelected(main_image.s.getActiveSign());
+				setActiveCharacter(-1);
+				main_image.s.setActiveCharacterNumber(-1);
+				main_image.root.text.setSelected(main_image.s.getActiveCharacter());
 			}
 		}
+		
 		//right button used
 		if(me.getButton() == me.BUTTON3){
 			// select active sign
-			if(main_image.s.getActiveSign()==null || !main_image.s.getActiveSign().s.getBounds2D().contains(mouse_pressed)){	// if not still the same sign used as active
-				for(int i=0; i<main_image.s.sutra_text.size(); i++){	// find sign that should be active
-					//System.out.println("Looking for active sign for RIGHT_BUTTON_PRESSED");
+			// if not still the same sign used as active
+			if(main_image.s.getActiveCharacter()==null || !main_image.s.getActiveCharacter().s.getBounds2D().contains(mouse_pressed)){
+				// find sign that should be active
+				for(int i=0; i<main_image.s.sutra_text.size(); i++){
+					//
 					HiWi_Object_Character sign = main_image.s.sutra_text.get(i).get(0).get(0);
 					if(sign.s.contains(mouse_current_new)){
 						// found existing sign
 						main_image.existingSign = true;
 						// 
-						setActiveSign(i);
+						setActiveCharacter(i);
 						// set selected sign as active
-						main_image.s.setActiveSignNumber(i+1);
+						main_image.s.setActiveCharacterNumber(i+1);
 						// no need to look for a valid sign further
 						break;
 					}
 				}
 			}
 			else{
-				if(main_image.s.getActiveSign()!=null) main_image.existingSign = true;
+				if(main_image.s.getActiveCharacter()!=null) main_image.existingSign = true;
 				else main_image.existingSign = false;
 			}
+			
 			// mark selected sign in text JPanel
-			main_image.root.text.setSelected(main_image.s.getActiveSign());
+			main_image.root.text.setSelected(main_image.s.getActiveCharacter());
+			
 			// if mouse pressed outside any existing markup field, set the information fields correspondingly
 			if(!main_image.existingSign){
-				setActiveSign(-1);
-				main_image.s.setActiveSignNumber(-1);
-				main_image.root.text.setSelected(main_image.s.getActiveSign());
+				setActiveCharacter(-1);
+				main_image.s.setActiveCharacterNumber(-1);
+				main_image.root.text.setSelected(main_image.s.getActiveCharacter());
 			}
+			
 			// change Cursor appearance
 			main_image.setCursor(new Cursor(Cursor.MOVE_CURSOR));
 		}
+		
+		
 		// repaint
 		main_image.root.main.repaint();
 	}
@@ -108,18 +139,15 @@ public class MouseControllerMainImage1 implements MouseListener, MouseMotionList
 		int dx = mouse_released.x - mouse_current_new.x;
 		int dy = mouse_released.y - mouse_current_new.y;
 		//left button used
-		if(me.getButton() == me.BUTTON1 && main_image.s.getActiveSign()!=null){
-			//main_image.sn.resizeSnippet(main_image.sn.computeMoveDirection(getCursor()), dx, dy);
-			main_image.s.resizeSnippet(main_image.s.getActiveSign(), main_image.s.getActiveSign().computeMoveDirection(main_image.getCursor()), dx, dy);
+		if(me.getButton() == me.BUTTON1 && main_image.s.getActiveCharacter()!=null){
+			main_image.s.resizeSnippet(main_image.s.getActiveCharacter(), main_image.s.getActiveCharacter().computeMoveDirection(main_image.getCursor()), dx, dy);
 		}
 		//right button used
-		if(me.getButton() == me.BUTTON3 && main_image.s.getActiveSign()!=null){
-			//main_image.sn.moveSnippet(dx, dy);
-			main_image.s.moveSnippet(main_image.s.getActiveSign(), dx, dy);
+		if(me.getButton() == me.BUTTON3 && main_image.s.getActiveCharacter()!=null){
+			main_image.s.moveSnippet(main_image.s.getActiveCharacter(), dx, dy);
 			main_image.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
-		//
-		//existingSign = false;
+
 		// repaint
 		main_image.root.main.repaint();
 	}
@@ -130,17 +158,20 @@ public class MouseControllerMainImage1 implements MouseListener, MouseMotionList
 		mouse_current_new = new Point((int)(me.getX()/main_image.scale), (int)(me.getY()/main_image.scale));
 		int dx = mouse_current_new.x - mouse_current_old.x;
 		int dy = mouse_current_new.y - mouse_current_old.y;
+		
 		//left button used
-		if(me.getModifiers() == me.BUTTON1_MASK && main_image.s.getActiveSign()!=null){
+		if(me.getModifiers() == me.BUTTON1_MASK && main_image.s.getActiveCharacter()!=null){
 			//main_image.sn.resizeSnippet(main_image.sn.computeMoveDirection(getCursor()), dx, dy);
-			main_image.s.resizeSnippet(main_image.s.getActiveSign(), main_image.s.getActiveSign().computeMoveDirection(main_image.getCursor()), dx, dy);
+			main_image.s.resizeSnippet(main_image.s.getActiveCharacter(), main_image.s.getActiveCharacter().computeMoveDirection(main_image.getCursor()), dx, dy);
 		}
+		
 		//right button used
-		if(me.getModifiers() == me.BUTTON3_MASK && main_image.s.getActiveSign()!=null){
+		if(me.getModifiers() == me.BUTTON3_MASK && main_image.s.getActiveCharacter()!=null){
 			//main_image.sn.moveSnippet(dx, dy);
-			main_image.s.moveSnippet(main_image.s.getActiveSign(), dx, dy);
+			main_image.s.moveSnippet(main_image.s.getActiveCharacter(), dx, dy);
 		}
-		//
+		
+		// repaint
 		main_image.root.main.repaint();
 	}
 
@@ -150,8 +181,8 @@ public class MouseControllerMainImage1 implements MouseListener, MouseMotionList
 		mouse_current_new = new Point((int)(me.getX()/main_image.scale), (int)(me.getY()/main_image.scale));
 		
 		// change cursor appearance
-		if(main_image.s.getActiveSign()!=null){
-			String cursorPlace = main_image.s.getActiveSign().placeOnBorder(mouse_current_new);
+		if(main_image.s.getActiveCharacter()!=null){
+			String cursorPlace = main_image.s.getActiveCharacter().placeOnBorder(mouse_current_new);
 			if(cursorPlace!=null && !cursorPlace.equals("none")){
 				if(cursorPlace.equals("nw")) {main_image.setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR));return;}
 				if(cursorPlace.equals("n")) {main_image.setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));return;}
@@ -165,10 +196,10 @@ public class MouseControllerMainImage1 implements MouseListener, MouseMotionList
 		}
 	}
 
-	public void setActiveSign(int n){
-		// set currently active sign
-		//main_image.sn = main_image.s.getSign(n, 0);
-		main_image.s.setActiveSignNumber(n);
+	public void setActiveCharacter(int n){
+		// set currently active character
+		main_image.s.setActiveCharacterNumber(n);
+		
 		// update reference for showing info about currently active sign
 		main_image.root.info.showInfo(n);
 	}

@@ -484,7 +484,7 @@ public class HiWi_Object_Inscript {
 
 	}
 
-	public HiWi_Object_Character getSign(int n, int v){
+	public HiWi_Object_Character getCharacter(int n, int v){
 		return sutra_text.get(n).get(v).get(0);
 	}
 	
@@ -561,7 +561,7 @@ public class HiWi_Object_Inscript {
 		return this.activeSign;
 	}
 	
-	public void setActiveSignNumber(int n){
+	public void setActiveCharacterNumber(int n){
 		this.activeSign = n-1;
 		root.addLogEntry("Set active character #"+this.getActiveSignNumber(), 1, 1);
 	}
@@ -569,7 +569,7 @@ public class HiWi_Object_Inscript {
 		return this.activeSign+1;
 	}
 	
-	public HiWi_Object_Character getActiveSign(){
+	public HiWi_Object_Character getActiveCharacter(){
 		if(activeSign == -1) return null;
 		return this.sutra_text.get(this.getActiveNumber()).get(0).get(0);
 	}
