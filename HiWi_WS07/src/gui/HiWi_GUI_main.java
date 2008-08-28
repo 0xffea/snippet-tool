@@ -2,17 +2,9 @@ package src.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridLayout;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -22,20 +14,11 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.xmldb.api.DatabaseManager;
-import org.xmldb.api.base.Collection;
-import org.xmldb.api.base.Database;
-import org.xmldb.api.base.XMLDBException;
-import org.xmldb.api.modules.BinaryResource;
-import org.xmldb.api.modules.CollectionManagementService;
-
-import src.controller.MouseControllerMainImage2;
 import src.model.HiWi_Object_Inscript;
 import src.model.HiWi_Object_Character;
 import src.util.file.HiWi_FileIO;
 import src.util.gui.JZoomSlider;
 import src.util.image.ImageUtil;
-import src.util.num.NumUtil;
 import src.util.xml.XMLUtil;
 
 @SuppressWarnings("serial")
@@ -135,7 +118,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 			// set zoomer jslider
 			zoomer.setZoom(main_image.scale);
 			// adjust view
-			main_image.sub.setPreferredSize(new Dimension((int)(main_image.scale*s.sutra_image.getWidth(main_image)), (int)(main_image.scale*s.sutra_image.getHeight(main_image))));
+			main_image.sub.setPreferredSize(new Dimension((int)(main_image.scale*s.inscript_image.getWidth(main_image)), (int)(main_image.scale*s.inscript_image.getHeight(main_image))));
 			main_image.sub.revalidate();
 			// repaint
 			root.main.main_image.repaint();
@@ -146,7 +129,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 			// set zoomer jslider
 			zoomer.setZoom(main_image.scale);
 			// adjust view
-			main_image.sub.setPreferredSize(new Dimension((int)(main_image.scale*s.sutra_image.getWidth(main_image)), (int)(main_image.scale*s.sutra_image.getHeight(main_image))));
+			main_image.sub.setPreferredSize(new Dimension((int)(main_image.scale*s.inscript_image.getWidth(main_image)), (int)(main_image.scale*s.inscript_image.getHeight(main_image))));
 			main_image.sub.revalidate();
 			// repaint
 			root.main.main_image.repaint();
@@ -154,7 +137,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		if(cmd.equals(fit_image_max.getActionCommand())){
 			// compute scale ratio
 			Dimension dim_workspace = main_image.getSize();
-			Dimension dim_image = new Dimension(s.sutra_image.getWidth(),s.sutra_image.getHeight());
+			Dimension dim_image = new Dimension(s.inscript_image.getWidth(),s.inscript_image.getHeight());
 			double horizontal_ratio = dim_workspace.width / (double)(dim_image.width);
 			double vertical_ratio = dim_workspace.height / (double)(dim_image.height);
 			double scale_ratio = ((horizontal_ratio < vertical_ratio)? horizontal_ratio : vertical_ratio);
@@ -162,14 +145,14 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 			zoomer.setZoom(scale_ratio);
 			// scale
 			main_image.scale = scale_ratio;
-			main_image.sub.setPreferredSize(new Dimension((int)(main_image.scale*s.sutra_image.getWidth(main_image)), (int)(main_image.scale*s.sutra_image.getHeight(main_image))));
+			main_image.sub.setPreferredSize(new Dimension((int)(main_image.scale*s.inscript_image.getWidth(main_image)), (int)(main_image.scale*s.inscript_image.getHeight(main_image))));
 			main_image.sub.revalidate();
 			root.main.main_image.repaint();
 		}
 		if(cmd.equals(fit_image_min.getActionCommand())){
 			// compute scale ratio
 			Dimension dim_workspace = main_image.getSize();
-			Dimension dim_image = new Dimension(s.sutra_image.getWidth(),s.sutra_image.getHeight());
+			Dimension dim_image = new Dimension(s.inscript_image.getWidth(),s.inscript_image.getHeight());
 			double horizontal_ratio = dim_workspace.width / (double)(dim_image.width);
 			double vertical_ratio = dim_workspace.height / (double)(dim_image.height);
 			double scale_ratio = ((horizontal_ratio > vertical_ratio)? horizontal_ratio : vertical_ratio);
@@ -177,17 +160,17 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 			zoomer.setZoom(scale_ratio);
 			// scale
 			main_image.scale = scale_ratio;
-			main_image.sub.setPreferredSize(new Dimension((int)(main_image.scale*s.sutra_image.getWidth(main_image)), (int)(main_image.scale*s.sutra_image.getHeight(main_image))));
+			main_image.sub.setPreferredSize(new Dimension((int)(main_image.scale*s.inscript_image.getWidth(main_image)), (int)(main_image.scale*s.inscript_image.getHeight(main_image))));
 			main_image.sub.revalidate();
 			root.main.main_image.repaint();
 		}
 		if(cmd.equals(clear.getActionCommand())){
 			
 			// clear shapes
-			for(int i=0; i<s.sutra_text.size(); i++){
-				for(int j=0; j<s.sutra_text.get(i).size(); j++){
-					for(int k=0; k<s.sutra_text.get(i).get(j).size(); k++){
-						HiWi_Object_Character csign = s.sutra_text.get(i).get(j).get(k);
+			for(int i=0; i<s.inscript_text.size(); i++){
+				for(int j=0; j<s.inscript_text.get(i).size(); j++){
+					for(int k=0; k<s.inscript_text.get(i).get(j).size(); k++){
+						HiWi_Object_Character csign = s.inscript_text.get(i).get(j).get(k);
 						Rectangle zeroRectangle = new Rectangle(0,0,0,0);
 						csign.s = zeroRectangle;
 					}
@@ -202,7 +185,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		}
 		if(cmd.equals(submit.getActionCommand())){
 			// check whether submit possible, e.g. image and text loaded, text added to image
-			if(s.sutra_text.size()<1){
+			if(s.inscript_text.size()<1){
 				JOptionPane.showMessageDialog(root, "Nothing to submit", "Alert!", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
@@ -215,7 +198,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 	public void stateChanged(ChangeEvent e) {
 		// scale
 		main_image.scale = zoomer.getZoom();
-		main_image.sub.setPreferredSize(new Dimension((int)(main_image.scale*s.sutra_image.getWidth(main_image)), (int)(main_image.scale*s.sutra_image.getHeight(main_image))));
+		main_image.sub.setPreferredSize(new Dimension((int)(main_image.scale*s.inscript_image.getWidth(main_image)), (int)(main_image.scale*s.inscript_image.getHeight(main_image))));
 		main_image.sub.revalidate();
 		root.main.main_image.repaint();
 	}
@@ -244,10 +227,10 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		root.text.setBorder(new TitledBorder("text"+" - "+res));
 		
 		//
-		s.sutra_path_file = col + res;
-		s.sutra_path_file = s.sutra_path_file.substring(dbURI.length());
-		s.sutra_id = res;
-		s.sutra_id = s.sutra_id.substring(0, s.sutra_id.length()-".xml".length());	// NOTICE: filename containing sutratext must be of form <SUTRA_ID>.xml
+		s.inscript_path_file = col + res;
+		s.inscript_path_file = s.inscript_path_file.substring(dbURI.length());
+		s.inscript_id = res;
+		s.inscript_id = s.inscript_id.substring(0, s.inscript_id.length()-".xml".length());	// NOTICE: filename containing sutratext must be of form <SUTRA_ID>.xml
 		
 		//perform the transformation and extraction of data
 		String xml = new String();
@@ -271,7 +254,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		HiWi_FileIO.writeStringToFile("inscript-transformed-standardized.xml", out_st);
 		
 		// add information to sutra_text
-		s.addText(s.sutra_id, out_st);
+		s.addText(s.inscript_id, out_st);
 		
 		// show extracted text in text-window
 		root.text.text_in.setText(XMLUtil.getPlainTextFromApp(s));
@@ -312,12 +295,12 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		root.main.setBorder(new TitledBorder("main"+" - "+res));
 		
 		//
-		s.sutra_image = ImageUtil.fetchImage(root, col, res);
-		s.sutra_path_rubbing = col + res;
-		s.sutra_path_rubbing = s.sutra_path_rubbing.substring(dbURI.length());
+		s.inscript_image = ImageUtil.fetchImage(root, col, res);
+		s.inscript_path_rubbing = col + res;
+		s.inscript_path_rubbing = s.inscript_path_rubbing.substring(dbURI.length());
 		
 		main_image.scale = 1;
-		main_image.sub.setPreferredSize(new Dimension(s.sutra_image.getWidth(main_image), s.sutra_image.getHeight(main_image)));
+		main_image.sub.setPreferredSize(new Dimension(s.inscript_image.getWidth(main_image), s.inscript_image.getHeight(main_image)));
 		main_image.sub.revalidate();
 
 		//

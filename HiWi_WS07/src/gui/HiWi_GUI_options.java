@@ -221,7 +221,7 @@ public class HiWi_GUI_options extends JPanel implements ActionListener, ItemList
 		if(rb_left_to_right.isSelected()) s.is_left_to_right = true;
 		if(rb_right_to_left.isSelected()) s.is_left_to_right = false;
 		
-		if(rb_id.isSelected()) s.showId = true; else s.showId = false;
+		if(rb_id.isSelected()) s.showCharacter = true; else s.showCharacter = false;
 		if(rb_n.isSelected()) s.showNumber = true; else s.showNumber = false;
 		if(rb_rc.isSelected()) s.showRowColumn = true; else s.showRowColumn = false;
 		
@@ -244,11 +244,11 @@ public class HiWi_GUI_options extends JPanel implements ActionListener, ItemList
 		
 		// 
 		if(cmd.equals(b_addtext.getActionCommand())){
-			s.loadMarkupSchema(this, false);			
+			s.loadMarkingSchema(this, false);			
 			root.repaint();
 		}
 		if(cmd.equals(b_addtext2.getActionCommand())){
-			s.loadMarkupSchema(this, true);			
+			s.loadMarkingSchema(this, true);			
 			root.repaint();
 		}
 		

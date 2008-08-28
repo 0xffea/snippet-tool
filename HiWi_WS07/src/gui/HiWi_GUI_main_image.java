@@ -97,20 +97,20 @@ public class HiWi_GUI_main_image extends JPanel{
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, rubbingAlpha));
             
             // draw image
-            if(s.sutra_image != null) g.drawImage(s.sutra_image, 0, 0, this);
+            if(s.inscript_image != null) g.drawImage(s.inscript_image, 0, 0, this);
             
             // draw marking
-    		for(int i=0; i<s.sutra_text.size(); i++){
-    			ArrayList<ArrayList<HiWi_Object_Character>> signvariants = s.sutra_text.get(i);
+    		for(int i=0; i<s.inscript_text.size(); i++){
+    			ArrayList<ArrayList<HiWi_Object_Character>> signvariants = s.inscript_text.get(i);
     			ArrayList<HiWi_Object_Character> signs = signvariants.get(0);
     			HiWi_Object_Character sign = signs.get(0);
     			sign.draw(g);
     		}
     		
     		// adjust scrolling speed
-    		if(s.sutra_image != null){
-    			int hspeed = s.sutra_image.getWidth() / 10;
-    			int vspeed = s.sutra_image.getHeight()/ 10;
+    		if(s.inscript_image != null){
+    			int hspeed = s.inscript_image.getWidth() / 10;
+    			int vspeed = s.inscript_image.getHeight()/ 10;
     			scroll_image.getHorizontalScrollBar().setUnitIncrement(hspeed/2);
     			scroll_image.getVerticalScrollBar().setUnitIncrement(vspeed/2);
     			//scroll_image.getHorizontalScrollBar().setBlockIncrement(hspeed*2);
