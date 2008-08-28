@@ -1,13 +1,8 @@
 package src.model;
 
-import java.awt.AlphaComposite;
-
-import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
@@ -41,64 +36,112 @@ import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.BinaryResource;
 import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
-import org.xmldb.api.modules.XPathQueryService;
 
 import src.gui.HiWi_GUI;
 import src.gui.HiWi_GUI_options;
 import src.util.db.DbUtil;
 import src.util.num.NumUtil;
-import src.util.prefs.PrefUtil;
 import src.util.xml.XMLUtil;
 
 public class HiWi_Object_Inscript {
-	//
+	
+	/** Reference to parent component **/
 	HiWi_GUI root;
 
-	//
-	public String sutra_id = new String();
-	public String sutra_path_rubbing = new String();	//.image of sutra
-	public String sutra_path_file = new String();	//.xml of sutra - correspondance between image and HiWi_Object_Signs
+	/** Inscript's id, e.g., HDS_1**/
+	public String inscript_id = new String();
+	
+	/** Absolute database server path to inscript's image **/
+	public String inscript_path_rubbing = new String();
+	
+	/** Absolute database server path to inscript's .xml description **/
+	public String inscript_path_file = new String();
 
-	//	
-	public BufferedImage sutra_image = null;
-	//public ArrayList<HiWi_Object_Sign> sutra_text = new ArrayList<HiWi_Object_Sign>();
-	public ArrayList<ArrayList<ArrayList<HiWi_Object_Character>>> sutra_text = new ArrayList<ArrayList<ArrayList<HiWi_Object_Character>>>();
+	/** Inscript's image **/
+	public BufferedImage inscript_image = null;
+	
+	/** Inscript's text.
+	 * Structure:
+	 * 1st index: continuous character numbering;
+	 * 2nd index: continuous character's variant numbering;
+	 * 3rd index: supplementary index for the case, when not preferred reading contains more characters, as preferred one**/
+	public ArrayList<ArrayList<ArrayList<HiWi_Object_Character>>> inscript_text = new ArrayList<ArrayList<ArrayList<HiWi_Object_Character>>>();
 
-	//
+	/** Whether text is read left-to-right **/
 	public boolean is_left_to_right = false;
-	public boolean showId = true;
+	
+	/** Whether character should be drawn **/
+	public boolean showCharacter = true;
+	
+	/** Whether character's number should be drawn **/
 	public boolean showNumber = false;
+	
+	/** Whether character's row, column must be drawn **/
 	public boolean showRowColumn = false;
-	public boolean updateOnly = false;	//sutra was already loaded in db, now updating appearance
+	
+	/** Whether sutra was already loaded in db, now updating appearance **/
+	public boolean updateOnly = false;
+	
+	/** Currently selected character index **/
 	public int activeSign = -1;	// initialize a default value, numbered 0 to size-1
+	
+	/** Font used to draw characters **/
 	Font f;
-	int oa, ob, a, b, da, db; //oa=x_offset; ob=y_offset; a=snippet_width; b=snippet_height; da=x_distance_between_snippets; db=y_distance_between_snippets
+	
+	/** Marking values**/
+	
+	/** X Offset **/
+	int oa;
+	
+	/** Y Offset **/
+	int ob;
+
+	/** Snippet width **/
+	int a;
+	
+	/** Snippet height **/
+	int b;
+	
+	/** X distance between snippets **/
+	int da;
+	
+	/** Y distance between snippets **/
+	int db;
+	
 
 	public HiWi_Object_Inscript(HiWi_GUI r){
 		this.root = r;
-		//loadFont();
 	}
 	
 	
-
+	/**
+	 * Load inscript image from local file
+	 * @param img	absolute path to image
+	 */
 	public void setImage(String img){
-		this.sutra_path_rubbing = img;
+		this.inscript_path_rubbing = img;
 		try {
-			this.sutra_image = ImageIO.read(new File(sutra_path_rubbing));
+			this.inscript_image = ImageIO.read(new File(inscript_path_rubbing));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	
+	/**
+	 * Load text from inscript's .xml description
+	 * @param xml	content of inscript's .xml description
+	 */
 	@SuppressWarnings("unchecked")
 	public void setTextFromXML(String xml){
-		// clear text
-		sutra_text.clear();
+		// clear old text
+		inscript_text.clear();
+		
 		// prepare index variables
 		int current_number = 1;
 		int current_row = 1;
 		int current_column = 1;
+		
 		// start
 		try {
 			// parse XML document
@@ -153,7 +196,6 @@ public class HiWi_Object_Inscript {
 						}
 					}
 					
-					//System.out.println("basiclength="+basiclength+"; maxlength="+maxlength);
 					
 					// proceed basic length
 					for(int j=0; j<basiclength; j++){
@@ -204,7 +246,7 @@ public class HiWi_Object_Inscript {
 						
 						if(!supplied){
 							// add variants arraylist to sutra text
-							sutra_text.add((ArrayList<ArrayList<HiWi_Object_Character>>) signVariants.clone());
+							inscript_text.add((ArrayList<ArrayList<HiWi_Object_Character>>) signVariants.clone());
 							//
 							current_column++;
 							current_number++;
@@ -251,7 +293,7 @@ public class HiWi_Object_Inscript {
 
 									// no imagesign -> attach it to last placed sign
 									// -1, current_number starts with 1, not 0 and in arraylist numbering starts with 0
-									sutra_text.get(current_number_for_extra-1).get(variantnumber).add(csign);
+									inscript_text.get(current_number_for_extra-1).get(variantnumber).add(csign);
 									
 
 									//System.out.println(tempsign.getInfo()+"sutra text size = "+sutra_text.size());
@@ -268,7 +310,12 @@ public class HiWi_Object_Inscript {
 			e.printStackTrace();
 		}
 	}
-
+	
+	/**
+	 * Load text from inscript's database
+	 * @param id			inscript's id
+	 * @param query_result	<appearance>s as result of querying database
+	 */
 	public void setTextFromDB(String id, ResourceSet query_result){
 		try{
 			// get needed properties
@@ -280,15 +327,15 @@ public class HiWi_Object_Inscript {
 			// get/set path to rubbing
 			Element xmlelem = (Element) dr.getRootElement();	// it's appearance tag
 			String rub = xmlelem.getChildText("rubbing");
-			this.sutra_path_rubbing = rub;
+			this.inscript_path_rubbing = rub;
 			//load image
-			String path = dbURI+this.sutra_path_rubbing;
+			String path = dbURI+this.inscript_path_rubbing;
 			String collection = path.substring(0, path.lastIndexOf("/"));
 			String resource = path.substring(path.lastIndexOf("/"));
 			root.main.loadImage(collection, resource);
 
 			// clear sutra_text
-			this.sutra_text.clear();
+			this.inscript_text.clear();
 
 			// get markup
 			ArrayList<HiWi_Object_Character> tarrayOfSigns = new ArrayList<HiWi_Object_Character>();
@@ -314,6 +361,10 @@ public class HiWi_Object_Inscript {
 
 	}
 	
+	/**
+	 * Update characters' snippet marking coordinates and dimension using results from querying the inscript database
+	 * @param query_result	<appearance>s as result of querying database
+	 */
 	public void setCoordinatesFromDB(ResourceSet query_result){
 		try{
 			SAXBuilder builder = new SAXBuilder();
@@ -340,10 +391,10 @@ public class HiWi_Object_Inscript {
 			}
 			
 			// check, whether all signs have become coordinates assigned, if not, mark those as missing
-			for(int i=0; i<sutra_text.size(); i++){
-				for(int j=0; j<sutra_text.get(i).size(); j++){
-					for(int k=0; k<sutra_text.get(i).get(j).size(); k++){
-						HiWi_Object_Character csign = sutra_text.get(i).get(j).get(k);
+			for(int i=0; i<inscript_text.size(); i++){
+				for(int j=0; j<inscript_text.get(i).size(); j++){
+					for(int k=0; k<inscript_text.get(i).get(j).size(); k++){
+						HiWi_Object_Character csign = inscript_text.get(i).get(j).get(k);
 						if(csign.s.width == 0 || csign.s.height == 0){
 							csign.missing = true;
 						}
@@ -358,6 +409,12 @@ public class HiWi_Object_Inscript {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Load image from the inscript database
+	 * @param id			inscript's id
+	 * @param query_result	<appearance>s as result of querying database
+	 */
 	public void setImageFromDB(String id, ResourceSet query_result){
 		try{
 			// get needed properties
@@ -369,9 +426,9 @@ public class HiWi_Object_Inscript {
 			// get/set path to rubbing
 			Element xmlelem = (Element) dr.getRootElement();	// it's appearance tag
 			String rub = xmlelem.getChildText("rubbing");
-			this.sutra_path_rubbing = rub;
+			this.inscript_path_rubbing = rub;
 			//load image
-			String path = dbURI+this.sutra_path_rubbing;
+			String path = dbURI+this.inscript_path_rubbing;
 			String collection = path.substring(0, path.lastIndexOf("/"));
 			String resource = path.substring(path.lastIndexOf("/"));
 			root.main.loadImage(collection, resource);
@@ -384,8 +441,13 @@ public class HiWi_Object_Inscript {
 		}
 	}
 	
+	/**
+	 * Fill the inscript_text structure from a plain array
+	 * @param list	list of character objects
+	 */
+	@SuppressWarnings("unchecked")
 	public void setTextFromArrayList(ArrayList<HiWi_Object_Character> list){
-		// sort tarrayOfSigns after their number
+		// sort tarrayOfSigns after their continuous number
 		for(int i=0; i< list.size(); i++){
 			for(int j=i; j<list.size(); j++){
 				if(list.get(i).number > list.get(j).number){	// handle different signs
@@ -409,7 +471,7 @@ public class HiWi_Object_Inscript {
 		
 		root.addLogEntry("Found signs in db after sort: "+list.size(), 0, 1);
 		
-		// add sign-variants to sutra's signs
+		// add sign-variants to inscript's signs
 		int lnumber = 0;	// rememebering that numbers start from 1
 		int lvariant = 0;
 		
@@ -423,7 +485,7 @@ public class HiWi_Object_Inscript {
 			int cvariant = csign.variant;
 			if(cnumber == lnumber){
 				if(cvariant == lvariant){
-					signVariants = sutra_text.get(cnumber);
+					signVariants = inscript_text.get(cnumber);
 					signs = signVariants.get(cvariant);
 					signs.add(csign);
 				}
@@ -442,7 +504,7 @@ public class HiWi_Object_Inscript {
 				
 				signs.add(csign);
 				signVariants.add(signs);
-				sutra_text.add((ArrayList<ArrayList<HiWi_Object_Character>>) signVariants.clone());
+				inscript_text.add((ArrayList<ArrayList<HiWi_Object_Character>>) signVariants.clone());
 			}
 			
 			lnumber = cnumber;				
@@ -452,12 +514,19 @@ public class HiWi_Object_Inscript {
 	}
 	
 
+	/**
+	 * Set Inscript's text either from database or from an .xml file
+	 * Notice: Snippet-Tool first tries to load inforamtion from eXist. Only on having received empty response the .xml file is proceeded.
+	 * @param id
+	 * @param xml
+	 */
 	@SuppressWarnings("unchecked")
 	public void addText(String id, String xml){
 		// get needed properties
 		//String dbURI = root.props.getProperty("db.uri");
 		String dbOut = root.props.getProperty("db.dir.out");
-		// 
+		
+		// generate xquery
 		String query = "//appearance[contains(@id, '"+id+"_')]";
 
 		ResourceSet result = DbUtil.executeQuery(dbOut, query);
@@ -469,7 +538,7 @@ public class HiWi_Object_Inscript {
 			}
 			else{
 				//updateOnly = true;
-				updateOnly = false; // experimantal: try to load data from .xml, coordinates from db, delete old appearances on submit
+				updateOnly = false; // experimental: try to load data from .xml, coordinates from db, delete old appearances on submit
 				//setTextFromDB(id, result);
 				// experimental
 				setTextFromXML(xml);
@@ -480,27 +549,46 @@ public class HiWi_Object_Inscript {
 			e.printStackTrace();
 		}
 
-		root.addLogEntry("Inscript size (preferred reading) = "+this.sutra_text.size(), 1, 1);
+		root.addLogEntry("Inscript size (preferred reading) = "+this.inscript_text.size(), 1, 1);
 
-	}
-
-	public HiWi_Object_Character getCharacter(int n, int v){
-		return sutra_text.get(n).get(v).get(0);
 	}
 	
+	
+	public HiWi_Object_Character getCharacter(int n, int v){
+		return inscript_text.get(n).get(v).get(0);
+	}
+	
+	/**
+	 * Resize character's snippet's marking.
+	 * Notice: all corresponding characters (those with the same continuous number) will be automatically resized too.
+	 * Notice: generally applies - all variants marking are adjusted using preferred reading's marking.
+	 * @param sn		character
+	 * @param dir		resize direction
+	 * @param dx		x resize
+	 * @param dy		y resize
+	 */
 	public void resizeSnippet(HiWi_Object_Character sn, String dir, int dx, int dy){
 		int index = sn.getNumber()-1;	// all variants must be resized
-		for(int j=0; j<this.sutra_text.get(index).size(); j++){
-			for(int k=0; k<this.sutra_text.get(index).get(j).size(); k++){
-				this.sutra_text.get(index).get(j).get(k).resizeSnippet(dir, dx, dy);
+		for(int j=0; j<this.inscript_text.get(index).size(); j++){
+			for(int k=0; k<this.inscript_text.get(index).get(j).size(); k++){
+				this.inscript_text.get(index).get(j).get(k).resizeSnippet(dir, dx, dy);
 			}
 		}
 	}
+	
+	/**
+	 * Move character's snippet's marking.
+	 * Notice: all corresponding characters (those with the same continuous number) will be automatically resized too.
+	 * Notice: generally applies - all variants marking are adjusted using preferred reading's marking.
+	 * @param sn		character
+	 * @param dx		x shift
+	 * @param dy		y shift
+	 */
 	public void moveSnippet(HiWi_Object_Character sn, int dx, int dy){
 		int index = sn.getNumber()-1;	// all variants must be moved
-		for(int j=0; j<this.sutra_text.get(index).size(); j++){
-			for(int k=0; k<this.sutra_text.get(index).get(j).size(); k++){
-				this.sutra_text.get(index).get(j).get(k).moveSnippet( dx, dy);
+		for(int j=0; j<this.inscript_text.get(index).size(); j++){
+			for(int k=0; k<this.inscript_text.get(index).get(j).size(); k++){
+				this.inscript_text.get(index).get(j).get(k).moveSnippet( dx, dy);
 			}
 		}
 	}
@@ -525,30 +613,30 @@ public class HiWi_Object_Inscript {
 				break;
 			}
 		}*/
-		for(int i=0; i<this.sutra_text.size(); i++){
-			//System.out.println("comparing r="+r+", c="+c+" to : "+this.sutra_text.get(i).get(0).get(0).getInfo());
-			if(this.sutra_text.get(i).get(0).get(0).row == r &&
-					this.sutra_text.get(i).get(0).get(0).column == c){
+		for(int i=0; i<this.inscript_text.size(); i++){
+			if(this.inscript_text.get(i).get(0).get(0).row == r &&
+					this.inscript_text.get(i).get(0).get(0).column == c){
 				indexTarget = i;
-				//System.out.println("found for fetched:"+i);
 				break;
 			}
 		}
+		
 		// check whether indexTarget found
 		if(indexTarget == -1){
 			root.addLogEntry("Couldn't find target sign for setting coordinates from DB for:\trow="+r+", column="+c, 1, 1);
 			
 			return;
 		}
+		
 		// update sign
 		updateSnippet(rectangle, indexTarget);
 	}
 	
 	public void updateSnippet(Rectangle rectangle, int indexTarget){
 		// update sign
-		for(int j=0; j<this.sutra_text.get(indexTarget).size(); j++){
-			for(int k=0; k<this.sutra_text.get(indexTarget).get(j).size(); k++){
-				this.sutra_text.get(indexTarget).get(j).get(k).updateSnippet(rectangle);
+		for(int j=0; j<this.inscript_text.get(indexTarget).size(); j++){
+			for(int k=0; k<this.inscript_text.get(indexTarget).get(j).size(); k++){
+				this.inscript_text.get(indexTarget).get(j).get(k).updateSnippet(rectangle);
 			}
 		}
 	}
@@ -571,10 +659,15 @@ public class HiWi_Object_Inscript {
 	
 	public HiWi_Object_Character getActiveCharacter(){
 		if(activeSign == -1) return null;
-		return this.sutra_text.get(this.getActiveNumber()).get(0).get(0);
+		return this.inscript_text.get(this.getActiveNumber()).get(0).get(0);
 	}
-
-	public void loadMarkupSchema(HiWi_GUI_options options, boolean missingOnly){
+	
+	/**
+	 * Load values for autoguided marking from Snippet-tool's Options component.
+	 * @param options	Snippet-Tool options component
+	 * @param missingOnly	whether marking schema should be applied for characters not already in database only
+	 */
+	public void loadMarkingSchema(HiWi_GUI_options options, boolean missingOnly){
 		// load markup parameters
 		oa = Integer.valueOf(options.jtf_oa.getText());
 		ob = Integer.valueOf(options.jtf_ob.getText());
@@ -585,29 +678,26 @@ public class HiWi_Object_Inscript {
 		
 		// check whether all markup snippets are seen
 		// use preferred reading's signs
-		int dim_x = sutra_image.getWidth();
-		int dim_y = sutra_image.getHeight();
+		int dim_x = inscript_image.getWidth();
+		int dim_y = inscript_image.getHeight();
 		int x_width = 0;
 		int y_height = 0;
 		int max_row = 0;
 		int max_column = 0;
-		for(int i=0; i<sutra_text.size(); i++){
-			if(sutra_text.get(i).get(0).get(0).column > max_column) max_column = sutra_text.get(i).get(0).get(0).column;
-			if(sutra_text.get(i).get(0).get(0).row > max_row) max_row = sutra_text.get(i).get(0).get(0).row;
+		for(int i=0; i<inscript_text.size(); i++){
+			if(inscript_text.get(i).get(0).get(0).column > max_column) max_column = inscript_text.get(i).get(0).get(0).column;
+			if(inscript_text.get(i).get(0).get(0).row > max_row) max_row = inscript_text.get(i).get(0).get(0).row;
 		}
 		x_width = oa+(max_row-1)*(a+da);
 		y_height = ob+(max_column-1)*(b+db);
 		if(x_width > dim_x || y_height > dim_y){	// show warning message
-			//System.out.println("dim_image = "+dim_x+"x"+dim_y);
-			//System.out.println("dim_markup = "+x_width+"x"+y_height);
-			//System.out.println("max_row="+max_row+", max_column="+max_column);
 			JOptionPane.showMessageDialog(root, "Some of markup snippet don't pass on image!\nPlease use \"Full\" button to see whole image", "Alert!", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		
 		// apply parameters if check passed
-		for(int i=0; i<sutra_text.size(); i++){
-			ArrayList<ArrayList<HiWi_Object_Character>> signvariants = sutra_text.get(i);
+		for(int i=0; i<inscript_text.size(); i++){
+			ArrayList<ArrayList<HiWi_Object_Character>> signvariants = inscript_text.get(i);
 			for(int j=0; j<signvariants.size(); j++){
 				for(int k=0; k<signvariants.get(j).size(); k++){
 					HiWi_Object_Character csign = signvariants.get(j).get(k);
@@ -634,7 +724,11 @@ public class HiWi_Object_Inscript {
 		// repaint
 		root.repaint();
 	}
-
+	
+	/**
+	 * Load Font used for drawing of character from local file.
+	 * Notice: font file, specified in snippet-tool.properties must be present
+	 */
 	public void loadFont(){
 		try {
 			// get needed properties
@@ -651,19 +745,28 @@ public class HiWi_Object_Inscript {
 		}
 	}
 	
+	/**
+	 * Save insript's marking to local file.
+	 * Structure:
+	 * <inscript>
+	 * 	<appearance/>
+	 * 	<appearance/>
+	 * 	...
+	 * </inscript>
+	 */
 	public void saveTemp(){
-		Document docout = new Document(new Element("sutra"));
-		for(int i=0; i<sutra_text.size(); i++){
-			for(int j=0; j<sutra_text.get(i).size(); j++){
-				for(int k=0; k<sutra_text.get(i).get(j).size(); k++){
-					HiWi_Object_Character csign = sutra_text.get(i).get(j).get(k);
+		Document docout = new Document(new Element("inscript"));
+		for(int i=0; i<inscript_text.size(); i++){
+			for(int j=0; j<inscript_text.get(i).size(); j++){
+				for(int k=0; k<inscript_text.get(i).get(j).size(); k++){
+					HiWi_Object_Character csign = inscript_text.get(i).get(j).get(k);
 					docout.getRootElement().addContent(csign.toAppearance());
 				}
 			}
 		}
 		
 		try {
-			FileOutputStream fos = new FileOutputStream(new File("tmp\\xml\\temporary_"+this.sutra_id+".xml"));
+			FileOutputStream fos = new FileOutputStream(new File("tmp\\xml\\temporary_"+this.inscript_id+".xml"));
 			XMLOutputter xmlout = new XMLOutputter();
 			xmlout.setFormat(Format.getPrettyFormat());
 			xmlout.output(docout, fos);
@@ -676,17 +779,22 @@ public class HiWi_Object_Inscript {
 		}
 	}
 	
+	/**
+	 * Load inscript's marking from local file.
+	 * Notice: since it uses inscript's id, an inscript (and its image) must be already loaded in Snippet-Tool application
+	 */
+	@SuppressWarnings("unchecked")
 	public void loadTemp(){
 		try {
 			//
 			SAXBuilder builder = new SAXBuilder();
-			Document docin = builder.build(new FileInputStream(new File("tmp\\xml\\temporary_"+this.sutra_id+".xml")));
+			Document docin = builder.build(new FileInputStream(new File("tmp\\xml\\temporary_"+this.inscript_id+".xml")));
 			//
 			Element docinroot = docin.getRootElement();
 			List<Element> apps = docinroot.getChildren("appearance");
 			
 			// clear sutra_text
-			this.sutra_text.clear();
+			this.inscript_text.clear();
 
 			// get markup
 			ArrayList<HiWi_Object_Character> tarrayOfSigns = new ArrayList<HiWi_Object_Character>();
@@ -699,7 +807,7 @@ public class HiWi_Object_Inscript {
 			
 			setTextFromArrayList(tarrayOfSigns);
 
-			root.addLogEntry("Sutra text size: "+sutra_text.size(), 1, 1);
+			root.addLogEntry("Sutra text size: "+inscript_text.size(), 1, 1);
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -709,17 +817,24 @@ public class HiWi_Object_Inscript {
 			e.printStackTrace();
 		}
 	}
-
+	
+	/**
+	 * clear inscript's information
+	 */
 	public void clear(){
-		sutra_image = null;
-		sutra_text.clear();
-		sutra_id = new String();
-		sutra_path_file = new String();
-		sutra_path_rubbing = new String();
+		inscript_image = null;
+		inscript_text.clear();
+		inscript_id = new String();
+		inscript_path_file = new String();
+		inscript_path_rubbing = new String();
 		
 		activeSign = -1;
 	}
-
+	
+	/**
+	 * Submit inscript's marking to database
+	 */
+	@SuppressWarnings("unchecked")
 	public void submit() {
 		// get neede properties
 		String dbOut = root.props.getProperty("db.dir.out");
@@ -728,13 +843,13 @@ public class HiWi_Object_Inscript {
 		
 		// clear old appearances
 		// experimental, to use with setTextFromXML, setCoordinatesFromDB, setImageFromDB
-		XMLUtil.clearAppearances(root, dbUser, dbPass, dbOut, this.sutra_id);
+		XMLUtil.clearAppearances(root, dbUser, dbPass, dbOut, this.inscript_id);
 		
 		//proceed for each sign - submit coordinates
-		for(int i=0; i<this.sutra_text.size(); i++){
-			for(int j=0; j<this.sutra_text.get(i).size(); j++){
-				for(int k=0; k<this.sutra_text.get(i).get(j).size(); k++){
-					HiWi_Object_Character csign = this.sutra_text.get(i).get(j).get(k);
+		for(int i=0; i<this.inscript_text.size(); i++){
+			for(int j=0; j<this.inscript_text.get(i).size(); j++){
+				for(int k=0; k<this.inscript_text.get(i).get(j).size(); k++){
+					HiWi_Object_Character csign = this.inscript_text.get(i).get(j).get(k);
 					
 					root.addLogEntry("storing coordinates of nr.="+csign.number, 1, 1);
 					
@@ -743,36 +858,34 @@ public class HiWi_Object_Inscript {
 			}
 		}
 		//proceed for each sign - submit snippet
-		BufferedImage img_in = this.sutra_image;
+		BufferedImage img_in = this.inscript_image;
 		BufferedImage img_out_t;
-		for(int i=0; i<this.sutra_text.size(); i++){
-			Rectangle2D r = this.sutra_text.get(i).get(0).get(0).s.getBounds2D();
+		for(int i=0; i<this.inscript_text.size(); i++){
+			Rectangle2D r = this.inscript_text.get(i).get(0).get(0).s.getBounds2D();
 			img_out_t = img_in.getSubimage((int)Math.max(0,r.getX()), (int)Math.max(0, r.getY()), (int)Math.min(img_in.getWidth()-r.getX(), r.getWidth()), (int)Math.min(img_in.getHeight()-r.getY(), r.getHeight()));
 			try {
 				//write image to local temporary file
-				File f = new File("tmp\\img\\subimage_"+this.sutra_id+"_"+this.sutra_text.get(i).get(0).get(0).getNumber()+".png");
+				File f = new File("tmp\\img\\subimage_"+this.inscript_id+"_"+this.inscript_text.get(i).get(0).get(0).getNumber()+".png");
 				ImageIO.write(img_out_t, "png", f);
+				
 				//copy image resource to selected collection
 				String driver = "org.exist.xmldb.DatabaseImpl";    
 				Class cl = Class.forName(driver);  
 				Database database = (Database) cl.newInstance();   
 				DatabaseManager.registerDatabase(database);
 				Collection current = DatabaseManager.getCollection(root.props.getProperty("db.uri")+root.props.getProperty("db.dir.snippet"), root.props.getProperty("db.user"), root.props.getProperty("db.passwd"));
-				if(current == null){
-					//Collection root = DatabaseManager.getCollection(Preferencethis.DB_URI, Preferencethis.DB_USER, Preferencethis.DB_PASSWD);   
+				if(current == null){   
 					Collection rootCollection = DatabaseManager.getCollection(root.props.getProperty("db.uri"), root.props.getProperty("db.user"), root.props.getProperty("db.passwd"));
-					CollectionManagementService mgtService = (CollectionManagementService) rootCollection.getService("CollectionManagementService", "1.0");   
-					//current = mgtService.createCollection(Preferencethis.DB_COLLECTION_SNIPPET);  
+					CollectionManagementService mgtService = (CollectionManagementService) rootCollection.getService("CollectionManagementService", "1.0");
 					current = mgtService.createCollection(root.props.getProperty("db.dir.snippet"));
 				}
-	            BinaryResource resource = (BinaryResource) current.createResource(this.sutra_text.get(i).get(0).get(0).sign_path_snippet.substring(this.sutra_text.get(i).get(0).get(0).sign_path_snippet.lastIndexOf("/")), "BinaryResource");
-	            //System.out.println("storing subimage:\t"+f.getName()+"\tas "+this.sutra_text.get(i).get(0).sign_path_snippet.substring(this.sutra_text.get(i).get(0).sign_path_snippet.lastIndexOf("/")));
-	            root.addLogEntry("storing subimage:\t"+f.getName()+"\tas "+this.sutra_text.get(i).get(0).get(0).sign_path_snippet.substring(this.sutra_text.get(i).get(0).get(0).sign_path_snippet.lastIndexOf("/")), 1, 1);
+	            BinaryResource resource = (BinaryResource) current.createResource(this.inscript_text.get(i).get(0).get(0).sign_path_snippet.substring(this.inscript_text.get(i).get(0).get(0).sign_path_snippet.lastIndexOf("/")), "BinaryResource");
+	            root.addLogEntry("storing subimage:\t"+f.getName()+"\tas "+this.inscript_text.get(i).get(0).get(0).sign_path_snippet.substring(this.inscript_text.get(i).get(0).get(0).sign_path_snippet.lastIndexOf("/")), 1, 1);
 	            resource.setContent(f);
 	            current.storeResource(resource);
 	            
 	            //delete temporary file
-	            //f.delete();
+	            f.delete();
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (InstantiationException e) {

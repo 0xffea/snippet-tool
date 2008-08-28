@@ -16,33 +16,57 @@ import src.util.prefs.PrefUtil;
 
 /**
  * (row, column) - for numeration text is represented in european way 
- * @author abratuhi
+ * @author Alexei Bratuhin
  *
  */
 public class HiWi_Object_Character {
-	//
-	public HiWi_Object_Inscript sutra;
+	
+	/** Reference to parent object **/
+	public HiWi_Object_Inscript inscript;
+	
+	/** path to character snippet on database server **/
 	public String sign_path_snippet = new String();
 
-	//
-	public Rectangle s;			//marked area on sutra's .jpg
+	/** snippet marking **/
+	public Rectangle s;
 
-	//
-	public String characterStandard = new String();		// standard unicode sign, which is represents characterOriginal in unicode database 
-	public String characterOriginal = new String();		// original unicode sign, which was mapped to characterStandard due to lack of characterOriginal in unicode database
+	/** standard unicode sign, which is represents characterOriginal in unicode database **/
+	public String characterStandard = new String();
+	/** original unicode sign, which was mapped to characterStandard due to lack of characterOriginal in unicode database **/
+	public String characterOriginal = new String(); 
 
-	//
-	public String id;	// id, e.g. HDS_1_2_1
-	public int row;	// numeration starts with 1 because of compatibility with existing scripts and numeration
-	public int column;	// numeration starts with 1 because of compatibility with existing scripts and numeration
-	public int number;	// numeration starts with 1 because of compatibility with existing scripts and numeration
-	public float cert;	// certainty -> max=1.0, min=0.0
-	boolean preferred_reading;	// whether this reading is preferred by heidelberger academy of science
-	boolean missing = false;	// whether this sign was newly added to inscript and not yet marked up as its colleagues
-	int groupnumber;
-	int variant;	// reading variant, numeration starts with 0, no compatibilitiy needed (yet?)
+	/** character's id, e.g. HDS_1_2_1;
+	 * built as {InscriptId}_{CharacterRowNumber}_{CharacterColumnNumber} **/
+	public String id;
+	
+	/** character's row number;
+	 * numeration starts with 1 because of compatibility with existing scripts and numeration **/
+	public int row;
+	
+	/** character's column number;
+	 * numeration starts with 1 because of compatibility with existing scripts and numeration **/
+	public int column;
+	
+	/** character's continuous number;
+	 * numeration starts with 1 because of compatibility with existing scripts and numeration **/
+	public int number;
+	
+	/** certainty -> max=1.0, min=0.0 **/
+	public float cert;
+	
+	/** whether this reading is preferred by heidelberger academy of science **/
+	boolean preferred_reading;
+	
+	/** whether this sign was newly added to inscript and not yet marked up as its colleagues **/
+	boolean missing = false;
+	
+	/** reading variant, numeration starts with 0, no compatibilitiy needed (yet?) **/
+	int variant;
 
-	//
+	/**
+	 * Get character attributes values as readable string
+	 * @return	character information
+	 */
 	public String getInfo(){
 		String out = new String();
 		out += "id="+id+",";
@@ -60,16 +84,33 @@ public class HiWi_Object_Character {
 		return out;
 	}
 
-	// empty constructor, needed sometimes in texhnical procedures
+	/** empty constructor, needed sometimes in technical procedures **/
 	public HiWi_Object_Character(){
 
 	}
-	// basic constructor
+	
+
+
+	/**
+	 * Basic Constructor
+	 * 
+	 * @param s				parent Inscript Object
+	 * @param chStandard	standard character used
+	 * @param chOriginal	original character
+	 * @param cert			certainty of a character
+	 * @param preferred		whether character is from preferred reading
+	 * @param var			character's reading variant number (preferred reading <-> variant=0)
+	 * @param r				character's row number
+	 * @param c				character's column number
+	 * @param n				character's number
+	 * @param base			character's snippet left upper corner coordinates
+	 * @param delta			character's snippet dimension
+	 */
 	public HiWi_Object_Character(HiWi_Object_Inscript s, String chStandard, String chOriginal, float cert, boolean preferred, int var, int r, int c, int n, Point base, Dimension delta){
-		// initialize parent sutra
-		this.sutra = s;
+		// initialize parent inscript
+		this.inscript = s;
 		// get needed properties
-		String dbSnips = sutra.root.props.getProperty("db.dir.snippet");
+		String dbSnips = inscript.root.props.getProperty("db.dir.snippet");
 		// initialize further attributes
 		this.characterStandard = chStandard;
 		this.characterOriginal = chOriginal;
@@ -79,12 +120,12 @@ public class HiWi_Object_Character {
 		this.setColumn(c);
 		this.setRow(r);
 		this.setNumber(n);
-		this.id = this.sutra.sutra_id+"_"+this.row+"_"+this.column;
-		this.sign_path_snippet = dbSnips+"/subimage_"+sutra.sutra_id+"_"+r+"_"+c+".png";
+		this.id = this.inscript.inscript_id+"_"+this.row+"_"+this.column;
+		this.sign_path_snippet = dbSnips+"/subimage_"+inscript.inscript_id+"_"+r+"_"+c+".png";
 		// 
 		this.s = new Rectangle(base, delta);
 	}
-
+	
 	public void setNumber(int n){
 		this.number = n;
 	}
@@ -104,7 +145,12 @@ public class HiWi_Object_Character {
 		return this.row;
 	}
 
-	// 
+	/**
+	 * Resize cahracter's snippet's marking.
+	 * @param direction		direction code. Possible values: n/nw/w/sw/s/se/e/ne, correspond to world directions.
+	 * @param dx			x resize
+	 * @param dy			x resize
+	 */
 	public void resizeSnippet(String direction, int dx, int dy){
 		if(direction == null) return;
 		if(direction.equals("nw")){s.setBounds(s.x+dx, s.y+dy, s.width-dx, s.height-dy);return;}
@@ -116,9 +162,21 @@ public class HiWi_Object_Character {
 		if(direction.equals("sw")){s.setBounds(s.x+dx, s.y, s.width-dx, s.height+dy);return;}
 		if(direction.equals("w")){s.setBounds(s.x+dx, s.y, s.width-dx, s.height);return;}
 	}
+	
+	/**
+	 * Move character's snippet's marking
+	 * @param dx			x shift
+	 * @param dy			y shift
+	 */
 	public void moveSnippet(int dx, int dy){
 		s.setLocation(s.x+dx, s.y+dy);
 	}
+	
+	/**
+	 * Produce direction code, basing on current Cursor form
+	 * @param c		current cursor
+	 * @return		direction code
+	 */
 	public String computeMoveDirection(Cursor c){
 		if(c.getType() == Cursor.NW_RESIZE_CURSOR) return new String("nw");
 		if(c.getType() == Cursor.N_RESIZE_CURSOR) return new String("n");
@@ -130,12 +188,18 @@ public class HiWi_Object_Character {
 		if(c.getType() == Cursor.W_RESIZE_CURSOR) return new String("w");
 		return null;
 	}
+	
+	/**
+	 * Compute, in which part of character's snippet's marking point is situated
+	 * @param p		point to check
+	 * @return		direction code
+	 */
 	public String placeOnBorder(Point p){
 		if(!s.contains(p)) return new String("none");
-		//1     2
-		// 11 22
-		// 33 44
-		//3     4			
+		//p1     p2
+		//   
+		//   
+		//p3     p4			
 		float part = 0.1f;
 		int x0 = s.getLocation().x;
 		int y0 = s.getLocation().y;
@@ -159,86 +223,121 @@ public class HiWi_Object_Character {
 		if(new Rectangle(p1.x, p1.y+dy, dx, y-dy-dy).contains(p)) return new String("w");
 		return null;
 	}
+	
+	/**
+	 * Draw character's marking using passed Graphics object of the parent -> on parent's pane
+	 * @param g parent Graphics object
+	 */
 	public void draw(Graphics2D g){
 		adjustFont();
 		drawBorder(g);
 		drawMarkup(g);
-		if(sutra.showId) drawID(g); 
-		if(sutra.showNumber) drawN(g);
-		if(sutra.showRowColumn) drawRC(g);
+		if(inscript.showCharacter) drawCharacter(g); 
+		if(inscript.showNumber) drawN(g);
+		if(inscript.showRowColumn) drawRC(g);
 	}
+	
+	/**
+	 * Adjust Font object, so that the size of the Font corresponds dimension of marking
+	 */
 	public void adjustFont(){
-		if(sutra.f != null){
-			Font f2 = sutra.f.deriveFont((float)(Math.min(s.width, s.height)));
-			sutra.f = f2;
+		if(inscript.f != null){
+			Font f2 = inscript.f.deriveFont((float)(Math.min(s.width, s.height)));
+			inscript.f = f2;
 		}
 	}
+	
+	/**
+	 * Set Opacity value
+	 * @param g			Graphics 
+	 * @param alpha		opacity value
+	 */
 	public void setAlpha(Graphics2D g, float alpha){
 		int rule = AlphaComposite.SRC_OVER;
 		AlphaComposite ac;
 		ac = AlphaComposite.getInstance(rule, alpha);
 		g.setComposite(ac);
 	}
+	
 	public void drawBorder(Graphics2D g){
 		// get needed properties
-		Float alpha = Float.parseFloat(sutra.root.props.getProperty("local.alpha.markup.border"));
-		Color color = PrefUtil.String2Color(sutra.root.props.getProperty("local.color.markup.border"));
+		Float alpha = Float.parseFloat(inscript.root.props.getProperty("local.alpha.markup.border"));
+		Color color = PrefUtil.String2Color(inscript.root.props.getProperty("local.color.markup.border"));
 		// draw
 		setAlpha(g, alpha);
 		g.setColor(color);
 		g.draw(s);
 	}
 	public void drawMarkup(Graphics2D g){
-		if(this.number!=sutra.getActiveSignNumber()) {
+		if(this.number!=inscript.getActiveSignNumber()) {
 			// get needed properties
-			Float alpha = Float.parseFloat(sutra.root.props.getProperty("local.alpha.markup.p"));
-			Color color = PrefUtil.String2Color(sutra.root.props.getProperty("local.color.markup.p"));
+			Float alpha = Float.parseFloat(inscript.root.props.getProperty("local.alpha.markup.p"));
+			Color color = PrefUtil.String2Color(inscript.root.props.getProperty("local.color.markup.p"));
 			// draw
 			setAlpha(g, alpha);
 			g.setColor(color);
 		}
 		else {
 			// get needed properties
-			Float alpha = Float.parseFloat(sutra.root.props.getProperty("local.alpha.markup.a"));
-			Color color = PrefUtil.String2Color(sutra.root.props.getProperty("local.color.markup.a"));
+			Float alpha = Float.parseFloat(inscript.root.props.getProperty("local.alpha.markup.a"));
+			Color color = PrefUtil.String2Color(inscript.root.props.getProperty("local.color.markup.a"));
 			// draw
 			setAlpha(g, alpha);
 			g.setColor(color);
 		}
 		g.fill(s);
 	}
-	public void drawID(Graphics2D g){
+	
+	/**
+	 * Draw character's string.
+	 * @param g
+	 */
+	public void drawCharacter(Graphics2D g){
 		// get needed properties
-		Float alpha = Float.parseFloat(sutra.root.props.getProperty("local.alpha.text"));
-		Color color = PrefUtil.String2Color(sutra.root.props.getProperty("local.color.text"));
+		Float alpha = Float.parseFloat(inscript.root.props.getProperty("local.alpha.text"));
+		Color color = PrefUtil.String2Color(inscript.root.props.getProperty("local.color.text"));
 		// draw
-		if(sutra.f != null) g.setFont(sutra.f);
+		if(inscript.f != null) g.setFont(inscript.f);
 		setAlpha(g, alpha);
 		g.setColor(color);
 		g.drawString(characterStandard, s.getBounds().x, s.getBounds().y+g.getFontMetrics().getHeight()*25/40);
 	}
+	
+	/**
+	 * Draw character's continuous number.
+	 * @param g
+	 */
 	public void drawN(Graphics2D g){
 		// get needed properties
-		Float alpha = Float.parseFloat(sutra.root.props.getProperty("local.alpha.text"));
-		Color color = PrefUtil.String2Color(sutra.root.props.getProperty("local.color.text"));
+		Float alpha = Float.parseFloat(inscript.root.props.getProperty("local.alpha.text"));
+		Color color = PrefUtil.String2Color(inscript.root.props.getProperty("local.color.text"));
 		// draw
-		if(sutra.f != null) g.setFont(sutra.f.deriveFont(sutra.f.getSize()/3.0f));
+		if(inscript.f != null) g.setFont(inscript.f.deriveFont(inscript.f.getSize()/3.0f));
 		setAlpha(g, alpha);
 		g.setColor(color);
 		g.drawString(String.valueOf(number), s.getBounds().x, s.getBounds().y+g.getFontMetrics().getAscent());
 	}
+	
+	/**
+	 * Draw character's row and column numbers: ({CharacterRowNumber},{CharacterColumnNumber})
+	 * @param g
+	 */
 	public void drawRC(Graphics2D g){
 		// get needed properties
-		Float alpha = Float.parseFloat(sutra.root.props.getProperty("local.alpha.text"));
-		Color color = PrefUtil.String2Color(sutra.root.props.getProperty("local.color.text"));
+		Float alpha = Float.parseFloat(inscript.root.props.getProperty("local.alpha.text"));
+		Color color = PrefUtil.String2Color(inscript.root.props.getProperty("local.color.text"));
 		// draw
-		if(sutra.f != null) g.setFont(sutra.f.deriveFont(sutra.f.getSize()/5.0f));
+		if(inscript.f != null) g.setFont(inscript.f.deriveFont(inscript.f.getSize()/5.0f));
 		setAlpha(g, alpha);
 		g.setColor(color);
 		g.drawString("("+String.valueOf(row)+","+String.valueOf(column)+")", s.getBounds().x, s.getBounds().y+g.getFontMetrics().getAscent());
 	}
 
-	//
+	/**
+	 * Generate XUpdate
+	 * @param updateOnly	whether only coordinates need to be updated
+	 * @return		XUpdate
+	 */
 	public String getXUpdate(boolean updateOnly){
 		if(!updateOnly){
 			String xupdate = 
@@ -252,9 +351,9 @@ public class HiWi_Object_Character {
 				"           <xu:attribute name=\"preferred_reading\">"+this.preferred_reading+"</xu:attribute>" +
 				"           <xu:attribute name=\"variant\">"+this.variant+"</xu:attribute>" +
 				"           <xu:attribute name=\"cert\">"+this.cert+"</xu:attribute>" +
-				"           <xu:attribute name=\"nr\">"+sutra.sutra_id+"_"+this.number+"</xu:attribute>" +
-				"           <source>"+sutra.sutra_id+"</source>" +
-				"           <rubbing>"+sutra.sutra_path_rubbing+"</rubbing>" +
+				"           <xu:attribute name=\"nr\">"+inscript.inscript_id+"_"+this.number+"</xu:attribute>" +
+				"           <source>"+inscript.inscript_id+"</source>" +
+				"           <rubbing>"+inscript.inscript_path_rubbing+"</rubbing>" +
 				"           <graphic>"+sign_path_snippet+"</graphic>" +
 				"           <coordinates x=\""+s.x+"\" y=\""+s.y+"\" width=\""+s.width+"\" height=\""+s.height+"\" />" +
 				"       </xu:element>" +
@@ -273,7 +372,12 @@ public class HiWi_Object_Character {
 			return xupdate;
 		}
 	}
-
+	
+	/**
+	 * Generate an org.jdom.Element <appearance> representation of Character
+	 * Notice: is used for saving marking inforamtion locally
+	 * @return		org.jdom.Element representation of Character
+	 */
 	public Element toAppearance(){
 		Element appearance = new Element("appearance");
 
@@ -283,13 +387,13 @@ public class HiWi_Object_Character {
 		appearance.setAttribute("preferred_reading", String.valueOf(this.preferred_reading));
 		appearance.setAttribute("variant", String.valueOf(this.variant));
 		appearance.setAttribute("cert", String.valueOf(this.cert));
-		appearance.setAttribute("nr", String.valueOf(sutra.sutra_id+"_"+this.number));
+		appearance.setAttribute("nr", String.valueOf(inscript.inscript_id+"_"+this.number));
 
 		Element source = new Element("source");
-		source.setText(sutra.sutra_id);
+		source.setText(inscript.inscript_id);
 
 		Element rubbing = new Element("rubbing");
-		rubbing.setText(sutra.sutra_path_rubbing);
+		rubbing.setText(inscript.inscript_path_rubbing);
 
 		Element graphic = new Element("graphic");
 		graphic.setText(this.sign_path_snippet);
@@ -307,16 +411,24 @@ public class HiWi_Object_Character {
 
 		return appearance;
 	}
-
-	public static HiWi_Object_Character fromAppearance(HiWi_Object_Inscript sutra, Element appearance){
+	
+	/**
+	 * Generate character from org.jdom.Element <appearance>
+	 * Notice: is used for loading marking information from database after having received corresponding <appearance>s list
+	 * Notice: is used for loading marking information from local file
+	 * @param inscript		inscript object that contains character generated
+	 * @param appearance	org.jdom.Element <appearance>
+	 * @return
+	 */
+	public static HiWi_Object_Character fromAppearance(HiWi_Object_Inscript inscript, Element appearance){
 		String chStandard = appearance.getAttributeValue("character");
 		String chOriginal = appearance.getAttributeValue("original");
 		String chId = appearance.getAttributeValue("id");
 		boolean preferred = Boolean.parseBoolean(appearance.getAttributeValue("preferred_reading"));
 		float cert = Float.parseFloat(appearance.getAttributeValue("cert"));
 		int var = Integer.parseInt(appearance.getAttributeValue("variant"));
-		int n = Integer.parseInt(appearance.getAttributeValue("nr").substring((sutra.sutra_id+"_").length()));
-		String rc = chId.substring((sutra.sutra_id+"_").length());
+		int n = Integer.parseInt(appearance.getAttributeValue("nr").substring((inscript.inscript_id+"_").length()));
+		String rc = chId.substring((inscript.inscript_id+"_").length());
 		int r = Integer.parseInt(rc.substring(0, rc.indexOf("_")));
 		int c = Integer.parseInt(rc.substring(rc.indexOf("_")+1));
 		Element xmlc = appearance.getChild("coordinates");
@@ -325,12 +437,16 @@ public class HiWi_Object_Character {
 		int width = Integer.parseInt(xmlc.getAttributeValue("width"));
 		int height = Integer.parseInt(xmlc.getAttributeValue("height"));
 
-		HiWi_Object_Character sign = new HiWi_Object_Character(sutra, chStandard, chOriginal, cert, preferred, var, r, c, n, new Point(x,y), new Dimension(width, height));				
+		HiWi_Object_Character sign = new HiWi_Object_Character(inscript, chStandard, chOriginal, cert, preferred, var, r, c, n, new Point(x,y), new Dimension(width, height));				
 		sign.id = chId; // just to be sure, since it's the only value not mentioned in constructor explicit
 
 		return sign;
 	}
 	
+	/**
+	 * Update characater'S snippet's marking coordinates from <appearance> element
+	 * @param appearance org.jdom.Element <appearance>
+	 */
 	public void updateCoordinatesFromAppearance(Element appearance){
 		Element xmlc = appearance.getChild("coordinates");
 		int x = Integer.parseInt(xmlc.getAttributeValue("x"));
@@ -339,7 +455,11 @@ public class HiWi_Object_Character {
 		int height = Integer.parseInt(xmlc.getAttributeValue("height"));
 		this.s = new Rectangle(x, y, width, height);
 	}
-
+	
+	/**
+	 * Update cahracter's snippet's marking cordinates from Rectangle object
+	 * @param rectangle		marking rectangle
+	 */
 	public void updateSnippet(Rectangle rectangle) {
 		this.s = (Rectangle) rectangle.clone();
 	}
