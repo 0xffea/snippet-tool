@@ -1,59 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="" />
-	<classpathentry exported="true" kind="lib" path="lib/xmldb.jar" />
-	<classpathentry exported="true" kind="lib"
-		path="lib/xmlrpc-1.2-patched.jar" />
-	<classpathentry exported="true" kind="lib" path="lib/exist.jar" />
-	<classpathentry exported="true" kind="lib"
-		path="lib/exist-optional.jar" />
-	<classpathentry exported="true" kind="lib"
-		path="lib/jakarta-regexp-1.5.jar" />
-	<classpathentry exported="true" kind="lib" path="lib/saxon9.jar" />
-	<classpathentry exported="true" kind="lib"
-		path="lib/saxon9-dom.jar" />
-	<classpathentry exported="true" kind="lib"
-		path="lib/saxon9-xpath.jar" />
-	<classpathentry exported="true" kind="lib"
-		path="lib/xercesImpl-2.9.1.jar" />
-	<classpathentry exported="true" kind="lib" path="lib/xml-apis.jar" />
-	<classpathentry exported="true" kind="lib"
-		path="lib/javax.servlet-1.4.jar" />
-	<classpathentry exported="true" kind="lib" path="lib/javaws.jar" />
-	<classpathentry exported="true" kind="lib"
-		path="lib/MultiSplit.jar" />
-	<classpathentry exported="true" kind="lib"
-		path="lib/swing-layout-1.0.jar" />
-	<classpathentry exported="true" kind="lib"
-		path="lib/antlr-2.7.6.jar" />
-	<classpathentry exported="true" kind="lib"
-		path="lib/commons-collections-3.1.jar" />
-	<classpathentry exported="true" kind="lib"
-		path="lib/commons-logging-1.0.4.jar" />
-	<classpathentry exported="true" kind="lib"
-		path="lib/commons-pool-1.2.jar" />
-	<classpathentry exported="true" kind="lib"
-		path="lib/excalibur-cli-1.0.jar" />
-	<classpathentry exported="true" kind="lib"
-		path="lib/jEdit-syntax.jar" />
-	<classpathentry exported="true" kind="lib"
-		path="lib/jgroups-all.jar" />
-	<classpathentry exported="true" kind="lib"
-		path="lib/jline-0_9_5.jar" />
-	<classpathentry exported="true" kind="lib" path="lib/jta.jar" />
-	<classpathentry exported="true" kind="lib"
-		path="lib/log4j-1.2.15.jar" />
-	<classpathentry exported="true" kind="lib"
-		path="lib/quartz-1.6.0.jar" />
-	<classpathentry exported="true" kind="lib"
-		path="lib/stax-api-1.0.1.jar" />
-	<classpathentry exported="true" kind="lib" path="lib/sunxacml.jar" />
-	<classpathentry exported="true" kind="lib"
-		path="lib/colorchooser.jar" />
-	<classpathentry exported="true" kind="con"
-		path="org.eclipse.jdt.launching.JRE_CONTAINER" />
-	<classpathentry kind="lib" path="lib/jdom.jar" />
-	<classpathentry kind="lib" path="lib/ant.jar" />
-	<classpathentry kind="lib" path="lib/ant-launcher.jar" />
-	<classpathentry kind="output" path="" />
+	<classpathentry kind="src" path=""/>
+	<classpathentry exported="true" kind="lib" path="lib/xmldb.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xmlrpc-1.2-patched.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/exist.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/exist-optional.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jakarta-regexp-1.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/saxon9.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/saxon9-dom.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/saxon9-xpath.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xercesImpl-2.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xml-apis.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javax.servlet-1.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javaws.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/swing-layout-1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/antlr-2.7.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-collections-3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-logging-1.0.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-pool-1.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/excalibur-cli-1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jEdit-syntax.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jgroups-all.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jline-0_9_5.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jta.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/log4j-1.2.15.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/quartz-1.6.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/stax-api-1.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/sunxacml.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/colorchooser.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/jdom.jar"/>
+	<classpathentry kind="lib" path="lib/ant.jar"/>
+	<classpathentry kind="lib" path="lib/ant-launcher.jar"/>
+	<classpathentry kind="output" path=""/>
 </classpath>
