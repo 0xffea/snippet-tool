@@ -41,8 +41,8 @@ public class XMLUtil {
 		String out = new String();
 		int row = 1;
 		int crow = 1;
-		for(int i=0; i<sutra.sutra_text.size(); i++){
-			HiWi_Object_Character csign = sutra.sutra_text.get(i).get(0).get(0);
+		for(int i=0; i<sutra.inscript_text.size(); i++){
+			HiWi_Object_Character csign = sutra.inscript_text.get(i).get(0).get(0);
 			crow = csign.row;
 
 			if(crow != row){	// add breakline

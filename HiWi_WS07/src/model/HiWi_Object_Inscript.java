@@ -118,10 +118,10 @@ public class HiWi_Object_Inscript {
 	 * Load inscript image from local file
 	 * @param img	absolute path to image
 	 */
-	public void setImage(String img){
-		this.inscript_path_rubbing = img;
+	public void setImage(File img){
+		this.inscript_path_rubbing = img.getAbsolutePath();
 		try {
-			this.inscript_image = ImageIO.read(new File(inscript_path_rubbing));
+			this.inscript_image = ImageIO.read(img);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
