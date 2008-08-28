@@ -56,9 +56,9 @@ public class MouseControllerMainImage1 implements MouseListener, MouseMotionList
 			// if not still the same sign used as active
 			if(main_image.s.getActiveCharacter()==null || !main_image.s.getActiveCharacter().s.getBounds2D().contains(mouse_pressed)){
 				// find sign that should be active
-				for(int i=0; i<main_image.s.sutra_text.size(); i++){
+				for(int i=0; i<main_image.s.inscript_text.size(); i++){
 					// check, whether marking bounds contain mousePressed coordinates
-					HiWi_Object_Character sign = main_image.s.sutra_text.get(i).get(0).get(0);
+					HiWi_Object_Character sign = main_image.s.inscript_text.get(i).get(0).get(0);
 					if(sign.s.getBounds2D().contains(mouse_current_new)){
 						// set flag: found existing sign
 						main_image.existingSign = true;
@@ -94,9 +94,9 @@ public class MouseControllerMainImage1 implements MouseListener, MouseMotionList
 			// if not still the same sign used as active
 			if(main_image.s.getActiveCharacter()==null || !main_image.s.getActiveCharacter().s.getBounds2D().contains(mouse_pressed)){
 				// find sign that should be active
-				for(int i=0; i<main_image.s.sutra_text.size(); i++){
+				for(int i=0; i<main_image.s.inscript_text.size(); i++){
 					//
-					HiWi_Object_Character sign = main_image.s.sutra_text.get(i).get(0).get(0);
+					HiWi_Object_Character sign = main_image.s.inscript_text.get(i).get(0).get(0);
 					if(sign.s.contains(mouse_current_new)){
 						// found existing sign
 						main_image.existingSign = true;

@@ -102,8 +102,8 @@ public class MouseControllerMainImage2 implements MouseListener, MouseMotionList
 
 			// set next active
 			main_image.s.setActiveCharacterNumber(currentIndex+1);
-			if(currentIndex<main_image.s.sutra_text.size()) main_image.root.info.showInfo(currentIndex);
-			if(currentIndex<main_image.s.sutra_text.size()) main_image.root.text.setSelected(main_image.s.getActiveCharacter());
+			if(currentIndex<main_image.s.inscript_text.size()) main_image.root.info.showInfo(currentIndex);
+			if(currentIndex<main_image.s.inscript_text.size()) main_image.root.text.setSelected(main_image.s.getActiveCharacter());
 
 			// repaint
 			main_image.root.main.repaint();
