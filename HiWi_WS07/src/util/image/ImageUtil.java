@@ -3,14 +3,12 @@ package src.util.image;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -28,16 +26,27 @@ import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.BinaryResource;
 import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
-import org.xmldb.api.modules.XPathQueryService;
 
 import src.gui.HiWi_GUI;
-import src.model.HiWi_Object_Character;
 import src.util.db.DbUtil;
 
 import com.sun.image.codec.jpeg.ImageFormatException;
 
+/**
+ * Collection of functions for dealing with images.
+ * 
+ * @author Alexei Bratuhin
+ *
+ */
 public class ImageUtil {
 	
+	/**
+	 * Fetch image from eXist database
+	 * @param root	reference to HiWi_GUI
+	 * @param collection	collection containing image
+	 * @param img		image name
+	 * @return	image object
+	 */
 	@SuppressWarnings("unchecked")
 	public static BufferedImage fetchImage(HiWi_GUI root, String collection, String img){
 		//
@@ -46,11 +55,6 @@ public class ImageUtil {
 		root.addLogEntry("\timg="+img, 0, 1);
 		//
 		BufferedImage bi = null;
-		/*try {
-			bi = ImageIO.read(new File("C:\\Users\\abratuhi\\Downloads\\tieshan_alleZeichen_2mm_kepeng_cutms SW.jpg"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
 		try {
 			String driver = "org.exist.xmldb.DatabaseImpl";    
 			Class cl = Class.forName(driver);   
@@ -60,14 +64,11 @@ public class ImageUtil {
 			// get the collection 
 			Collection col = DatabaseManager.getCollection(collection);
 			if(col == null){
-				//System.out.println("NULL COLLECTION, aborting operation fetchImage");
 				root.addLogEntry("NULL COLLECTION, aborting operation fetchImage", 1, 1);
 			}
 			else{
-				//col.setProperty(OutputKeys.INDENT, "yes");
 				BinaryResource image = (BinaryResource)col.getResource(img);
 				byte[] bytear = (byte[]) image.getContent();
-				//ByteArrayInputStream bis = new ByteArrayInputStream (bytear,0,bytear.length);
 				bi = ImageIO.read (new ByteArrayInputStream(bytear));
 			}
 		} catch (ClassNotFoundException e) {
@@ -88,7 +89,15 @@ public class ImageUtil {
 		//
 		return bi;
 	}
-
+	
+	/**
+	 * Cut image to snippets using already existing marking from some inscript 
+	 * @param root	reference to HiWi_GUI
+	 * @param img_collection	address of output snippet collection
+	 * @param img_resource		address of image to proceed
+	 * @param coordinatesId		inscript id to take marking from
+	 * @return	snippets
+	 */
 	public static File[] cutImageDueCoordinates(HiWi_GUI root, String img_collection, String img_resource, String coordinatesId){
 		try {
 			String coordinatesCollection = root.props.getProperty("db.dir.out");
@@ -116,7 +125,7 @@ public class ImageUtil {
 
 				String chId = appearance.getAttributeValue("id");
 				Element xmlc = appearance.getChild("coordinates");
-				int n = Integer.parseInt(appearance.getAttributeValue("nr").substring((coordinatesId+"_").length()));
+				//int n = Integer.parseInt(appearance.getAttributeValue("nr").substring((coordinatesId+"_").length()));
 				String rc = chId.substring((coordinatesId+"_").length());
 				int r = Integer.parseInt(rc.substring(0, rc.indexOf("_")));
 				int c = Integer.parseInt(rc.substring(rc.indexOf("_")+1));
@@ -144,6 +153,12 @@ public class ImageUtil {
 		return null;
 	}
 	
+	/**
+	 * Store snippets to database
+	 * @param root	reference to HiWi_GUI
+	 * @param subimages	list of snippets' files
+	 */
+	@SuppressWarnings("unchecked")
 	public static void saveSubimages(HiWi_GUI root, File[] subimages){
 		try {
 			String driver = "org.exist.xmldb.DatabaseImpl";    

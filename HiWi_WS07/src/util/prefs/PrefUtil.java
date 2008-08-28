@@ -4,6 +4,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 
+/**
+ * Collection of function to convert between different Properties and Preferences.
+ * 
+ * @author Alexei Bratuhin
+ *
+ */
 public class PrefUtil {
 	
 	public static Dimension string2dimesion(String windowSize){
@@ -20,10 +26,6 @@ public class PrefUtil {
 	
 	public static Integer string2integer(String size){
 		return Integer.valueOf(size);
-	}
-	
-	public static Integer getDividerWidth(String width){
-		return Integer.valueOf(width);
 	}
 	
 	public static Color String2Color(String s){

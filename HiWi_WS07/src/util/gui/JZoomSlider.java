@@ -5,6 +5,13 @@ import java.util.Hashtable;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
 
+/**
+ * JSlider extended to provide use for zoom functionality.
+ * Notice: zoom(+2) ~ zoomFactor=2
+ * Notice: zoom(-2) ~ zoomFactor=1/2
+ * @author Alexei Bratuhin
+ *
+ */
 @SuppressWarnings("serial")
 public class JZoomSlider extends JSlider{
 		
@@ -20,6 +27,10 @@ public class JZoomSlider extends JSlider{
 		setPaintLabels(true);
 	}
 	
+	/**
+	 * Get Zoom Factor
+	 * @return
+	 */
 	public double getZoom(){
 		int z = getValue();
 		double zoom;
@@ -32,9 +43,11 @@ public class JZoomSlider extends JSlider{
 		return zoom;
 	}
 	
+	/**
+	 * Set Zoom Factor
+	 * @param zoom	zoom factor
+	 */
 	public void setZoom(double zoom){
-		//if(zoom <= 0) return;
-		//if(zoom > getMaximum()) setValue(getMaximum());
 		if(zoom >= 1){
 			setValue((int) (zoom-1));
 		}

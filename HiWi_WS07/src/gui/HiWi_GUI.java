@@ -95,11 +95,11 @@ public class HiWi_GUI extends JFrame{
 		down.setBorder(null);
 		all.setBorder(null);
 		
-		mainoption.setDividerSize(PrefUtil.getDividerWidth(props.getProperty("local.window.divider.width")));
-		up.setDividerSize(PrefUtil.getDividerWidth(props.getProperty("local.window.divider.width")));
-		textinfo.setDividerSize(PrefUtil.getDividerWidth(props.getProperty("local.window.divider.width")));
-		down.setDividerSize(PrefUtil.getDividerWidth(props.getProperty("local.window.divider.width")));
-		all.setDividerSize(PrefUtil.getDividerWidth(props.getProperty("local.window.divider.width")));
+		mainoption.setDividerSize(PrefUtil.string2integer(props.getProperty("local.window.divider.width")));
+		up.setDividerSize(PrefUtil.string2integer(props.getProperty("local.window.divider.width")));
+		textinfo.setDividerSize(PrefUtil.string2integer(props.getProperty("local.window.divider.width")));
+		down.setDividerSize(PrefUtil.string2integer(props.getProperty("local.window.divider.width")));
+		all.setDividerSize(PrefUtil.string2integer(props.getProperty("local.window.divider.width")));
 		
 		setContentPane(all);
 		

@@ -7,8 +7,15 @@ import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XPathQueryService;
 
+/**
+ * Collection of functions to ease the use of XMLDB:API and to improve code readability. 
+ * 
+ * @author Alexei Bratuhin
+ *
+ */
 public class DbUtil {
 	
+	@SuppressWarnings("unchecked")
 	public static ResourceSet executeQuery(String collection, String query){
 		try {
 			String driver = "org.exist.xmldb.DatabaseImpl";  

@@ -2,6 +2,7 @@ package src.util.unicode;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -10,19 +11,38 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Properties;
 
+import org.xmldb.api.DatabaseManager;
+import org.xmldb.api.base.Collection;
+import org.xmldb.api.base.Database;
+import org.xmldb.api.base.XMLDBException;
+import org.xmldb.api.modules.CollectionManagementService;
+import org.xmldb.api.modules.XMLResource;
+
+import src.gui.HiWi_GUI;
 import src.util.string.HiWi_StringIO;
 
+/**
+ * Contains functionality for generating unicode_xxxxx_1000.xml files.
+ * 
+ * @author Alexei Bratuhin
+ *
+ */
 public class UnicodeTXT2XML {
 	
+	/**
+	 * Generate xml from Unihan.txt
+	 * Notice: generated file are saved in same directory that is containing Unihan.txt
+	 * @param dir	directory containing Unihan.txt
+	 * @param upload	whether generated files should be uploaded onto server
+	 */
 	public static void generateUnicodeDBFiles(String dir, boolean upload){
 		//
 		System.out.println("generating unicode db files...");
 		//
 		String file_out_base = dir + "unicode";
 		String file_in_unihan = dir + "Unihan.txt";
-		
-		//ClassLoader cl = UnicodeTXT2XML.class.getClassLoader(); 
 		
 		try {
 			FileInputStream fis_unihan = new FileInputStream(file_in_unihan);
@@ -51,10 +71,10 @@ public class UnicodeTXT2XML {
 						fos.close();
 						bw.close();
 					}
-					/*if(upload){
+					if(upload){
 						File f = new File(curr_file);
 						uploadUnicodeDBFile(f);
-					}*/
+					}
 					break;
 				}
 				if(str_unihan.startsWith("#")) continue;
@@ -69,10 +89,10 @@ public class UnicodeTXT2XML {
 						fos.close();
 						bw.close();
 					}
-					/*if(upload){
+					if(upload){
 						File f = new File(curr_file);
 						uploadUnicodeDBFile(f);
-					}*/
+					}
 					break;
 				}
 				
@@ -91,10 +111,10 @@ public class UnicodeTXT2XML {
 								fos.close();
 								bw.close();
 							}
-							/*if(upload){
+							if(upload){
 								File f = new File(curr_file);
 								uploadUnicodeDBFile(f);
-							}*/
+							}
 						}
 						
 						counter = counter % slice;
@@ -132,17 +152,31 @@ public class UnicodeTXT2XML {
 		}
 	}
 	
-	/*public static void uploadUnicodeDBFile(File f){
+	@SuppressWarnings("unchecked")
+	public static void uploadUnicodeDBFile(File f){
+		Properties props = null;
+		try {
+	        props.load(new FileInputStream(HiWi_GUI.PROPERTIES_FILE));
+	    } catch (IOException e) {
+	    	e.printStackTrace();
+	    	return;
+	    }
+	    
+	    String db_uri = props.getProperty("db.uri");
+	    String db_user = props.getProperty("db.user");
+	    String db_passwd = props.getProperty("db.passwd");
+	    String db_collection = props.getProperty("db.dir.out");
+	    
 		try {
 			String driver = "org.exist.xmldb.DatabaseImpl";    
 			Class cl = Class.forName(driver); 
 			Database database = (Database) cl.newInstance();   
 			DatabaseManager.registerDatabase(database);
-			Collection current = DatabaseManager.getCollection(Preferences.DB_URI+Preferences.DB_COLLECTION_OUT, Preferences.DB_USER, Preferences.DB_PASSWD);
+			Collection current = DatabaseManager.getCollection(db_uri+db_collection, db_user, db_passwd);
 			if(current == null){
-				Collection root = DatabaseManager.getCollection(Preferences.DB_URI, Preferences.DB_USER, Preferences.DB_PASSWD);   
+				Collection root = DatabaseManager.getCollection(db_uri, db_user, db_passwd);   
 	            CollectionManagementService mgtService = (CollectionManagementService) root.getService("CollectionManagementService", "1.0");   
-	            current = mgtService.createCollection(Preferences.DB_COLLECTION_OUT);  
+	            current = mgtService.createCollection(db_collection);  
 			}
 	        XMLResource resource = (XMLResource) current.createResource(f.getName(), "XMLResource");
 	        resource.setContent(f);
@@ -158,6 +192,6 @@ public class UnicodeTXT2XML {
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		} 
-	}*/
+	}
 }
 

@@ -15,6 +15,7 @@ import src.util.num.NumUtil;
 import src.util.prefs.PrefUtil;
 
 /**
+ * Character class. Representation for characters of the inscript together with all their relevant properties to be stored.
  * (row, column) - for numeration text is represented in european way 
  * @author Alexei Bratuhin
  *

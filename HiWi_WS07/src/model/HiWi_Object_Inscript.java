@@ -43,6 +43,12 @@ import src.util.db.DbUtil;
 import src.util.num.NumUtil;
 import src.util.xml.XMLUtil;
 
+/**
+ * Inscript class. Stores all inscript relevant attributes from inscript's .xml description and inscript's text structured due reading variants.
+ * 
+ * @author Alexei Bratuhin
+ *
+ */
 public class HiWi_Object_Inscript {
 	
 	/** Reference to parent component **/

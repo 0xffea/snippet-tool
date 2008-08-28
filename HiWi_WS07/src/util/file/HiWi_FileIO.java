@@ -20,6 +20,12 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
+/**
+ * Collection of functions to handle different file I/O operations for 'all' and 'xml' files.
+ * 
+ * @author Alexei Bratuhin
+ *
+ */
 public class HiWi_FileIO {
 	
 	public static String readStringFromFile(String pathname){
@@ -65,7 +71,7 @@ public class HiWi_FileIO {
 		}
 		return s;
 	}
-	public static ArrayList<String> readFromFile(String pathname){
+	public static ArrayList<String> readArrayListFromFile(String pathname){
 		ArrayList<String> out=new ArrayList<String>();
 		
 		//open streams
@@ -106,39 +112,6 @@ public class HiWi_FileIO {
 		return out;
 	}
 	
-	public static String readXMLStringFromFile(String file){
-		try {
-			SAXBuilder builder = new SAXBuilder();
-			Document d = builder.build(new FileInputStream(file));
-			StringWriter sw = new StringWriter();
-			XMLOutputter outputter = new XMLOutputter();
-			outputter.output(d, sw);
-			return sw.toString();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (JDOMException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	public static Document readXMLDocumentFromFile(String file){
-		try {
-			SAXBuilder builder = new SAXBuilder();
-			Document d = builder.build(new FileInputStream(file));
-			return d;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (JDOMException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
 	public static void writeStringToFile(String file, String str){
 		try {
 			FileOutputStream fos = new FileOutputStream(file);
@@ -156,7 +129,37 @@ public class HiWi_FileIO {
 			e.printStackTrace();
 		}
 	}
-	
+	public static String readXMLStringFromFile(String file){
+		try {
+			SAXBuilder builder = new SAXBuilder();
+			Document d = builder.build(new FileInputStream(file));
+			StringWriter sw = new StringWriter();
+			XMLOutputter outputter = new XMLOutputter();
+			outputter.output(d, sw);
+			return sw.toString();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public static Document readXMLDocumentFromFile(String file){
+		try {
+			SAXBuilder builder = new SAXBuilder();
+			Document d = builder.build(new FileInputStream(file));
+			return d;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	public static void writeXMLStringToFile(String file, String str){
 		SAXBuilder saxb = new SAXBuilder();
 		StringReader sr = new StringReader(str);

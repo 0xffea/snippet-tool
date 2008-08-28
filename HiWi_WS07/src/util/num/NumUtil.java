@@ -1,5 +1,10 @@
 package src.util.num;
 
+/**
+ * 
+ * @author Alexei Bratuhin
+ *
+ */
 public class NumUtil {
 	
 	public static int hex2dec(String s){
@@ -10,6 +15,12 @@ public class NumUtil {
 		return Integer.toHexString(n);
 	}
 	
+	/**
+	 * Find unicode_xxxxx_1000.xml file containing searched id
+	 * @param file_ids	file list
+	 * @param id		id searched
+	 * @return			index of file needed in file list
+	 */
 	public static int myIndex(String[] file_ids, String id){
 		//System.out.println("calling myIndex() with id="+id);
 		int[] f = new int[file_ids.length];

@@ -35,14 +35,26 @@ import src.model.HiWi_Object_Inscript;
 import src.model.HiWi_Object_Character;
 import src.util.num.NumUtil;
 
+/**
+ * Collection of functions for dealing with XML data of inscript's .xml description.
+ * Primarily created for transformation functions, used to extract needed data from inscripts .xml description.
+ * 
+ * @author Alexei Bratuhin
+ *
+ */
 public class XMLUtil {
-
-	public static String getPlainTextFromApp(HiWi_Object_Inscript sutra){
+	
+	/**
+	 * Extracts preferred reading text of inscript from Inscript object.
+	 * @param inscript inscript
+	 * @return
+	 */
+	public static String getPlainTextFromApp(HiWi_Object_Inscript inscript){
 		String out = new String();
 		int row = 1;
 		int crow = 1;
-		for(int i=0; i<sutra.inscript_text.size(); i++){
-			HiWi_Object_Character csign = sutra.inscript_text.get(i).get(0).get(0);
+		for(int i=0; i<inscript.inscript_text.size(); i++){
+			HiWi_Object_Character csign = inscript.inscript_text.get(i).get(0).get(0);
 			crow = csign.row;
 
 			if(crow != row){	// add breakline
@@ -59,6 +71,12 @@ public class XMLUtil {
 		return out;
 	}
 
+	/**
+	 * Extracts preferred reading text from inscript from inscript's .xml description.
+	 * @param xml	contents of inscript's .xml description
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
 	public static String getPlainTextFromXML(String xml){
 		String out = new String();
 		SAXBuilder builder = new SAXBuilder();
@@ -119,7 +137,16 @@ public class XMLUtil {
 		//
 		return out;
 	}
-
+	
+	/**
+	 * Fetch content of inscript's .xml description from database
+	 * @param root		reference to HiWi_GUI
+	 * @param user		database's username
+	 * @param pass		database's password
+	 * @param collection	database's collection
+	 * @param xml			database's resource
+	 * @return				content of inscript's .xml
+	 */
 	@SuppressWarnings("unchecked")
 	public static String fetchXML(HiWi_GUI root, String user, String pass, String collection, String xml){
 		//
@@ -167,9 +194,14 @@ public class XMLUtil {
 		//
 		return resultxml;
 	}
-
+	
+	/**
+	 * Apply XSL Transformation to XML
+	 * @param xml	content of XML
+	 * @param xslt	content of XSLT
+	 * @return		content of resultant transformation
+	 */
 	public static String transformXML(String xml, String xslt){
-		//System.out.println("starting transformXML()");
 		StringWriter sw = new StringWriter();
 		TransformerFactory  tFactory = TransformerFactory.newInstance();
 		Source xslSource = new StreamSource(new StringReader(xslt));
@@ -186,6 +218,15 @@ public class XMLUtil {
 		return null;
 	}
 
+	/**
+	 * Perform an XUpdate on eXist database
+	 * @param root	reference to HiWi_GUI
+	 * @param id	id of inscript to update
+	 * @param xupdate	xupdate text
+	 * @param user		database's username
+	 * @param pass		database's password
+	 * @param out		dtabase's collection to update
+	 */
 	@SuppressWarnings("unchecked")
 	public static void updateXML(HiWi_GUI root, String id, String xupdate, String user, String pass, String out){
 		//
@@ -206,12 +247,9 @@ public class XMLUtil {
 			// get the collection
 			Collection col = DatabaseManager.getCollection(out, user, pass);
 			if(col == null){
-				//System.out.println("Trying to get NULL Collection:\tDatabaseManager.getCollection("+(hosturi+out)+", "+user+", "+pass+")");
-				//System.out.println("Aborting operation updateXML");
 				root.addLogEntry("Error updating XML: trying to get NULL Collection:\tDatabaseManager.getCollection("+(out)+", "+user+", "+pass+")", 1, 1);
 			}
 			else{
-				//System.out.println("updating collection:\t"+col.getName());
 				root.addLogEntry("updating collection:\t"+col.getName(), 0, 1);
 				// find out which file to update
 				String[] xml_out = col.listResources();
@@ -234,7 +272,7 @@ public class XMLUtil {
 				XUpdateQueryService service = (XUpdateQueryService) col.getService("XUpdateQueryService", "1.0");
 				service.setCollection(col);
 				long modified = service.updateResource(xml_out[index], xupdate);
-				//System.out.println("updating:\t"+"id = "+id+" in "+xml_out[index]+"; modified:\t"+modified+" nodes");
+				
 				root.addLogEntry("updating:\t"+"id = "+id+" in "+xml_out[index]+"; modified:\t"+modified+" nodes", 1, 1);
 			}
 		} catch (ClassNotFoundException e) {
@@ -250,18 +288,27 @@ public class XMLUtil {
 		root.addLogEntry("** ended updating XML **", 1, 1);
 	}
 
+	/**
+	 * Clear all <appearance>s to given inscript id, meaning - clear marking of inscript with given id
+	 * Notice: regexp must end with an '_'(underscore), since matching is done by startsWith() mean.
+	 * @param root		reference to HiWi_GUI
+	 * @param user		database's username
+	 * @param pass		database's password
+	 * @param out		database's collection, containing inscript's marking
+	 * @param regexp	inscript's id
+	 */
 	@SuppressWarnings("unchecked")
 	public static void clearAppearances(HiWi_GUI root, String user, String pass, String out, String regexp){
-		if(regexp.length() < 2) return; // avoid accidentaly deleting all appearances
+		// avoid accidentaly deleting all appearances
+		if(regexp.length() < 2) return; 
+		
 		// remove appearances
 		try {
 			String driver = "org.exist.xmldb.DatabaseImpl";
 			String xupdate = 	"<xu:modifications version=\'1.0\' xmlns:xu=\'http://www.xmldb.org/xupdate\'> " +
-			//"<xu:remove select=\"//*[substring(@id,0,"+(regexp.length()+1)+")='"+regexp+"']\" /> " +
 			"<xu:remove select=\"//appearance[substring(@id,0,"+(regexp.length()+1)+")='"+regexp+"']\" /> " +
-			//"<xu:remove select=\"//appearance[contains(@id, '"+regexp+"']\" /> " +
 			"</xu:modifications>";
-			//System.out.println(xupdate);
+			
 			root.addLogEntry("xupdate="+xupdate, 0, 1);
 			Class cl = Class.forName(driver);  
 			Database database = (Database) cl.newInstance();   
@@ -293,6 +340,13 @@ public class XMLUtil {
 		// TODO: remove snippets
 	}
 
+	/**
+	 * Standardize xml after applying the xsl transformation. This is done to make the implementation of HiWi_Object_Inscript.readTextFromXML() easier.
+	 * Notice: It's better to have an agreement of what the inscript's xml structure may be like, to avoid complicated transformations
+	 * @param xml
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
 	public static String standardizeXML(String xml){
 		try {
 			StringWriter sw = new StringWriter();
@@ -342,7 +396,6 @@ public class XMLUtil {
 
 				Element element = elementsIn.get(i);
 				
-				//System.out.println("standardizing element:\t"+element.getName());
 
 				// newline
 				if(element.getName().equals("br")){
@@ -362,12 +415,7 @@ public class XMLUtil {
 					for(int j=0; j<iterations; j++){						
 						Element suppliedElement = suppliedChildren.remove(0);
 						
-						//System.out.println("proceeding element(supplied):\t"+suppliedElement.getName());
-						
 						if(suppliedElement.getName().equals("span")){
-							//outputter.output(suppliedElement, System.out);
-							//System.out.println();
-							
 							if(ignoreSupplied) suppliedElement.setAttribute("class", "supplied");
 							else suppliedElement.setAttribute("class", "quasi-supplied");
 
@@ -381,18 +429,9 @@ public class XMLUtil {
 							rootOut.addContent(choice);
 						}
 						if(suppliedElement.getName().equals("norm")){
-							//outputter.output(suppliedElement, System.out);
-							//System.out.println();
-
-							//System.out.println("Listing children of:");
-							//for(int j=0; j<suppliedElement.getChildren().size(); j++){
-							//	outputter.output((Element)suppliedElement.getChildren().get(j), System.out);
-							//}
-
 							Element choice = new Element("choice");
 							Element variant = new Element("variant");
 
-							//Element span = suppliedElement.getChild("span");
 							Element span = (Element) suppliedElement.getChildren().get(0);
 							suppliedElement.removeContent(span);
 
@@ -405,12 +444,8 @@ public class XMLUtil {
 							rootOut.addContent(choice);
 						}
 						if(suppliedElement.getName().equals("choice")){
-							//outputter.output(suppliedElement, System.out);
-							//System.out.println();
-							//System.out.println("\t#variants="+suppliedElement.getChildren().size());
 							for(int k=0; k<suppliedElement.getChildren().size(); k++){
 								Element cvariant = (Element) suppliedElement.getChildren().get(k);
-								//System.out.println("\t\t#spans="+cvariant.getChildren().size());
 								for(int l=0; l<cvariant.getChildren().size(); l++){
 									Element cspan = (Element) cvariant.getChildren().get(l);
 									cspan.setAttribute("class", "supplied");
@@ -425,9 +460,6 @@ public class XMLUtil {
 				else{
 					if(element.getName().equals("span")){
 						element.getParentElement().removeContent(element);
-						//outputter.output(element, System.out);
-						//System.out.println();
-
 						Element choice = new Element("choice");
 						Element variant = new Element("variant");
 
@@ -439,18 +471,9 @@ public class XMLUtil {
 					}
 					if(element.getName().equals("norm")){
 						element.getParentElement().removeContent(element);
-						//outputter.output(element, System.out);
-						//System.out.println();
-
-						//System.out.println("Listing children of:");
-						//for(int j=0; j<element.getChildren().size(); j++){
-						//	outputter.output((Element)element.getChildren().get(j), System.out);
-						//}
-
 						Element choice = new Element("choice");
 						Element variant = new Element("variant");
 
-						//Element span = element.getChild("span");
 						Element span = (Element) element.getChildren().get(0);
 						element.removeContent(span);
 
@@ -464,9 +487,6 @@ public class XMLUtil {
 					}
 					if(element.getName().equals("choice")){
 						element.getParentElement().removeContent(element);
-						//outputter.output(element, System.out);
-						//System.out.println();
-
 						rootOut.addContent(element);
 					}
 				}
