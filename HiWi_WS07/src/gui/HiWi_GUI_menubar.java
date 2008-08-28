@@ -1,5 +1,6 @@
 package src.gui;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -148,8 +149,17 @@ public class HiWi_GUI_menubar extends JMenuBar implements ActionListener{
 			JFileChooser fc = new JFileChooser();
 			fc.showOpenDialog(root);
 			File selectedImage = fc.getSelectedFile();
-			if(selectedImage != null){
+			if(selectedImage != null){;
+				// 
+				root.main.setBorder(new TitledBorder("main"+" - "+selectedImage.getName()));
+				
+				//
 				s.setImage(selectedImage);
+				s.inscript_path_rubbing = selectedImage.getAbsolutePath();
+				
+				root.main.main_image.scale = 1;
+				root.main.main_image.sub.setPreferredSize(new Dimension(s.inscript_image.getWidth(root.main.main_image), s.inscript_image.getHeight(root.main.main_image)));
+				root.main.main_image.sub.revalidate();
 			}
 			
 			root.repaint();
