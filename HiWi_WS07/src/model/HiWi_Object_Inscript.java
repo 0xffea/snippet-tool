@@ -13,11 +13,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.border.TitledBorder;
 
 import org.jdom.Document;
 import org.jdom.Element;
@@ -40,6 +43,8 @@ import org.xmldb.api.modules.XMLResource;
 import src.gui.HiWi_GUI;
 import src.gui.HiWi_GUI_options;
 import src.util.db.DbUtil;
+import src.util.file.HiWi_FileIO;
+import src.util.image.ImageUtil;
 import src.util.num.NumUtil;
 import src.util.xml.XMLUtil;
 
@@ -131,6 +136,215 @@ public class HiWi_Object_Inscript {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void loadText(String mode, String col, String res){
+		//
+		root.addLogEntry("*** started loading text ***", 1, 1);
+		
+		// get needed properties
+		String dbURI = root.props.getProperty("db.uri");
+		String dbUser = root.props.getProperty("db.user");
+		String dbPass = root.props.getProperty("db.passwd");
+		String localXSLTFile = root.props.getProperty("local.file.xslt");
+		
+		//
+		inscript_path_file = col + res;
+		//inscript_path_file = inscript_path_file.substring(dbURI.length());
+		inscript_id = res;
+		inscript_id = inscript_id.substring(0, inscript_id.length()-".xml".length());	// NOTICE: filename containing sutratext must be of form <SUTRA_ID>.xml
+		
+		//perform the transformation and extraction of data
+		String xml = new String();
+		String xslt = new String();
+		String out = new String();
+		String out_st = new String();
+		
+		StringWriter xmlWriter = new StringWriter();
+		StringWriter xsltWriter = new StringWriter();
+		
+		// load xml and xslt
+		if(mode.equals("local")){
+			if(col == null && res == null){
+				loadTextLocalSelect(xmlWriter, xsltWriter);
+			}
+			else{
+				loadTextLocal(new File(res), xmlWriter, xsltWriter);
+			}
+		}
+		else if(mode.equals("remote") && col!=null && res!=null){
+			loadTextRemote(col, res, xmlWriter, xsltWriter);
+		}
+		
+		xml = xmlWriter.toString();
+		xslt = xsltWriter.toString();
+		
+		// 
+		out = XMLUtil.transformXML(xml, xslt);
+		if(out == null || out == "") JOptionPane.showMessageDialog(root, "Bad out after transformation xml->xslt->out", "Alert!", JOptionPane.ERROR_MESSAGE);
+		
+		// standardize transformed inscript
+		out_st = XMLUtil.standardizeXML(out);
+		
+		// save original and transformed xml in application directory
+		HiWi_FileIO.writeStringToFile("inscript-original.xml", xml);
+		HiWi_FileIO.writeStringToFile("inscript-transformed.xml", out);
+		HiWi_FileIO.writeStringToFile("inscript-transformed-standardized.xml", out_st);
+		
+		// add information to sutra_text
+		addText(inscript_id, out_st);
+		
+		// show extracted text in text-window
+		root.text.text_in.setText(XMLUtil.getPlainTextFromApp(this));
+		
+		// repaint
+		if(updateOnly) root.repaint();
+		else root.text.repaint();		
+		//
+		root.addLogEntry("*** ended loading text ***", 1, 1);
+	}
+	
+	public void loadTextRemote(String col, String res, StringWriter xmlWriter, StringWriter xsltWriter){
+		// get needed properties
+		String dbURI = root.props.getProperty("db.uri");
+		String dbUser = root.props.getProperty("db.user");
+		String dbPass = root.props.getProperty("db.passwd");
+		String localXSLTFile = root.props.getProperty("local.file.xslt");
+		
+		// load xml
+		xmlWriter.append(XMLUtil.fetchXML(root, dbUser, dbPass, col, res));
+		if(xmlWriter.toString() == null || xmlWriter.toString() == "") JOptionPane.showMessageDialog(root, "XML not fetched properly", "Alert!", JOptionPane.ERROR_MESSAGE);
+		
+		// load xslt
+		xsltWriter.append(HiWi_FileIO.readXMLStringFromFile(localXSLTFile));
+		if(xsltWriter.toString() == null || xsltWriter.toString() == "") JOptionPane.showMessageDialog(root, "XSLT not fetched properly", "Alert!", JOptionPane.ERROR_MESSAGE);
+	}
+	
+	public void loadTextLocal(File f, StringWriter xmlWriter, StringWriter xsltWriter){
+		// get needed properties
+		String localXSLTFile = root.props.getProperty("local.file.xslt");
+		
+		// load xml
+		if(f != null){
+			xmlWriter.append(HiWi_FileIO.readXMLStringFromFile(f.getAbsolutePath()));
+			if(xmlWriter.toString() == null || xmlWriter.toString() == "") JOptionPane.showMessageDialog(root, "XML not fetched properly", "Alert!", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		// load xslt
+		xsltWriter.append(HiWi_FileIO.readXMLStringFromFile(localXSLTFile));
+		if(xsltWriter.toString() == null || xsltWriter.toString() == "") JOptionPane.showMessageDialog(root, "XSLT not fetched properly", "Alert!", JOptionPane.ERROR_MESSAGE);
+	}
+	
+	public void loadTextLocalSelect(StringWriter xmlWriter, StringWriter xsltWriter){
+		// get needed properties
+		String localXSLTFile = root.props.getProperty("local.file.xslt");
+		
+		// load xml
+		JFileChooser fc = new JFileChooser();
+		fc.showOpenDialog(root);
+		File selectedInscript = fc.getSelectedFile();
+		if(selectedInscript != null){
+			xmlWriter.append(HiWi_FileIO.readXMLStringFromFile(selectedInscript.getAbsolutePath()));
+			if(xmlWriter.toString() == null || xmlWriter.toString() == "") JOptionPane.showMessageDialog(root, "XML not fetched properly", "Alert!", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		// load xslt
+		xsltWriter.append(HiWi_FileIO.readXMLStringFromFile(localXSLTFile));
+		if(xsltWriter.toString() == null || xsltWriter.toString() == "") JOptionPane.showMessageDialog(root, "XSLT not fetched properly", "Alert!", JOptionPane.ERROR_MESSAGE);
+	}
+	
+	/**
+	 * 
+	 * @param mode		"local"/"remote"
+	 * @param col		remote:collection
+	 * @param res		remote:resource
+	 */
+	public void loadImage(String mode, String col, String res){
+		if(mode.equals("local")){
+			if(col == null && res == null){
+				loadImageLocalSelect();
+			}
+			else{
+				loadImageLocal(new File(res));
+			}
+		}
+		else if(mode.equals("remote") && res != null && col != null){
+			loadImageRemote(col, res);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param col		remote:collection
+	 * @param res		remote:resource
+	 */
+	public void loadImageRemote(String col, String res){
+		//
+		root.addLogEntry("*** started loading image ***", 1, 1);
+		
+		// get needed properties
+		String dbURI = root.props.getProperty("db.uri");
+		
+		//
+		inscript_image = ImageUtil.fetchImage(root, col, res);
+		inscript_path_rubbing = col + res;
+		//inscript_path_rubbing = inscript_path_rubbing.substring(dbURI.length());
+		
+		root.main.main_image.scale = 1;
+		root.main.main_image.sub.setPreferredSize(new Dimension(inscript_image.getWidth(root.main.main_image), inscript_image.getHeight(root.main.main_image)));
+		root.main.main_image.sub.revalidate();
+
+		//
+		root.addLogEntry("*** ended loaded image ***", 1, 1);
+	}
+	
+	public void loadImageLocal(File f){
+		//
+		root.addLogEntry("*** started loading image ***", 1, 1);
+		
+		//
+		File selectedImage = f;
+		if(selectedImage != null){
+			//
+			setImage(selectedImage);
+			inscript_path_rubbing = selectedImage.getAbsolutePath();
+			
+			root.main.main_image.scale = 1;
+			root.main.main_image.sub.setPreferredSize(new Dimension(inscript_image.getWidth(root.main.main_image), inscript_image.getHeight(root.main.main_image)));
+			root.main.main_image.sub.revalidate();
+		}
+		
+		root.repaint();
+		
+		//
+		root.addLogEntry("*** ended loaded image ***", 1, 1);
+	}
+	
+	/**
+	 * 
+	 */
+	public void loadImageLocalSelect(){
+		//
+		root.addLogEntry("*** started loading image ***", 1, 1);
+		
+		//
+		JFileChooser fc = new JFileChooser();
+		fc.showOpenDialog(root);
+		File selectedImage = fc.getSelectedFile();
+		if(selectedImage != null){
+			//
+			setImage(selectedImage);
+			inscript_path_rubbing = selectedImage.getAbsolutePath();
+			
+			root.main.main_image.scale = 1;
+			root.main.main_image.sub.setPreferredSize(new Dimension(inscript_image.getWidth(root.main.main_image), inscript_image.getHeight(root.main.main_image)));
+			root.main.main_image.sub.revalidate();
+		}
+		
+		root.repaint();
+		
+		//
+		root.addLogEntry("*** ended loaded image ***", 1, 1);
 	}
 
 	
@@ -338,7 +552,8 @@ public class HiWi_Object_Inscript {
 			String path = dbURI+this.inscript_path_rubbing;
 			String collection = path.substring(0, path.lastIndexOf("/"));
 			String resource = path.substring(path.lastIndexOf("/"));
-			root.main.loadImage(collection, resource);
+			//root.main.loadImage(collection, resource);
+			loadImage("remote", collection, resource);
 
 			// clear sutra_text
 			this.inscript_text.clear();
@@ -437,7 +652,8 @@ public class HiWi_Object_Inscript {
 			String path = dbURI+this.inscript_path_rubbing;
 			String collection = path.substring(0, path.lastIndexOf("/"));
 			String resource = path.substring(path.lastIndexOf("/"));
-			root.main.loadImage(collection, resource);
+			//root.main.loadImage(collection, resource);
+			loadImage("remote", collection, resource);
 		} catch(XMLDBException e){
 			e.printStackTrace();
 		} catch (JDOMException e) {
@@ -598,6 +814,15 @@ public class HiWi_Object_Inscript {
 			}
 		}
 	}
+	
+	/**
+	 * Update character's snippet's marking
+	 * Notice. all corresponding characters (those with the same continuous number) will be automatically updated too
+	 * Notice: generally applies - all variants marking are adjusted using preferred reading's marking.
+	 * @param rectangle		new snippet marking
+	 * @param r				character's row number
+	 * @param c				character's column number
+	 */
 	public void updateSnippet(Rectangle rectangle, int r, int c){
 		int indexTarget = -1;
 		// find sign using row,column signature and binary search for row
@@ -760,8 +985,11 @@ public class HiWi_Object_Inscript {
 	 * 	...
 	 * </inscript>
 	 */
-	public void saveTemp(){
-		Document docout = new Document(new Element("inscript"));
+	public void saveTempMarking(){
+		Document docout = new Document(new Element("inscript")
+										.setAttribute("id", inscript_id)
+										.setAttribute("xml", inscript_path_file)
+										.setAttribute("img", inscript_path_rubbing));
 		for(int i=0; i<inscript_text.size(); i++){
 			for(int j=0; j<inscript_text.get(i).size(); j++){
 				for(int k=0; k<inscript_text.get(i).get(j).size(); k++){
@@ -790,13 +1018,43 @@ public class HiWi_Object_Inscript {
 	 * Notice: since it uses inscript's id, an inscript (and its image) must be already loaded in Snippet-Tool application
 	 */
 	@SuppressWarnings("unchecked")
-	public void loadTemp(){
+	public void loadTempMarking(){
 		try {
 			//
+			JFileChooser fc = new JFileChooser();
+			fc.showOpenDialog(root);
+			File selectedMarking = fc.getSelectedFile();
+			//
 			SAXBuilder builder = new SAXBuilder();
-			Document docin = builder.build(new FileInputStream(new File("tmp\\xml\\temporary_"+this.inscript_id+".xml")));
+			Document docin = builder.build(new FileInputStream(selectedMarking));
 			//
 			Element docinroot = docin.getRootElement();
+			//String id = docinroot.getAttributeValue("id");
+			String xml = docinroot.getAttributeValue("xml");
+			String img = docinroot.getAttributeValue("img");
+			
+			String xml_collection = null;
+			String xml_resource = xml;
+			String xml_method = "local";
+			String img_collection = null;
+			String img_resource = img;
+			String img_method = "local";
+			
+			if(xml.startsWith("xmldb:")){
+				xml_collection = xml.substring(0, xml.lastIndexOf("/"));
+				xml_resource = xml.substring(xml.lastIndexOf("/")+1);
+				xml_method = "remote";
+			}
+			
+			if(img.startsWith("xmldb:")){
+				img_collection = img.substring(0, img.lastIndexOf("/"));
+				img_resource = img.substring(img.lastIndexOf("/")+1);
+				img_method = "remote";
+			}
+			
+			loadText(xml_method, xml_collection, xml_resource);
+			loadImage(img_method, img_collection, img_resource);
+			
 			List<Element> apps = docinroot.getChildren("appearance");
 			
 			// clear sutra_text

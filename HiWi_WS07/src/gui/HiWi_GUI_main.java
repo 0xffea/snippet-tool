@@ -30,7 +30,7 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 	HiWi_Object_Inscript s;
 	
 	/** Sub JPanel containing image, where the marking is done **/
-	HiWi_GUI_main_image main_image;
+	public HiWi_GUI_main_image main_image;
 	
 	/** JPanel containing Zoom functionality **/
 	JPanel main_navigation = new JPanel();
@@ -203,7 +203,8 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		root.main.main_image.repaint();
 	}
 	
-	public void loadText(){
+	
+	/*public void loadText(){
 		//
 		root.addLogEntry("*** started loading text ***", 1, 1);
 		// simple validation of input
@@ -264,9 +265,9 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		else root.text.repaint();		
 		//
 		root.addLogEntry("*** ended loading text ***", 1, 1);
-	}
+	}*/
 	
-	public void loadImage(){
+	/*public void loadImage(){
 		//
 		String col = root.explorer.selectedCollection;
 		String res = root.explorer.selectedResource;
@@ -276,9 +277,9 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 		
 		// repaint 
 		root.main.repaint();
-	}
+	}*/
 	
-	public void loadImage(String col, String res){
+	/*public void loadImage(String col, String res){
 		//
 		root.addLogEntry("*** started loading image ***", 1, 1);
 		
@@ -305,5 +306,5 @@ public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListe
 
 		//
 		root.addLogEntry("*** ended loaded image ***", 1, 1);
-	}
+	}*/
 }

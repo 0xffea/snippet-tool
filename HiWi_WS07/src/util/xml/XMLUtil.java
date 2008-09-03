@@ -212,8 +212,12 @@ public class XMLUtil {
 			return sw.toString();
 		} catch (TransformerConfigurationException e) {
 			e.printStackTrace();
+			System.out.println("xml = "+xml);
+			System.out.println("xslt = "+xslt);
 		} catch (TransformerException e) {
 			e.printStackTrace();
+			System.out.println("xml = "+xml);
+			System.out.println("xslt = "+xslt);
 		}
 		return null;
 	}

@@ -122,11 +122,13 @@ public class HiWi_GUI_explorer extends JPanel{
 								selectedResource.endsWith(".jpeg") ||
 								selectedResource.endsWith(".jpg"))){
 							
-							root.main.loadImage();
+							//root.main.loadImage();
+							root.s.loadImage("remote", selectedCollection, selectedResource);
 							root.main.main_image.mouse2.reset();
 						}
 						if(autoload && selectedResource.endsWith(".xml")){
-							root.main.loadText();
+							//root.main.loadText();
+							root.s.loadText("remote", selectedCollection, selectedResource);
 							root.main.main_image.mouse2.reset();
 						}
 					}

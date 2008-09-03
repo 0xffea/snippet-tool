@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.border.TitledBorder;
 
 import src.controller.MouseControllerMainImage1;
 import src.controller.MouseControllerMainImage2;
@@ -106,6 +107,10 @@ public class HiWi_GUI_main_image extends JPanel{
     			HiWi_Object_Character sign = signs.get(0);
     			sign.draw(g);
     		}
+    		
+    		// adjust panel label
+    		if(s.inscript_path_rubbing != null && s.inscript_path_rubbing != new String()) root.main.setBorder(new TitledBorder("main"+" - "+s.inscript_path_rubbing));
+    		else  root.main.setBorder(new TitledBorder("main"));
     		
     		// adjust scrolling speed
     		if(s.inscript_image != null){

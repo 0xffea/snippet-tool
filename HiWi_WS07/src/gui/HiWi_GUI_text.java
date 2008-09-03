@@ -1,5 +1,6 @@
 package src.gui;
 
+import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.Box;
@@ -31,7 +32,7 @@ public class HiWi_GUI_text extends JPanel implements MouseListener{
 	HiWi_Object_Inscript s;
 	
 	/** Inscript text **/
-	JTextArea text_in = new JTextArea();
+	public JTextArea text_in = new JTextArea();
 	
 	public HiWi_GUI_text(HiWi_GUI r, HiWi_Object_Inscript su){
 		super();
@@ -54,6 +55,14 @@ public class HiWi_GUI_text extends JPanel implements MouseListener{
 		add(box3);
 		
 		setVisible(true);
+	}
+	
+	public void paintComponent(Graphics g){
+		//
+		super.paintComponent(g);
+		// agjust panel label
+		if(s.inscript_path_file != null && s.inscript_path_file != new String()) root.text.setBorder(new TitledBorder("text - "+s.inscript_path_file));
+		else root.text.setBorder(new TitledBorder("text"));
 	}
 	
 	/**

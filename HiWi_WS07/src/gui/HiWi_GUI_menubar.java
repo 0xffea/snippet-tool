@@ -22,6 +22,8 @@ import src.util.xml.XMLUtil;
  * File -> 
  * 		+ Load Marking- load marking from file stored locally in /tmp/xml
  * 		+ Save Marking - save marking to file stores locally in /tmp/xml
+ * 		+ Load Inscript - load inscript from local file
+ * 		+ Load Image - load image from local file
  * 		//+ Preferences
  * 		+ Exit - leave application
  * Edit -> 
@@ -98,7 +100,7 @@ public class HiWi_GUI_menubar extends JMenuBar implements ActionListener{
 	@SuppressWarnings("static-access")
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals(mi_loads.getActionCommand())){
-			JFileChooser fc = new JFileChooser();
+			/*JFileChooser fc = new JFileChooser();
 			fc.showOpenDialog(root);
 			File selectedInscript = fc.getSelectedFile();
 			if(selectedInscript != null){
@@ -143,10 +145,11 @@ public class HiWi_GUI_menubar extends JMenuBar implements ActionListener{
 				else root.text.repaint();		
 				//
 				root.addLogEntry("*** ended loading text ***", 1, 1);
-			}
+			}*/
+			s.loadText("local", null, null);
 		}
 		if(e.getActionCommand().equals(mi_loadi.getActionCommand())){
-			JFileChooser fc = new JFileChooser();
+			/*JFileChooser fc = new JFileChooser();
 			fc.showOpenDialog(root);
 			File selectedImage = fc.getSelectedFile();
 			if(selectedImage != null){;
@@ -162,13 +165,14 @@ public class HiWi_GUI_menubar extends JMenuBar implements ActionListener{
 				root.main.main_image.sub.revalidate();
 			}
 			
-			root.repaint();
+			root.repaint();*/
+			s.loadImage("local", null, null);
 		}
 		if(e.getActionCommand().equals(mi_loadm.getActionCommand())){
-			s.loadTemp();
+			s.loadTempMarking();
 		}
 		if(e.getActionCommand().equals(mi_savem.getActionCommand())){
-			s.saveTemp();
+			s.saveTempMarking();
 		}
 		/*if(e.getActionCommand().equals(mi_pref.getActionCommand())){
 			new HiWi_GUI_preferences(root, s);
