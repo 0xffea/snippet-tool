@@ -16,10 +16,7 @@ import javax.swing.event.ChangeListener;
 
 import src.model.HiWi_Object_Inscript;
 import src.model.HiWi_Object_Character;
-import src.util.file.HiWi_FileIO;
 import src.util.gui.JZoomSlider;
-import src.util.image.ImageUtil;
-import src.util.xml.XMLUtil;
 
 @SuppressWarnings("serial")
 public class HiWi_GUI_main extends JPanel implements ActionListener, ChangeListener{

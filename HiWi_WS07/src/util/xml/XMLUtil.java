@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.transform.Source;
@@ -33,7 +32,6 @@ import org.xmldb.api.modules.XUpdateQueryService;
 import src.gui.HiWi_GUI;
 import src.model.HiWi_Object_Inscript;
 import src.model.HiWi_Object_Character;
-import src.util.num.NumUtil;
 
 /**
  * Collection of functions for dealing with XML data of inscript's .xml description.
@@ -256,7 +254,7 @@ public class XMLUtil {
 			else{
 				root.addLogEntry("updating collection:\t"+col.getName(), 0, 1);
 				// find out which file to update
-				String[] xml_out = col.listResources();
+				/*String[] xml_out = col.listResources();
 				ArrayList<String> xml_out_a = new ArrayList<String>(Arrays.asList(xml_out));
 				for(int i=0; i<xml_out_a.size(); i++){	// clean file list from files with inproper filenames
 					if(!xml_out_a.get(i).startsWith("unicode_") ||
@@ -276,8 +274,16 @@ public class XMLUtil {
 				XUpdateQueryService service = (XUpdateQueryService) col.getService("XUpdateQueryService", "1.0");
 				service.setCollection(col);
 				long modified = service.updateResource(xml_out[index], xupdate);
+				//
+				root.addLogEntry("updating:\t"+"id = "+id+" in "+xml_out[index]+"; modified:\t"+modified+" nodes", 1, 1);*/
 				
-				root.addLogEntry("updating:\t"+"id = "+id+" in "+xml_out[index]+"; modified:\t"+modified+" nodes", 1, 1);
+				// update
+				XUpdateQueryService service = (XUpdateQueryService) col.getService("XUpdateQueryService", "1.0");
+				long modified = service.update(xupdate);
+				
+				//
+				root.addLogEntry("updating:\t"+"id = "+id+"; modified:\t"+modified+" nodes", 1, 1);
+				
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -304,7 +310,9 @@ public class XMLUtil {
 	@SuppressWarnings("unchecked")
 	public static void clearAppearances(HiWi_GUI root, String user, String pass, String out, String regexp){
 		// avoid accidentaly deleting all appearances
-		if(regexp.length() < 2) return; 
+		if(regexp.length() < 2) return;
+		
+		if(!regexp.endsWith("_")) regexp += "_";
 		
 		// remove appearances
 		try {

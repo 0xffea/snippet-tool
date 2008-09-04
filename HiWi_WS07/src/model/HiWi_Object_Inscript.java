@@ -20,7 +20,6 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.border.TitledBorder;
 
 import org.jdom.Document;
 import org.jdom.Element;
@@ -143,10 +142,10 @@ public class HiWi_Object_Inscript {
 		root.addLogEntry("*** started loading text ***", 1, 1);
 		
 		// get needed properties
-		String dbURI = root.props.getProperty("db.uri");
-		String dbUser = root.props.getProperty("db.user");
-		String dbPass = root.props.getProperty("db.passwd");
-		String localXSLTFile = root.props.getProperty("local.file.xslt");
+		//String dbURI = root.props.getProperty("db.uri");
+		//String dbUser = root.props.getProperty("db.user");
+		//String dbPass = root.props.getProperty("db.passwd");
+		//String localXSLTFile = root.props.getProperty("local.file.xslt");
 		
 		//
 		inscript_path_file = col + res;
@@ -206,7 +205,7 @@ public class HiWi_Object_Inscript {
 	
 	public void loadTextRemote(String col, String res, StringWriter xmlWriter, StringWriter xsltWriter){
 		// get needed properties
-		String dbURI = root.props.getProperty("db.uri");
+		//String dbURI = root.props.getProperty("db.uri");
 		String dbUser = root.props.getProperty("db.user");
 		String dbPass = root.props.getProperty("db.passwd");
 		String localXSLTFile = root.props.getProperty("local.file.xslt");
@@ -283,7 +282,7 @@ public class HiWi_Object_Inscript {
 		root.addLogEntry("*** started loading image ***", 1, 1);
 		
 		// get needed properties
-		String dbURI = root.props.getProperty("db.uri");
+		//String dbURI = root.props.getProperty("db.uri");
 		
 		//
 		inscript_image = ImageUtil.fetchImage(root, col, res);
@@ -639,17 +638,20 @@ public class HiWi_Object_Inscript {
 	public void setImageFromDB(String id, ResourceSet query_result){
 		try{
 			// get needed properties
-			String dbURI = root.props.getProperty("db.uri");
+			//String dbURI = root.props.getProperty("db.uri");
+			
 			// build JDOM document from response
 			XMLResource xmlr = (XMLResource) query_result.getResource(0);
 			SAXBuilder builder = new SAXBuilder();
 			Document dr = builder.build(new StringReader((String) xmlr.getContent()));
+			
 			// get/set path to rubbing
 			Element xmlelem = (Element) dr.getRootElement();	// it's appearance tag
 			String rub = xmlelem.getChildText("rubbing");
 			this.inscript_path_rubbing = rub;
+			
 			//load image
-			String path = dbURI+this.inscript_path_rubbing;
+			String path = this.inscript_path_rubbing;
 			String collection = path.substring(0, path.lastIndexOf("/"));
 			String resource = path.substring(path.lastIndexOf("/"));
 			//root.main.loadImage(collection, resource);
