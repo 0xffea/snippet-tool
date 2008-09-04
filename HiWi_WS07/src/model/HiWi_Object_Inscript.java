@@ -652,7 +652,7 @@ public class HiWi_Object_Inscript {
 			
 			//load image
 			String path = this.inscript_path_rubbing;
-			if(!this.inscript_path_rubbing.startsWith("dbURI")) path += dbURI;
+			if(!this.inscript_path_rubbing.startsWith("dbURI")) path = dbURI + path;
 			String collection = path.substring(0, path.lastIndexOf("/"));
 			String resource = path.substring(path.lastIndexOf("/"));
 			//root.main.loadImage(collection, resource);
