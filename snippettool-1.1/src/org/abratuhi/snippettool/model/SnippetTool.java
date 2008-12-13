@@ -132,7 +132,7 @@ public class SnippetTool {
 
 		XMLUtil.clearAppearances(user, password, collection, inscript.id);
 		XMLUtil.updateXML(inscript.getXUpdate("/db"+collection.substring(uri.length())), user, password, collection);
-		System.out.println("Coordinates stored.");
+		//System.out.println("Coordinates stored.");
 
 		// snippets
 		collection = props.getProperty("db.snippet.dir");
@@ -158,7 +158,7 @@ public class SnippetTool {
 		for(int i=0; i<preferredSnippets.length; i++){
 			inscript.updatePathToSnippet(preferredSnippets[i].getName(), i);
 		}
-		System.out.println("Snippets stored.");
+		//System.out.println("Snippets stored.");
 	}
 
 	public void clearInscript(){
