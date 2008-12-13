@@ -1,2 +1,0 @@
-set CLASSPATH=%CLASSPATH%;lib\xmldb.jar;lib\xmlrpc-1.2-patched.jar;lib\exist.jar;lib\exist-optional.jar;lib\jakarta-regexp-1.5.jar;lib\saxon9.jar;lib\saxon9-dom.jar;lib\saxon9-xpath.jar;lib\xercesImpl-2.9.1.jar;lib\xml-apis.jar;lib\log4j-1.2.15.jar;lib\colorchooser.jar;lib\jdom.jar;
-java -Xmx512m src.gui.HiWi_GUI
