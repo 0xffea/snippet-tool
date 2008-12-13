@@ -65,20 +65,18 @@ public class XMLUtil {
 	/**
 	 * Perform an XUpdate on eXist database
 	 * @param root	reference to HiWi_GUI
-	 * @param id	id of inscript to update
 	 * @param xupdate	xupdate text
 	 * @param user		database's username
 	 * @param pass		database's password
 	 * @param out		dtabase's collection to update
 	 */
-	public static void updateXML(String id, String xupdate, String user, String pass, String out){
+	public static void updateXML(String xupdate, String user, String pass, String out){
 		try {
 			Database database = (Database) Class.forName("org.exist.xmldb.DatabaseImpl").newInstance();   
 			DatabaseManager.registerDatabase(database);
 			Collection col = DatabaseManager.getCollection(out, user, pass);
 			XUpdateQueryService service = (XUpdateQueryService) col.getService("XUpdateQueryService", "1.0");
 			service.update(xupdate);
-				
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {

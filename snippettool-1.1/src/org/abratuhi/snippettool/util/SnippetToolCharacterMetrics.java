@@ -10,8 +10,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 
-import org.jdom.Element;
-
 
 public class SnippetToolCharacterMetrics {
 	
@@ -37,27 +35,6 @@ public class SnippetToolCharacterMetrics {
 			//read line from stream
 			String instr=new String();
 			String outstr = new String();
-			Element templ = new Element("character", "c")
-							.setAttribute("char", "")
-							.setAttribute("column", "")
-							.setAttribute("height", "")
-							.setAttribute("row", "")
-							.setAttribute("width", "")
-							.addContent(new Element("engraving", "c")
-								.addContent(new Element("width", "c")
-									.setAttribute("type", "")
-									.addContent(new Element("point", "c"))
-									.addContent(new Element("range", "c")
-										.setAttribute("lower", "")
-										.setAttribute("upper", "")))
-								.addContent(new Element("depth", "c")
-									.setAttribute("type", "")
-									.addContent(new Element("point", "c"))
-									.addContent(new Element("range", "c")
-										.setAttribute("lower", "")
-										.setAttribute("upper", ""))))
-							.addContent(new Element("condition", "c")
-								.setAttribute("grade", ""));
 			for(;;){
 				try {
 					instr=br.readLine();

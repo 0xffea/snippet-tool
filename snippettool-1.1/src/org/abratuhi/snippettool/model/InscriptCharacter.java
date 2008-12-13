@@ -232,42 +232,29 @@ public class InscriptCharacter {
 
 	/**
 	 * Generate XUpdate
-	 * @param updateOnly	whether only coordinates need to be updated
 	 * @return		XUpdate
 	 */
-	public String getXUpdate(boolean updateOnly){
-		if(!updateOnly){
-			String xupdate = 
-				"<xu:modifications version=\'1.0\' xmlns:xu=\'http://www.xmldb.org/xupdate\'>" +
-				//"    <xu:append select=\"//unihandb/char[@xmlid=\'U+"+NumUtil.dec2hex(character.codePointAt(0)).toUpperCase()+"\']\">" +
-				"    <xu:append select=\"//char[@xmlid=\'U+"+NumUtil.dec2hex(characterStandard.codePointAt(0)).toUpperCase()+"\']\">" +
-				"       <xu:element name=\"appearance\">" +
-				"           <xu:attribute name=\"character\">"+this.characterStandard+"</xu:attribute>" +
-				"           <xu:attribute name=\"original\">"+this.characterOriginal+"</xu:attribute>" +
-				"           <xu:attribute name=\"id\">"+this.id+"</xu:attribute>" +
-				"           <xu:attribute name=\"preferred_reading\">"+this.preferred_reading+"</xu:attribute>" +
-				"           <xu:attribute name=\"variant\">"+this.variant+"</xu:attribute>" +
-				"           <xu:attribute name=\"cert\">"+this.cert+"</xu:attribute>" +
-				"           <xu:attribute name=\"nr\">"+inscript.id+"_"+this.number+"</xu:attribute>" +
-				"           <source>"+inscript.id+"</source>" +
-				"           <rubbing>"+inscript.path_rubbing+"</rubbing>" +
-				"           <graphic>"+path_to_snippet+"</graphic>" +
-				"           <coordinates x=\""+shape.x+"\" y=\""+shape.y+"\" width=\""+shape.width+"\" height=\""+shape.height+"\" />" +
-				"       </xu:element>" +
-				"    </xu:append>" +
-				"</xu:modifications>";
-			return xupdate;
-		}
-		else{
-			String xupdate = 
-				"<xu:modifications version=\'1.0\' xmlns:xu=\'http://www.xmldb.org/xupdate\'>" +
-				"	<xu:update select=\"//unihandb/char[@xmlid=\'U+"+NumUtil.dec2hex(characterStandard.codePointAt(0)).toUpperCase()+"\']/appearance[@id='"+this.id+"']/coordinates/@x\">" + this.shape.x + "</xu:update>" +
-				"	<xu:update select=\"//unihandb/char[@xmlid=\'U+"+NumUtil.dec2hex(characterStandard.codePointAt(0)).toUpperCase()+"\']/appearance[@id='"+this.id+"']/coordinates/@y\">" + this.shape.y + "</xu:update>" + 
-				"	<xu:update select=\"//unihandb/char[@xmlid=\'U+"+NumUtil.dec2hex(characterStandard.codePointAt(0)).toUpperCase()+"\']/appearance[@id='"+this.id+"']/coordinates/@width\">" + this.shape.width + "</xu:update>" + 
-				"	<xu:update select=\"//unihandb/char[@xmlid=\'U+"+NumUtil.dec2hex(characterStandard.codePointAt(0)).toUpperCase()+"\']/appearance[@id='"+this.id+"']/coordinates/@height\">" + this.shape.height + "</xu:update>" + 
-				"</xu:modifications>";
-			return xupdate;
-		}
+	public String getXUpdate(String collection){
+		String xupdate = 
+			//"<xu:modifications version=\'1.0\' xmlns:xu=\'http://www.xmldb.org/xupdate\'>" +
+			//"    <xu:append select=\"//unihandb/char[@xmlid=\'U+"+NumUtil.dec2hex(character.codePointAt(0)).toUpperCase()+"\']\">" +
+			"    <xu:append select=\"collection('"+collection+"')//char[@xmlid=\'U+"+NumUtil.dec2hex(characterStandard.codePointAt(0)).toUpperCase()+"\']\">" +
+			"       <xu:element name=\"appearance\">" +
+			"           <xu:attribute name=\"character\">"+this.characterStandard+"</xu:attribute>" +
+			"           <xu:attribute name=\"original\">"+this.characterOriginal+"</xu:attribute>" +
+			"           <xu:attribute name=\"id\">"+this.id+"</xu:attribute>" +
+			"           <xu:attribute name=\"preferred_reading\">"+this.preferred_reading+"</xu:attribute>" +
+			"           <xu:attribute name=\"variant\">"+this.variant+"</xu:attribute>" +
+			"           <xu:attribute name=\"cert\">"+this.cert+"</xu:attribute>" +
+			"           <xu:attribute name=\"nr\">"+inscript.id+"_"+this.number+"</xu:attribute>" +
+			"           <source>"+inscript.id+"</source>" +
+			"           <rubbing>"+inscript.path_rubbing+"</rubbing>" +
+			"           <graphic>"+path_to_snippet+"</graphic>" +
+			"           <coordinates x=\""+shape.x+"\" y=\""+shape.y+"\" width=\""+shape.width+"\" height=\""+shape.height+"\" />" +
+			"       </xu:element>" +
+			"    </xu:append>";// +
+		//"</xu:modifications>";
+		return xupdate;
 	}
 	
 	/**
@@ -341,20 +328,7 @@ public class InscriptCharacter {
 	}
 	
 	/**
-	 * Update characater'S snippet's marking coordinates from <appearance> element
-	 * @param appearance org.jdom.Element <appearance>
-	 */
-	/*public void updateCoordinatesFromAppearance(Element appearance){
-		Element xmlc = appearance.getChild("coordinates");
-		int x = Integer.parseInt(xmlc.getAttributeValue("x"));
-		int y = Integer.parseInt(xmlc.getAttributeValue("y"));
-		int width = Integer.parseInt(xmlc.getAttributeValue("width"));
-		int height = Integer.parseInt(xmlc.getAttributeValue("height"));
-		this.shape = new Rectangle(x, y, width, height);
-	}*/
-	
-	/**
-	 * Update cahracter's snippet's marking cordinates from Rectangle object
+	 * Update character's snippet's marking coordinates from Rectangle object
 	 * @param rectangle		marking rectangle
 	 */
 	public void updateSnippet(Rectangle rectangle) {

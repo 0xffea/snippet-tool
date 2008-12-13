@@ -151,6 +151,11 @@ public class _frame_SnippetTool extends JFrame implements WindowListener{
 		info.setPreferredSize(PrefUtil.string2dimesion(preferences.getProperty("local.window.info.size")));
 		status.setPreferredSize(PrefUtil.string2dimesion(preferences.getProperty("local.window.status.size")));
 	}
+	
+	public void exit(){
+		saveLayout();
+		snippettool.exit();
+	}
 
 	@Override
 	public void windowActivated(WindowEvent e) {}
@@ -158,8 +163,7 @@ public class _frame_SnippetTool extends JFrame implements WindowListener{
 	public void windowClosed(WindowEvent e) {}
 	@Override
 	public void windowClosing(WindowEvent e) {
-		saveLayout();
-		snippettool.exit();
+		exit();
 	}
 	@Override
 	public void windowDeactivated(WindowEvent e) {}

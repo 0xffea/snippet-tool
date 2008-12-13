@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
@@ -189,13 +189,13 @@ public class _panel_Main extends JPanel implements ActionListener, ChangeListene
 			root.repaint();
 		}
 		if(cmd.equals(submit.getActionCommand())){
-			// check whether submit possible, e.g. image and text loaded, text added to image
-			if(inscript.text.size()<1){
-				JOptionPane.showMessageDialog(root, "Nothing to submit", "Alert!", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			// submit
-			snippettool.submitInscript();
+			Thread t1 = new Thread(){
+				public void run(){
+					snippettool.submitInscript();
+					root.status("Finished Submit");
+				}
+			};
+			t1.start();
 		}
 	}
 

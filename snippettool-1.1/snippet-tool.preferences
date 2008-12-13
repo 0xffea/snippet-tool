@@ -1,11 +1,11 @@
-#Sat Dec 13 00:44:22 CET 2008
+#Sat Dec 13 19:15:12 CET 2008
 local.window.position=-4,25
-local.window.text.size=1009x105
+local.window.text.size=1009x100
 local.color.rubbing=ffffff
 local.window.options.size=265x564
 local.alpha.marking.p=0.6
-local.window.info.size=262x105
-local.window.size=1289x737
+local.window.info.size=262x100
+local.window.size=1289x732
 local.color.marking.border=c0c0c0
 local.window.divider.width=8
 local.color.text=fff847

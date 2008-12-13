@@ -3,6 +3,7 @@ package org.abratuhi.snippettool.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -40,16 +41,14 @@ public class _menubar_SnippetTool extends JMenuBar implements ActionListener{
 	
 	
 	JMenu m_file = new JMenu("File");
-	JMenu m_edit = new JMenu("Edit");
+	JMenu m_tool = new JMenu("Tool");
 	JMenu m_help = new JMenu("Help");
 
-	JMenuItem mi_loadm = new JMenuItem("Load Marking");
-	JMenuItem mi_savem = new JMenuItem("Save Marking");
-	JMenuItem mi_loads = new JMenuItem("Load Inscript");
-	JMenuItem mi_loadi = new JMenuItem("Load Image");
-	JMenuItem mi_pref = new JMenuItem("Preferences");
+	JMenuItem mi_loadm = new JMenuItem("Load Marking From Local File");
+	JMenuItem mi_savem = new JMenuItem("Save Marking To Local File");
+	JMenuItem mi_loads = new JMenuItem("Load Inscript From Local File");
+	JMenuItem mi_loadi = new JMenuItem("Load Image From Local File");
 	JMenuItem mi_exit = new JMenuItem("Exit");
-	JMenuItem mi_clear = new JMenuItem("Clear Appearance");
 	JMenuItem mi_cutter = new JMenuItem("Image Cutter");
 	JMenuItem mi_about = new JMenuItem("About");
 	JMenuItem mi_help = new JMenuItem("Help");
@@ -66,7 +65,6 @@ public class _menubar_SnippetTool extends JMenuBar implements ActionListener{
 		mi_loadi.addActionListener(this);
 		mi_loads.addActionListener(this);
 		mi_exit.addActionListener(this);
-		mi_clear.addActionListener(this);
 		mi_cutter.addActionListener(this);
 		mi_about.addActionListener(this);
 		mi_help.addActionListener(this);
@@ -77,43 +75,71 @@ public class _menubar_SnippetTool extends JMenuBar implements ActionListener{
 		m_file.add(mi_savem);
 		m_file.add(mi_loadm);
 		m_file.add(mi_exit);
-		m_edit.add(mi_clear);
-		m_edit.add(mi_cutter);
+		m_tool.add(mi_cutter);
 		m_help.add(mi_about);
-		m_help.add(mi_help);
+		//m_help.add(mi_help);
 		
 		// 
 		add(m_file);
-		add(m_edit);
+		add(m_tool);
 		add(m_help);
 	}
 
 
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals(mi_loads.getActionCommand())){
+			Thread t1 = new Thread(){
+				public void run(){
+					JFileChooser fc = new JFileChooser(snippettool.props.getProperty("local.inscript.dir"));
+					fc.showOpenDialog(root);
+					snippettool.setInscriptText("local", fc.getSelectedFile().getParent(), fc.getSelectedFile().getName());
+					root.status("Loaded Inscript.");
+				}
+			};
+			t1.start();
 		}
 		if(e.getActionCommand().equals(mi_loadi.getActionCommand())){
+			Thread t1 = new Thread(){
+				public void run(){
+					JFileChooser fc = new JFileChooser(snippettool.props.getProperty("local.image.dir"));
+					fc.showOpenDialog(root);
+					snippettool.setInscriptImage("local", fc.getSelectedFile().getParent(), fc.getSelectedFile().getName());
+					root.status("Loaded Image.");
+				}
+			};
+			t1.start();
 		}
 		if(e.getActionCommand().equals(mi_loadm.getActionCommand())){
-			//snippettool.inscript.loadTempMarking();
+			Thread t1 = new Thread(){
+				public void run(){
+					JFileChooser fc = new JFileChooser(snippettool.props.getProperty("local.unicode.dir"));
+					fc.showOpenDialog(root);
+					snippettool.loadLocal(fc.getSelectedFile());
+					root.status("Loaded Marking.");
+				}
+			};
+			t1.start();
 		}
 		if(e.getActionCommand().equals(mi_savem.getActionCommand())){
-			//snippettool.inscript.saveTempMarking();
+			Thread t1 = new Thread(){
+				public void run(){
+					snippettool.saveLocal();
+					root.status("Saved Marking.");
+				}
+			};
+			t1.start();
 		}
 		if(e.getActionCommand().equals(mi_exit.getActionCommand())){
-			//snippettool.exit();
-		}
-		if(e.getActionCommand().equals(mi_clear.getActionCommand())){
-			//new _frame_Clearapp(root, snippettool);
+			root.exit();
 		}
 		if(e.getActionCommand().equals(mi_cutter.getActionCommand())){
 			//new ImageCutter(root);
 		}
 		if(e.getActionCommand().equals(mi_about.getActionCommand())){
 			String text = "Snippet Tool\n" +
-							"v.2.0beta\n" +
-							"author: Alexei Bratuhin\n" +
-							"produced for: Heidelberger Academy of Science";
+							"Version: 1.1beta\n" +
+							"Author: Alexei Bratuhin\n" +
+							"Produced for: Heidelberger Academy of Science";
 			JOptionPane.showMessageDialog(root, text, "About", JOptionPane.INFORMATION_MESSAGE);
 		}
 		if(e.getActionCommand().equals(mi_help.getActionCommand())){

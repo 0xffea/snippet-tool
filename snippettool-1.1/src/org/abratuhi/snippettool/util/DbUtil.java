@@ -139,6 +139,27 @@ public class DbUtil {
 			e.printStackTrace();
 		} 
 	}
+	
+	public static void uploadBinaryResources(File[] f, String collection, String user, String password){
+		try {
+			Database database = (Database) Class.forName("org.exist.xmldb.DatabaseImpl").newInstance();   
+			DatabaseManager.registerDatabase(database);
+			Collection current = DatabaseManager.getCollection(collection, user, password);
+			for(int i=0; i<f.length; i++){
+		        BinaryResource resource = (BinaryResource) current.createResource(f[i].getName(), "BinaryResource");
+		        resource.setContent(f[i]);
+		        current.storeResource(resource);
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+		} 
+	}
 
 	public static Element[] convertResourceSetToElements(ResourceSet resourceset){
 		ArrayList<Element> elements = new ArrayList<Element>();

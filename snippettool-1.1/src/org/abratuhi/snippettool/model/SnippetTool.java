@@ -9,7 +9,6 @@ import org.abratuhi.snippettool.gui._frame_SnippetTool;
 import org.abratuhi.snippettool.util.DbUtil;
 import org.abratuhi.snippettool.util.FileUtil;
 import org.abratuhi.snippettool.util.ImageUtil;
-import org.abratuhi.snippettool.util.NumUtil;
 import org.abratuhi.snippettool.util.PrefUtil;
 import org.abratuhi.snippettool.util.XMLUtil;
 import org.jdom.Document;
@@ -126,21 +125,14 @@ public class SnippetTool {
 
 	public void submitInscript(){
 		// coordinates
+		String uri = props.getProperty("db.unicode.uri");
 		String collection = props.getProperty("db.unicode.dir");
 		String user = props.getProperty("db.unicode.user");
 		String password =  props.getProperty("db.unicode.password");
 
 		XMLUtil.clearAppearances(user, password, collection, inscript.id);
-
-		for(int i=0; i<inscript.text.size(); i++){
-			for(int j=0; j<inscript.text.get(i).size(); j++){
-				for(int k=0; k<inscript.text.get(i).get(j).size(); k++){
-					InscriptCharacter csign = inscript.text.get(i).get(j).get(k);
-
-					XMLUtil.updateXML(NumUtil.dec2hex(csign.characterStandard.codePointAt(0)), csign.getXUpdate(inscript.updateOnly), user, password, collection);
-				}
-			}
-		}
+		XMLUtil.updateXML(inscript.getXUpdate("/db"+collection.substring(uri.length())), user, password, collection);
+		System.out.println("Coordinates stored.");
 
 		// snippets
 		collection = props.getProperty("db.snippet.dir");
@@ -149,6 +141,9 @@ public class SnippetTool {
 
 		String snippetdir = props.getProperty("local.snippet.dir");
 		String imagedir = props.getProperty("local.image.dir");
+		
+		if(!snippetdir.endsWith(File.separator)) snippetdir += File.separator;
+		if(!imagedir.endsWith(File.separator)) imagedir += File.separator;
 
 		File inputImageFile = new File(imagedir + inscript.id + ".png");
 
@@ -159,10 +154,11 @@ public class SnippetTool {
 
 		ImageUtil.store(inscript.image, "PNG", inputImageFile);
 		File[] preferredSnippets = ImageUtil.cutSnippets(inputImageFile, preferredReading, snippetdir, "subimage");
+		DbUtil.uploadBinaryResources(preferredSnippets, collection, user, password);
 		for(int i=0; i<preferredSnippets.length; i++){
-			DbUtil.uploadBinaryResource(preferredSnippets[i], collection, user, password);
 			inscript.updatePathToSnippet(preferredSnippets[i].getName(), i);
 		}
+		System.out.println("Snippets stored.");
 	}
 
 	public void clearInscript(){
@@ -187,11 +183,13 @@ public class SnippetTool {
 			}
 		}
 
-		FileUtil.writeXMLDocumentToFile(new File(unicodedir + "tmarking" + inscript.id + ".xml"), document);
+		FileUtil.writeXMLDocumentToFile(new File(unicodedir + "tmarking_" + inscript.id + ".xml"), document);
 	}
 
 	@SuppressWarnings("unchecked")
 	public void loadLocal(File f){
+		if (f == null) return;
+		
 		Document docin = FileUtil.readXMLDocumentFromFile(f);
 		Element docinroot = docin.getRootElement();
 		String xml = docinroot.getAttributeValue("xml");

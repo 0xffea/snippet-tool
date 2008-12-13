@@ -61,9 +61,6 @@ public class Inscript {
 	/** Whether character's row, column must be drawn **/
 	public boolean showRowColumn = false;
 	
-	/** Whether sutra was already loaded in db, now updating appearance **/
-	public boolean updateOnly = false;
-	
 	/** Currently selected character index **/
 	public InscriptCharacter activeCharacter = null;
 	
@@ -546,6 +543,20 @@ public class Inscript {
 				}
 			}
 		}
+	}
+	
+	public String getXUpdate(String collection){
+		String xupdate = "";
+		for(int i=0; i<text.size(); i++){
+			for(int j=0; j<text.get(i).size(); j++){
+				for(int k=0; k<text.get(i).get(j).size(); k++){
+					xupdate += text.get(i).get(j).get(k).getXUpdate(collection);
+				}
+			}
+		}
+		xupdate = "<xu:modifications version=\'1.0\' xmlns:xu=\'http://www.xmldb.org/xupdate\'>" + xupdate;
+		xupdate = xupdate + "</xu:modifications>";
+		return xupdate;
 	}
 	
 	/**
