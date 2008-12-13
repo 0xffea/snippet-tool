@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="lib/xmldb.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xmlrpc-1.2-patched.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/exist.jar"/>
+	<classpathentry kind="lib" path="lib/exist-optional.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/saxon9.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xercesImpl-2.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xml-apis.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="lib/jdom.jar"/>
+	<classpathentry kind="lib" path="lib/ant.jar"/>
+	<classpathentry kind="lib" path="lib/ant-launcher.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/colorchooser.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/log4j-1.2.15.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/saxon9-dom.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/saxon9-xpath.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
