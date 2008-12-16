@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project Snippet-Tool">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="/home/abratuhi/workspace/Snippet-Tool/snippettool-1.1.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <attribute name="Main-Class" value="org.abratuhi.snippettool.gui._frame_SnippetTool"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="/home/abratuhi/workspace/Snippet-Tool/bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="/home/abratuhi/workspace/Snippet-Tool/lib/xmldb.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/home/abratuhi/workspace/Snippet-Tool/lib/xmlrpc-1.2-patched.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/home/abratuhi/workspace/Snippet-Tool/lib/exist.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/home/abratuhi/workspace/Snippet-Tool/lib/exist-optional.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/home/abratuhi/workspace/Snippet-Tool/lib/saxon9.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/home/abratuhi/workspace/Snippet-Tool/lib/xercesImpl-2.9.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/home/abratuhi/workspace/Snippet-Tool/lib/xml-apis.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/home/abratuhi/workspace/Snippet-Tool/lib/jdom.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/home/abratuhi/workspace/Snippet-Tool/lib/ant.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/home/abratuhi/workspace/Snippet-Tool/lib/ant-launcher.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/home/abratuhi/workspace/Snippet-Tool/lib/colorchooser.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/home/abratuhi/workspace/Snippet-Tool/lib/log4j-1.2.15.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/home/abratuhi/workspace/Snippet-Tool/lib/saxon9-dom.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/home/abratuhi/workspace/Snippet-Tool/lib/saxon9-xpath.jar"/>
+        </jar>
+    </target>
+</project>
