@@ -69,27 +69,29 @@ public class SnippetShape {
 		return newpoint;
 	}
 	
-	/*public String getPointRelative(Point point){
-		if(cursor_inner.contains(point)){
+	public String getPointRelative(Point point){
+		Point p = rotatePointO(point, -angle, center.x, center.y);
+		Rectangle out = rotatePolygonO(cursor_outer, -angle, center).getBounds();
+		Rectangle in = rotatePolygonO(cursor_inner, -angle, center).getBounds();
+		
+		if(in.contains(p)){
 			return "in";
 		}
-		else if(cursor_outer.contains(point)){
-			double radius = Math.max(base.width, base.height) / 2;
-			double dist = center.distance(point);
-			if(point.x < center.x && point.y < center.y && dist > radius) return "nw";
-			if(point.x < center.x && point.y < center.y && dist < radius) return "n";
-			if(point.x < center.x && point.y < center.y && dist > radius) return "ne";
-			if(point.x < center.x && point.y < center.y && dist < radius) return "e";
-			if(point.x < center.x && point.y < center.y && dist > radius) return "se";
-			if(point.x < center.x && point.y < center.y && dist < radius) return "s";
-			if(point.x < center.x && point.y < center.y && dist > radius) return "sw";
-			if(point.x < center.x && point.y < center.y && dist < radius) return "w";
-			return "cursor";	//TODO
+		else if(out.contains(p)){
+			if(new Rectangle(out.x, out.y, (out.width-in.width)/2, (out.height-in.height)/2).contains(p)) return "nw";
+			else if(new Rectangle(out.x+(out.width-in.width)/2, out.y, in.width, (out.height-in.height)/2).contains(p)) return "n";
+			else if(new Rectangle(out.x+(out.width-in.width)/2+in.width, out.y, (out.width-in.width)/2, (out.height-in.height)/2).contains(p)) return "ne";
+			else if(new Rectangle(out.x+(out.width-in.width)/2+in.width, out.y+(out.height-in.height)/2, (out.width-in.width)/2, in.height).contains(p)) return "e";
+			else if(new Rectangle(out.x+(out.width-in.width)/2+in.width, out.y+(out.height-in.height)/2+in.height, (out.width-in.width)/2, (out.height-in.height)/2).contains(p)) return "se";
+			else if(new Rectangle(out.x+(out.width-in.width)/2, out.y+(out.height-in.height)/2+in.height, in.width, (out.height-in.height)/2).contains(p)) return "s";
+			else if(new Rectangle(out.x, out.y+(out.height-in.height)/2+in.height, (out.width-in.width)/2, (out.height-in.height)/2).contains(p)) return "sw";
+			else if(new Rectangle(out.x, out.y+(out.height-in.height)/2, (out.width-in.width)/2, in.height).contains(p)) return "w";
+			else return "cursor";
 		}
 		else{
 			return "out";
 		}
-	}*/
+	}
 	
 	public static Polygon rotatePolygonO(Polygon oldpoly, double d, Point c){
 		Polygon newpoly =new Polygon(oldpoly.xpoints, oldpoly.ypoints, oldpoly.npoints);

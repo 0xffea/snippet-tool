@@ -11,7 +11,6 @@ import java.util.Properties;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.KeyStroke;
 
 import org.abratuhi.snippettool.controller._controller_AutoGuided;
 import org.abratuhi.snippettool.controller._controller_Keyboard;
@@ -126,9 +125,9 @@ public class _panel_Mainimage extends JPanel{
     		setAlpha(g, alpha);
     		g.setColor(color);
     		
-    		//AffineTransform textrotator = new AffineTransform();
-    		//textrotator.rotate(character.shape.angle, character.shape.center.x, character.shape.center.y);
-    		//g.setTransform(textrotator);
+    		AffineTransform textrotator = g.getTransform();
+    		textrotator.rotate(-character.shape.angle, character.shape.center.x, character.shape.center.y);
+    		g.setTransform(textrotator);
     		if(character.inscript.showCharacter){
     			g.setFont(f.deriveFont(fontBaseSize));
     			g.drawString(character.characterStandard, character.shape.base.x, character.shape.base.y+g.getFontMetrics().getHeight()*25/40);
@@ -141,6 +140,9 @@ public class _panel_Mainimage extends JPanel{
     			g.setFont(f.deriveFont(fontBaseSize/5.0f));
     			g.drawString("("+String.valueOf(character.row)+","+String.valueOf(character.column)+")", character.shape.base.x, character.shape.base.y+g.getFontMetrics().getAscent());
     		}
+    		AffineTransform textderotator = g.getTransform();
+    		textderotator.rotate(character.shape.angle, character.shape.center.x, character.shape.center.y);
+    		g.setTransform(textderotator);
     	}
         protected void paintComponent(Graphics gg) {
             super.paintComponent(gg);

@@ -158,14 +158,14 @@ public class InscriptCharacter {
 	 */
 	public void resizeSnippet(String direction, int dx, int dy){
 		if(direction == null) return;
-		else if(direction.equals("nw")){shape.resizeNW(dx, dy);}
-		else if(direction.equals("n")){shape.resizeN(dy);}
-		else if(direction.equals("ne")){shape.resizeNE(dx, dy);}
+		else if(direction.equals("nw")){shape.resizeNW(-dx, -dy);}
+		else if(direction.equals("n")){shape.resizeN(-dy);}
+		else if(direction.equals("ne")){shape.resizeNE(dx, -dy);}
 		else if(direction.equals("e")){shape.resizeE(dx);}
 		else if(direction.equals("se")){shape.resizeSE(dx, dy);}
-		else if(direction.equals("s")){shape.resizeE(dy);}
-		else if(direction.equals("sw")){shape.resizeSW(dx, dy);}
-		else if(direction.equals("w")){shape.resizeW(dx);}
+		else if(direction.equals("s")){shape.resizeS(dy);}
+		else if(direction.equals("sw")){shape.resizeSW(-dx, dy);}
+		else if(direction.equals("w")){shape.resizeW(-dx);}
 	}
 	
 	/**

@@ -159,8 +159,6 @@ public class _controller_AutoGuided implements MouseListener, MouseMotionListene
 		int dx = mouse_current_new.x - mouse_current_old.x;
 		int dy = mouse_current_new.y - mouse_current_old.y;
 		
-		System.out.println(MouseEvent.getMouseModifiersText(me.getModifiers()));
-		
 		// left button used
 		if(me.getModifiers() == me.BUTTON1_MASK && inscript.activeCharacter!=null){
 			inscript.resizeSnippet(inscript.activeCharacter, inscript.activeCharacter.computeMoveDirection(main_image.getCursor()), dx, dy);
@@ -187,16 +185,16 @@ public class _controller_AutoGuided implements MouseListener, MouseMotionListene
 		
 		// change cursor appearance
 		if(inscript.activeCharacter!=null){
-			String cursorPlace = "none";
+			String cursorPlace = inscript.activeCharacter.shape.getPointRelative(mouse_current_new);
 			if(cursorPlace!=null && !cursorPlace.equals("none")){
 				if(cursorPlace.equals("nw")) {main_image.setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR));return;}
-				if(cursorPlace.equals("n")) {main_image.setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));return;}
-				if(cursorPlace.equals("ne")) {main_image.setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR));return;}
-				if(cursorPlace.equals("e")) {main_image.setCursor(new Cursor(Cursor.E_RESIZE_CURSOR));return;}
-				if(cursorPlace.equals("se")) {main_image.setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR));return;}
-				if(cursorPlace.equals("s")) {main_image.setCursor(new Cursor(Cursor.S_RESIZE_CURSOR));return;}
-				if(cursorPlace.equals("sw")) {main_image.setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR));return;}
-				if(cursorPlace.equals("w")) {main_image.setCursor(new Cursor(Cursor.W_RESIZE_CURSOR));return;}
+				else if(cursorPlace.equals("n")) {main_image.setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));return;}
+				else if(cursorPlace.equals("ne")) {main_image.setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR));return;}
+				else if(cursorPlace.equals("e")) {main_image.setCursor(new Cursor(Cursor.E_RESIZE_CURSOR));return;}
+				else if(cursorPlace.equals("se")) {main_image.setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR));return;}
+				else if(cursorPlace.equals("s")) {main_image.setCursor(new Cursor(Cursor.S_RESIZE_CURSOR));return;}
+				else if(cursorPlace.equals("sw")) {main_image.setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR));return;}
+				else if(cursorPlace.equals("w")) {main_image.setCursor(new Cursor(Cursor.W_RESIZE_CURSOR));return;}
 			}
 		}
 	}
