@@ -42,7 +42,7 @@ public class _panel_Info extends JPanel{
 		this.inscript = snippettool.inscript;
 		//
 		jta_info.setColumns(20);
-		jta_info.setRows(4);
+		jta_info.setRows(5);
 		//
 		setVisible(true);
 		setLayout(new SpringLayout());
@@ -69,8 +69,9 @@ public class _panel_Info extends JPanel{
 		String info = new String();
 		if(sn != null) {
 			info += "character:\t"+sn.characterStandard+" ("+sn.characterOriginal+")"+"\n";
-			info += "x, y:\t"+sn.shape.x+", "+sn.shape.y+"\n";
-			info += "width, height:\t"+sn.shape.width+", "+sn.shape.height+"\n";
+			info += "x, y:\t"+sn.shape.base.x+", "+sn.shape.base.y+"\n";
+			info += "width, height:\t"+sn.shape.base.width+", "+sn.shape.base.height+"\n";
+			info += "angle:\t"+sn.shape.angle+"\n";
 			info += "number:\t"+sn.number+" (r:"+sn.row+", c:"+sn.column+")";
 		}
 		jta_info.setText(info);

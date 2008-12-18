@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import org.abratuhi.snippettool.gui._panel_Mainimage;
 import org.abratuhi.snippettool.model.InscriptCharacter;
+import org.abratuhi.snippettool.model.SnippetShape;
 import org.abratuhi.snippettool.model.SnippetTool;
 import org.abratuhi.snippettool.util.PrefUtil;
 
@@ -57,7 +58,7 @@ public class _controller_ManualSequential implements MouseListener, MouseMotionL
 	 */
 	public void reset(){
 		this.currentIndex = 0;
-		snippettool.inscript.activeCharacter = snippettool.inscript.getCharacter(0, 0);
+		snippettool.inscript.activeCharacter = snippettool.inscript.getCharacterNV(0, 0);
 		main_image.root.text.setSelected(snippettool.inscript.activeCharacter);
 	}
 
@@ -102,13 +103,13 @@ public class _controller_ManualSequential implements MouseListener, MouseMotionL
 			InscriptCharacter activeChar = snippettool.inscript.activeCharacter;
 			
 			// update dimension of snippet marking
-			snippettool.inscript.updateSnippet(r, activeChar.row, activeChar.column);
+			snippettool.inscript.updateSnippet(new SnippetShape(r), activeChar.row, activeChar.column);
 			
 			//
 			currentIndex++;
 
 			// set next active
-			snippettool.inscript.activeCharacter = snippettool.inscript.getCharacter(activeChar.number + 1 - 1, 0);	// +1 for next, -1 for indexing started with 1
+			snippettool.inscript.activeCharacter = snippettool.inscript.getCharacterNV(activeChar.number + 1 - 1, 0);	// +1 for next, -1 for indexing started with 1
 
 			// repaint
 			main_image.root.repaint();
@@ -133,7 +134,7 @@ public class _controller_ManualSequential implements MouseListener, MouseMotionL
 			InscriptCharacter activeChar = snippettool.inscript.activeCharacter;
 			
 			// update dimension of snippet marking
-			snippettool.inscript.updateSnippet(r, activeChar.row, activeChar.column);
+			snippettool.inscript.updateSnippet(new SnippetShape(r), activeChar.row, activeChar.column);
 			
 			// repaint
 			main_image.root.repaint();

@@ -81,6 +81,7 @@ public class DbUtil {
 	public static File downloadBinaryResource(String collection, String resource, String user, String password, String tempdir){
 		try {
 			if(!tempdir.endsWith(File.separator)) tempdir += File.separator;
+			//System.out.println("DbUtil, download binary resource: "+collection+", "+resource+", "+", "+user+", "+password+", "+tempdir);
 			File f = new File(tempdir + resource);
 			Database database = (Database) Class.forName("org.exist.xmldb.DatabaseImpl").newInstance();   
 			DatabaseManager.registerDatabase(database); 

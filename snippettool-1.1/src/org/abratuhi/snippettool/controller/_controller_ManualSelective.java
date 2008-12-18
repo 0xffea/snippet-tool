@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import org.abratuhi.snippettool.gui._panel_Mainimage;
 import org.abratuhi.snippettool.model.InscriptCharacter;
+import org.abratuhi.snippettool.model.SnippetShape;
 import org.abratuhi.snippettool.model.SnippetTool;
 import org.abratuhi.snippettool.util.PrefUtil;
 
@@ -88,7 +89,7 @@ public class _controller_ManualSelective implements MouseListener, MouseMotionLi
 			InscriptCharacter activeChar = snippettool.inscript.activeCharacter;
 			
 			// update dimension of snippet marking
-			snippettool.inscript.updateSnippet(r, activeChar.row, activeChar.column);
+			snippettool.inscript.updateSnippet(new SnippetShape(r), activeChar.row, activeChar.column);
 			
 			// set active
 			main_image.root.text.setSelected(activeChar);
@@ -118,7 +119,7 @@ public class _controller_ManualSelective implements MouseListener, MouseMotionLi
 			InscriptCharacter activeChar = snippettool.inscript.activeCharacter;
 			
 			// update dimension of snippet marking
-			snippettool.inscript.updateSnippet(r, activeChar.row, activeChar.column);
+			snippettool.inscript.updateSnippet(new SnippetShape(r), activeChar.row, activeChar.column);
 			
 			// set active
 			main_image.root.text.setSelected(activeChar);

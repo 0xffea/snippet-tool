@@ -17,6 +17,7 @@ import javax.swing.event.ChangeListener;
 
 import org.abratuhi.snippettool.model.Inscript;
 import org.abratuhi.snippettool.model.InscriptCharacter;
+import org.abratuhi.snippettool.model.SnippetShape;
 import org.abratuhi.snippettool.model.SnippetTool;
 
 @SuppressWarnings("serial")
@@ -177,7 +178,7 @@ public class _panel_Main extends JPanel implements ActionListener, ChangeListene
 					for(int k=0; k<inscript.text.get(i).get(j).size(); k++){
 						InscriptCharacter csign = inscript.text.get(i).get(j).get(k);
 						Rectangle zeroRectangle = new Rectangle(0,0,0,0);
-						csign.shape = zeroRectangle;
+						csign.shape = new SnippetShape(zeroRectangle);
 					}
 				}
 			}

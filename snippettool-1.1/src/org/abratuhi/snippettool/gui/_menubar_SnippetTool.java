@@ -9,7 +9,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
-import org.abratuhi.snippettool.imagecutter.ImageCutter;
 import org.abratuhi.snippettool.model.SnippetTool;
 
 /**
@@ -20,9 +19,6 @@ import org.abratuhi.snippettool.model.SnippetTool;
  * 		+ Load Inscript - load inscript from local file
  * 		+ Load Image - load image from local file
  * 		+ Exit - leave application
- * Edit -> 
- * 		+ Clear Appearances - open HiWi_GUI_clearapp Window
- * 		+ Image Cutter - open ImageCutter Window
  * Help ->
  * 		+ About
  * 		+ Help
@@ -41,7 +37,6 @@ public class _menubar_SnippetTool extends JMenuBar implements ActionListener{
 	
 	
 	JMenu m_file = new JMenu("File");
-	JMenu m_tool = new JMenu("Tool");
 	JMenu m_help = new JMenu("Help");
 
 	JMenuItem mi_loadm = new JMenuItem("Load Marking From Local File");
@@ -49,7 +44,6 @@ public class _menubar_SnippetTool extends JMenuBar implements ActionListener{
 	JMenuItem mi_loads = new JMenuItem("Load Inscript From Local File");
 	JMenuItem mi_loadi = new JMenuItem("Load Image From Local File");
 	JMenuItem mi_exit = new JMenuItem("Exit");
-	JMenuItem mi_cutter = new JMenuItem("Image Cutter");
 	JMenuItem mi_about = new JMenuItem("About");
 	JMenuItem mi_help = new JMenuItem("Help");
 	
@@ -65,7 +59,6 @@ public class _menubar_SnippetTool extends JMenuBar implements ActionListener{
 		mi_loadi.addActionListener(this);
 		mi_loads.addActionListener(this);
 		mi_exit.addActionListener(this);
-		mi_cutter.addActionListener(this);
 		mi_about.addActionListener(this);
 		mi_help.addActionListener(this);
 		
@@ -75,13 +68,11 @@ public class _menubar_SnippetTool extends JMenuBar implements ActionListener{
 		m_file.add(mi_savem);
 		m_file.add(mi_loadm);
 		m_file.add(mi_exit);
-		m_tool.add(mi_cutter);
 		m_help.add(mi_about);
-		//m_help.add(mi_help);
+		m_help.add(mi_help);
 		
 		// 
 		add(m_file);
-		add(m_tool);
 		add(m_help);
 	}
 
@@ -132,9 +123,6 @@ public class _menubar_SnippetTool extends JMenuBar implements ActionListener{
 		if(e.getActionCommand().equals(mi_exit.getActionCommand())){
 			root.exit();
 		}
-		if(e.getActionCommand().equals(mi_cutter.getActionCommand())){
-			//new ImageCutter(root);
-		}
 		if(e.getActionCommand().equals(mi_about.getActionCommand())){
 			String text = "Snippet Tool\n" +
 							"Version: 1.1beta\n" +
@@ -143,7 +131,12 @@ public class _menubar_SnippetTool extends JMenuBar implements ActionListener{
 			JOptionPane.showMessageDialog(root, text, "About", JOptionPane.INFORMATION_MESSAGE);
 		}
 		if(e.getActionCommand().equals(mi_help.getActionCommand())){
-			String text = "";
+			String text = "Keyboard Controller Cheatsheat:\n" + 
+							"q,e - rotate snippet\n" + 
+							"w,a,s,d - increase snippet size\n" +
+							"shift+w,a,s,d - decrease snippet size\n" +
+							"i,j,k,l - move snippet\n" +
+							"arrows - navigate";
 			JOptionPane.showMessageDialog(root, text, "Help", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}

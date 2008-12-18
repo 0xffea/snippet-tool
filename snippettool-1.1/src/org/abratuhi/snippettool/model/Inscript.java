@@ -250,7 +250,7 @@ public class Inscript {
 									String ch = cspan.getText();
 									String chOriginal = (cspan.getAttribute("original") != null)? cspan.getAttributeValue("original") : ch;
 									
-									csign = new InscriptCharacter(this, ch, chOriginal, cert, preferred, variantnumber, current_row, current_column, current_number, new Point(0,0), new Dimension(0,0));
+									csign = new InscriptCharacter(this, ch, chOriginal, cert, preferred, variantnumber, current_row, current_column, current_number, new SnippetShape(new Rectangle(0, 0, 0, 0)));
 
 									signs.add(csign);
 									signVariants.add((ArrayList<InscriptCharacter>) signs.clone());
@@ -303,7 +303,7 @@ public class Inscript {
 									String ch = cspan.getText();
 									String chOriginal = (cspan.getAttribute("original") != null)? cspan.getAttributeValue("original") : ch;
 									
-									csign = new InscriptCharacter(this, ch, chOriginal, cert, preferred, variantnumber, current_row, current_column_for_extra, current_number_for_extra, new Point(0,0), new Dimension(0,0));
+									csign = new InscriptCharacter(this, ch, chOriginal, cert, preferred, variantnumber, current_row, current_column_for_extra, current_number_for_extra, new SnippetShape(new Rectangle(0,0,0,0)));
 
 									// no imagesign -> attach it to last placed sign
 									// -1, current_number starts with 1, not 0 and in arraylist numbering starts with 0
@@ -342,7 +342,7 @@ public class Inscript {
 			for(int j=0; j<text.get(i).size(); j++){
 				for(int k=0; k<text.get(i).get(j).size(); k++){
 					InscriptCharacter csign = text.get(i).get(j).get(k);
-					if(csign.shape.width == 0 || csign.shape.height == 0){
+					if(csign.shape.base.width == 0 || csign.shape.base.height == 0){
 						csign.missing = true;
 					}
 				}
@@ -420,8 +420,18 @@ public class Inscript {
 	}
 	
 	
-	public InscriptCharacter getCharacter(int n, int v){
+	public InscriptCharacter getCharacterNV(int n, int v){
 		return text.get(n).get(v).get(0);
+	}
+	
+	public InscriptCharacter getCharacterRC(int r, int c){
+		for(int i=0; i<text.size(); i++){
+			InscriptCharacter ch = getCharacterNV(i, 0);
+			if(ch.row == r && ch.column == c){
+				return ch;
+			}
+		}
+		return null;
 	}
 	
 	/**
@@ -459,7 +469,16 @@ public class Inscript {
 		}
 	}
 	
-	public void updateSnippet(Rectangle rectangle, int r, int c){
+	public void rotateSnippet(InscriptCharacter sn, double phi){
+		int index = sn.getNumber()-1;	// all variants must be moved
+		for(int j=0; j<this.text.get(index).size(); j++){
+			for(int k=0; k<this.text.get(index).get(j).size(); k++){
+				this.text.get(index).get(j).get(k).rotateSnippet(phi);
+			}
+		}
+	}
+	
+	public void updateSnippet(SnippetShape shape, int r, int c){
 		int indexTarget = -1;
 		for(int i=0; i<text.size(); i++){
 			if(text.get(i).get(0).get(0).row == r &&
@@ -473,7 +492,7 @@ public class Inscript {
 		if(indexTarget != -1){
 			for(int j=0; j<text.get(indexTarget).size(); j++){
 				for(int k=0; k<text.get(indexTarget).get(j).size(); k++){
-					text.get(indexTarget).get(j).get(k).updateSnippet(rectangle);
+					text.get(indexTarget).get(j).get(k).updateSnippet(shape);
 				}
 			}
 		}
@@ -534,10 +553,10 @@ public class Inscript {
 						int r = csign.getRow()-1;
 						int c = csign.getColumn()-1;
 						if(is_left_to_right){
-							csign.shape = new Rectangle(new Point(oa+(a+da)*r, ob+(b+db)*c), new Dimension(a, b));
+							csign.shape = new SnippetShape(new Rectangle(new Point(oa+(a+da)*r, ob+(b+db)*c), new Dimension(a, b)));
 						}
 						else {
-							csign.shape = new Rectangle(new Point(dim_x-oa-a-(a+da)*r, ob+(b+db)*c), new Dimension(a, b));
+							csign.shape = new SnippetShape(new Rectangle(new Point(dim_x-oa-a-(a+da)*r, ob+(b+db)*c), new Dimension(a, b)));
 						} 
 					 }
 				}
@@ -556,6 +575,7 @@ public class Inscript {
 		}
 		xupdate = "<xu:modifications version=\'1.0\' xmlns:xu=\'http://www.xmldb.org/xupdate\'>" + xupdate;
 		xupdate = xupdate + "</xu:modifications>";
+		//System.out.println(xupdate);
 		return xupdate;
 	}
 	
@@ -569,14 +589,6 @@ public class Inscript {
 		path_file = new String();
 		path_rubbing = new String();
 		activeCharacter = null;
-	}
-	
-	public String getInscriptDetail(){
-		String out = new String();
-		for(int i=0; i<text.size(); i++){
-			out += text.get(i).get(0).get(0).getInfo()+"\n";
-		}
-		return out;
 	}
 
 }

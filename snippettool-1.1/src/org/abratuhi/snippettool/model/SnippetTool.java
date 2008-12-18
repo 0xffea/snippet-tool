@@ -101,7 +101,7 @@ public class SnippetTool {
 			String query = "//appearance[contains(@id, '"+inscript.id+"_')]/rubbing/text()";
 			
 			String[] paths = DbUtil.convertResourceSetToStrings(DbUtil.executeQuery(collection, user, password, query));
-			inscript.path_rubbing = paths[0];
+			if(paths.length > 0) inscript.path_rubbing = paths[0];
 		}
 		else if(mode.equals("local")){
 			
@@ -131,7 +131,7 @@ public class SnippetTool {
 		String password =  props.getProperty("db.unicode.password");
 
 		XMLUtil.clearAppearances(user, password, collection, inscript.id);
-		XMLUtil.updateXML(inscript.getXUpdate("/db"+collection.substring(uri.length())), user, password, collection);
+		XMLUtil.updateXML(inscript.getXUpdate("/db/"+collection.substring(uri.length())), user, password, collection);
 		//System.out.println("Coordinates stored.");
 
 		// snippets
@@ -166,6 +166,7 @@ public class SnippetTool {
 	}
 
 	public void saveLocal(){
+		// coordinates
 		String unicodedir = props.getProperty("local.unicode.dir");
 		if(!unicodedir.endsWith(File.separator)) unicodedir += File.separator;
 
@@ -184,6 +185,24 @@ public class SnippetTool {
 		}
 
 		FileUtil.writeXMLDocumentToFile(new File(unicodedir + "tmarking_" + inscript.id + ".xml"), document);
+		
+
+		// snippets
+		String snippetdir = props.getProperty("local.snippet.dir");
+		String imagedir = props.getProperty("local.image.dir");
+		
+		if(!snippetdir.endsWith(File.separator)) snippetdir += File.separator;
+		if(!imagedir.endsWith(File.separator)) imagedir += File.separator;
+		
+		File inputImageFile = new File(imagedir + inscript.id + ".png");
+
+		ArrayList<InscriptCharacter> preferredReading = new ArrayList<InscriptCharacter>();
+		for(int i=0; i<inscript.text.size(); i++){
+			preferredReading.add(inscript.text.get(i).get(0).get(0));
+		}
+
+		ImageUtil.store(inscript.image, "PNG", inputImageFile);
+		ImageUtil.cutSnippets(inputImageFile, preferredReading, snippetdir, "tcut");
 	}
 
 	@SuppressWarnings("unchecked")

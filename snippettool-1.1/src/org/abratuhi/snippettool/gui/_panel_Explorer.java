@@ -133,8 +133,8 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener{
 					Thread t3 = new Thread(){
 						public void run(){
 							snippettool.setInscriptImage("remote", 
-									snippettool.inscript.path_rubbing.substring(0, snippettool.inscript.path_rubbing.lastIndexOf("/")),
-									snippettool.inscript.path_rubbing.substring(snippettool.inscript.path_rubbing.lastIndexOf("/")+1));
+									selectedCollection,
+									selectedResource);
 							root.status("Loaded Image");
 							try{
 								sleep(10);
@@ -163,6 +163,9 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener{
 					} catch (InterruptedException e1) {}
 					
 					// image loading thread
+					if(snippettool.inscript.path_rubbing != null && 
+							snippettool.inscript.path_rubbing != new String() &&
+							snippettool.inscript.path_rubbing.contains("/")){
 					Thread t3 = new Thread(){
 						public void run(){
 							snippettool.setInscriptImage("remote", 
@@ -175,8 +178,10 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener{
 						}
 					};
 					t3.start();
+					}
 					
 					// coordinates loading thread
+					if(snippettool.inscript.path_rubbing != null && snippettool.inscript.path_rubbing != new String()){
 					Thread t2 = new Thread(){
 						public void run(){
 							snippettool.updateInscriptCoordinates("remote");
@@ -187,6 +192,7 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener{
 						}
 					};
 					t2.start();
+					}
 					/*
 					try {
 						t2.join();

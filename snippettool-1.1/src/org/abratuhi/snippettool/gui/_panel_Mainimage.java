@@ -6,11 +6,15 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.util.Properties;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
+
 import org.abratuhi.snippettool.controller._controller_AutoGuided;
+import org.abratuhi.snippettool.controller._controller_Keyboard;
 import org.abratuhi.snippettool.controller._controller_ManualSequential;
 import org.abratuhi.snippettool.controller._controller_ManualSelective;
 import org.abratuhi.snippettool.model.InscriptCharacter;
@@ -69,6 +73,7 @@ public class _panel_Mainimage extends JPanel{
 		add(scroll_image, BorderLayout.CENTER);
 		
 		changeMouseController("auto");
+		addKeyListener(new _controller_Keyboard(this));
 	}
 		
 	 /** 
@@ -85,9 +90,12 @@ public class _panel_Mainimage extends JPanel{
     		g.setComposite(ac);
     	}
     	public void drawCharacter(Graphics2D g, InscriptCharacter character){
+    		// produce graphics derivatives
+    		character.shape.derivate();
+    		
     		// adjust font
     		Font f = character.inscript.getFont();
-    		float fontBaseSize = (float)(Math.min(character.shape.width, character.shape.height));
+    		float fontBaseSize = (float)(Math.min(character.shape.base.width, character.shape.base.height));
     		
     		Float alpha;
     		Color color;
@@ -97,7 +105,7 @@ public class _panel_Mainimage extends JPanel{
     		color = PrefUtil.String2Color(preferences.getProperty("local.color.marking.border"));
     		setAlpha(g, alpha);
     		g.setColor(color);
-    		g.draw(character.shape);
+    		g.draw(character.shape.main);
     		
     		// draw marking
     		if(!character.equals(character.inscript.activeCharacter)) {
@@ -110,7 +118,7 @@ public class _panel_Mainimage extends JPanel{
     		}
     		setAlpha(g, alpha);
     		g.setColor(color);
-    		g.fill(character.shape);
+    		g.fill(character.shape.main);
     		
     		// draw text
     		alpha = Float.parseFloat(preferences.getProperty("local.alpha.text"));
@@ -118,17 +126,20 @@ public class _panel_Mainimage extends JPanel{
     		setAlpha(g, alpha);
     		g.setColor(color);
     		
+    		//AffineTransform textrotator = new AffineTransform();
+    		//textrotator.rotate(character.shape.angle, character.shape.center.x, character.shape.center.y);
+    		//g.setTransform(textrotator);
     		if(character.inscript.showCharacter){
     			g.setFont(f.deriveFont(fontBaseSize));
-    			g.drawString(character.characterStandard, character.shape.getBounds().x, character.shape.getBounds().y+g.getFontMetrics().getHeight()*25/40);
+    			g.drawString(character.characterStandard, character.shape.base.x, character.shape.base.y+g.getFontMetrics().getHeight()*25/40);
     		}
     		if(character.inscript.showNumber){
     			g.setFont(f.deriveFont(fontBaseSize/3.0f));
-    			g.drawString(String.valueOf(character.number), character.shape.getBounds().x, character.shape.getBounds().y+g.getFontMetrics().getAscent());
+    			g.drawString(String.valueOf(character.number), character.shape.base.x, character.shape.base.y+g.getFontMetrics().getAscent());
     		}
     		if(character.inscript.showRowColumn){
     			g.setFont(f.deriveFont(fontBaseSize/5.0f));
-    			g.drawString("("+String.valueOf(character.row)+","+String.valueOf(character.column)+")", character.shape.getBounds().x, character.shape.getBounds().y+g.getFontMetrics().getAscent());
+    			g.drawString("("+String.valueOf(character.row)+","+String.valueOf(character.column)+")", character.shape.base.x, character.shape.base.y+g.getFontMetrics().getAscent());
     		}
     	}
         protected void paintComponent(Graphics gg) {
@@ -150,7 +161,7 @@ public class _panel_Mainimage extends JPanel{
             // draw marking
     		for(int i=0; i<snippettool.inscript.text.size(); i++){
     			InscriptCharacter sign = snippettool.inscript.text.get(i).get(0).get(0);
-    			if(sign.shape.width>0 && sign.shape.height>0) drawCharacter(g, sign);
+    			if(sign.shape.base.width>0 && sign.shape.base.height>0) drawCharacter(g, sign);
     		}
     		
     		// adjust scrolling speed

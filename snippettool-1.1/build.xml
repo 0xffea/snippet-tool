@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="build" name="Create Runnable Jar for Project Snippet-Tool">
+<project basedir="." default="snippettool" name="Create Runnable Jar for Project Snippet-Tool">
+	<description>Snippet Tool</description>
     <!--this file was created by Eclipse Runnable JAR Export Wizard-->
     <!--ANT 1.7 is required                                        -->
-    <target name="build">
+    <target name="snippettool">
         <jar destfile="snippettool-1.1.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Built-By" value="${user.name}"/>

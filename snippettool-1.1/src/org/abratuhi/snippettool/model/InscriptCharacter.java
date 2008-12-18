@@ -1,9 +1,6 @@
 package org.abratuhi.snippettool.model;
 
 import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
 
 import org.jdom.Element;
 
@@ -24,7 +21,7 @@ public class InscriptCharacter {
 	public String path_to_snippet = new String();
 
 	/** snippet marking **/
-	public Rectangle shape;
+	public SnippetShape shape;
 
 	/** standard unicode sign, which is represents characterOriginal in unicode database **/
 	public String characterStandard = new String();
@@ -60,27 +57,6 @@ public class InscriptCharacter {
 	/** whether this sign was newly added to inscript and not yet marked up as its colleagues **/
 	boolean missing = false;
 
-	/**
-	 * Get character attributes values as readable string
-	 * @return	character information
-	 */
-	public String getInfo(){
-		String out = new String();
-		out += "id="+id+",";
-		out += "chS="+characterStandard+",";
-		out += "chO="+characterOriginal+",";
-		out += "number="+getNumber()+",";
-		out += "cert="+cert+",";
-		out += "variant="+variant+",";
-		out += "preferred_reading="+preferred_reading+",";
-		out += "row="+getRow()+",";
-		out += "column="+getColumn()+",";
-		out += "point=("+shape.x+","+shape.y+")"+",";
-		out += "dimension=("+shape.width+"x"+shape.height+")"+",";
-		out += ";";
-		return out;
-	}
-
 	/** empty constructor, needed sometimes in technical procedures **/
 	public InscriptCharacter(){
 
@@ -103,7 +79,7 @@ public class InscriptCharacter {
 	 * @param base			character's snippet left upper corner coordinates
 	 * @param delta			character's snippet dimension
 	 */
-	public InscriptCharacter(Inscript s,
+	/*public InscriptCharacter(Inscript s,
 			String chStandard, 
 			String chOriginal, 
 			float cert, 
@@ -127,7 +103,32 @@ public class InscriptCharacter {
 		this.setNumber(n);
 		this.id = this.inscript.id+"_"+this.row+"_"+this.column;
 		// 
-		this.shape = new Rectangle(base, delta);
+		this.shape = new SnippetShape(new Rectangle(base, delta));
+	}*/
+	
+	public InscriptCharacter(Inscript s,
+			String chStandard, 
+			String chOriginal, 
+			float cert, 
+			boolean preferred, 
+			int var, 
+			int r, 
+			int c, 
+			int n,
+			SnippetShape sh){
+		// initialize parent inscript
+		this.inscript = s;
+		// initialize further attributes
+		this.characterStandard = chStandard;
+		this.characterOriginal = chOriginal;
+		this.cert = cert;
+		this.preferred_reading = preferred;
+		this.variant = var;
+		this.setColumn(c);
+		this.setRow(r);
+		this.setNumber(n);
+		this.id = this.inscript.id+"_"+this.row+"_"+this.column;
+		this.shape = sh;
 	}
 	
 	public void setNumber(int n){
@@ -157,14 +158,14 @@ public class InscriptCharacter {
 	 */
 	public void resizeSnippet(String direction, int dx, int dy){
 		if(direction == null) return;
-		if(direction.equals("nw")){shape.setBounds(shape.x+dx, shape.y+dy, shape.width-dx, shape.height-dy);return;}
-		if(direction.equals("n")){shape.setBounds(shape.x, shape.y+dy, shape.width, shape.height-dy);return;}
-		if(direction.equals("ne")){shape.setBounds(shape.x, shape.y+dy, shape.width+dx, shape.height-dy);return;}
-		if(direction.equals("e")){shape.setBounds(shape.x, shape.y, shape.width+dx, shape.height);return;}
-		if(direction.equals("se")){shape.setBounds(shape.x, shape.y, shape.width+dx, shape.height+dy);return;}
-		if(direction.equals("s")){shape.setBounds(shape.x, shape.y, shape.width, shape.height+dy);return;}
-		if(direction.equals("sw")){shape.setBounds(shape.x+dx, shape.y, shape.width-dx, shape.height+dy);return;}
-		if(direction.equals("w")){shape.setBounds(shape.x+dx, shape.y, shape.width-dx, shape.height);return;}
+		else if(direction.equals("nw")){shape.resizeNW(dx, dy);}
+		else if(direction.equals("n")){shape.resizeN(dy);}
+		else if(direction.equals("ne")){shape.resizeNE(dx, dy);}
+		else if(direction.equals("e")){shape.resizeE(dx);}
+		else if(direction.equals("se")){shape.resizeSE(dx, dy);}
+		else if(direction.equals("s")){shape.resizeE(dy);}
+		else if(direction.equals("sw")){shape.resizeSW(dx, dy);}
+		else if(direction.equals("w")){shape.resizeW(dx);}
 	}
 	
 	/**
@@ -173,9 +174,12 @@ public class InscriptCharacter {
 	 * @param dy			y shift
 	 */
 	public void moveSnippet(int dx, int dy){
-		shape.setLocation(shape.x+dx, shape.y+dy);
+		shape.shift(dx, dy);
 	}
-	
+
+	public void rotateSnippet(double phi){
+		shape.rotate(phi);
+	}
 	/**
 	 * Produce direction code, basing on current Cursor form
 	 * @param c		current cursor
@@ -198,7 +202,7 @@ public class InscriptCharacter {
 	 * @param p		point to check
 	 * @return		direction code
 	 */
-	public String placeOnBorder(Point p){
+	/*public String placeOnBorder(Point p){
 		if(!shape.contains(p)) return new String("none");
 		//p1     p2
 		//   
@@ -226,7 +230,7 @@ public class InscriptCharacter {
 		if(new Rectangle(p3.x, p3.y-dy, dx, dy).contains(p)) return new String("sw");
 		if(new Rectangle(p1.x, p1.y+dy, dx, y-dy-dy).contains(p)) return new String("w");
 		return null;
-	}
+	}*/
 	
 	
 
@@ -250,7 +254,10 @@ public class InscriptCharacter {
 			"           <source>"+inscript.id+"</source>" +
 			"           <rubbing>"+inscript.path_rubbing+"</rubbing>" +
 			"           <graphic>"+path_to_snippet+"</graphic>" +
-			"           <coordinates x=\""+shape.x+"\" y=\""+shape.y+"\" width=\""+shape.width+"\" height=\""+shape.height+"\" />" +
+			"           <coordinates>" +
+			"           <base x=\""+shape.base.x+"\" y=\""+shape.base.y+"\" width=\""+shape.base.width+"\" height=\""+shape.base.height+"\" />" +
+			"           <angle phi=\""+shape.angle+"\"/>" +
+			"           </coordinates>" +
 			"       </xu:element>" +
 			"    </xu:append>";// +
 		//"</xu:modifications>";
@@ -282,11 +289,7 @@ public class InscriptCharacter {
 		Element graphic = new Element("graphic");
 		graphic.setText(this.path_to_snippet);
 
-		Element coordinates = new Element("coordinates");
-		coordinates.setAttribute("x", String.valueOf(this.shape.x));
-		coordinates.setAttribute("y", String.valueOf(this.shape.y));
-		coordinates.setAttribute("height", String.valueOf(this.shape.height));
-		coordinates.setAttribute("width", String.valueOf(this.shape.width));
+		Element coordinates = shape.toElement();
 
 		appearance.addContent(source);
 		appearance.addContent(rubbing);
@@ -315,14 +318,9 @@ public class InscriptCharacter {
 		String rc = chId.substring((inscript.id+"_").length());
 		int r = Integer.parseInt(rc.substring(0, rc.indexOf("_")));
 		int c = Integer.parseInt(rc.substring(rc.indexOf("_")+1));
-		Element xmlc = appearance.getChild("coordinates");
-		int x = Integer.parseInt(xmlc.getAttributeValue("x"));
-		int y = Integer.parseInt(xmlc.getAttributeValue("y"));
-		int width = Integer.parseInt(xmlc.getAttributeValue("width"));
-		int height = Integer.parseInt(xmlc.getAttributeValue("height"));
+		SnippetShape shape = SnippetShape.fromElement(appearance.getChild("coordinates"));
 
-		InscriptCharacter sign = new InscriptCharacter(inscript, chStandard, chOriginal, cert, preferred, var, r, c, n, new Point(x,y), new Dimension(width, height));				
-		sign.id = chId; // just to be sure, since it's the only value not mentioned in constructor explicit
+		InscriptCharacter sign = new InscriptCharacter(inscript, chStandard, chOriginal, cert, preferred, var, r, c, n, shape);
 
 		return sign;
 	}
@@ -331,8 +329,8 @@ public class InscriptCharacter {
 	 * Update character's snippet's marking coordinates from Rectangle object
 	 * @param rectangle		marking rectangle
 	 */
-	public void updateSnippet(Rectangle rectangle) {
-		this.shape = (Rectangle) rectangle.clone();
+	public void updateSnippet(SnippetShape shape) {
+		this.shape = shape.clone();
 	}
 }
 
