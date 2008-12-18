@@ -33,8 +33,8 @@ public class ImageUtil {
 		Rectangle border = shape.getBounds();
 		BufferedImage bounds = inputImage.getSubimage(Math.max(0, border.x), 
 				Math.max(0, shape.getBounds().y), 
-				Math.max(1, shape.getBounds().width), 
-				Math.max(1, shape.getBounds().height));
+				Math.min(Math.max(1, shape.getBounds().width), inputImage.getWidth()-border.x), 
+				Math.min(Math.max(1, shape.getBounds().height), inputImage.getHeight()-border.y));
 		AffineTransformOp filter = new AffineTransformOp(AffineTransform.getRotateInstance(angle, center.x-border.x, center.y-border.y), AffineTransformOp.TYPE_BICUBIC);
 		BufferedImage outputImage = new BufferedImage(bounds.getWidth(), bounds.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		filter.filter(bounds, outputImage);

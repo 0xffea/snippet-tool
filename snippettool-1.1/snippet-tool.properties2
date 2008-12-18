@@ -1,0 +1,37 @@
+## Settings of server, storing inscriptions and rubbings
+# server's root uri
+db.data.uri=xmldb\:exist\://stonesutras.org\:8080/exist/xmlrpc/db/
+# server's collection uri
+db.data.dir=xmldb\:exist\://stonesutras.org\:8080/exist/xmlrpc/db/docs
+# server's user
+db.data.user=admin
+# server's password
+db.data.password=rondalfa
+
+## Settings of server, storing snippets
+db.snippet.uri=xmldb\:exist\://stonesutras.org\:7000/exist/xmlrpc/db/
+db.snippet.dir=xmldb\:exist\://stonesutras.org\:7000/exist/xmlrpc/db/snippets
+db.snippet.user=admin
+db.snippet.password=rondalfa
+
+## Settings of server, storing unicode db
+db.unicode.uri=xmldb\:exist\://stonesutras.org\:7000/exist/xmlrpc/db/
+db.unicode.dir=xmldb\:exist\://stonesutras.org\:7000/exist/xmlrpc/db/unicode
+db.unicode.user=admin
+db.unicode.password=rondalfa
+
+## Settings of application itself
+# relative path to XSL file for extracting text from inscription's .xml
+local.xslt.file=data/xslt/extract-plain-mod.xml
+# relative path to unicode font file, used in application
+local.font.file=data/font/ARIALUNI.TTF
+# minimal size of snippets marking
+local.snippet.size.min=50
+# relative path for caching inscription files, loaded from server
+local.inscript.dir=tmp/inscript
+# relative path for caching rubbing files, loaded from server
+local.image.dir=tmp/image
+# relative path for storing inscriptions' marking locally
+local.snippet.dir=tmp/snippet
+# relative path for storing inscriptions' rubbing locally
+local.unicode.dir=tmp/unicode
