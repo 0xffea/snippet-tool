@@ -136,7 +136,13 @@ public class _menubar_SnippetTool extends JMenuBar implements ActionListener{
 							"w,a,s,d - increase snippet size\n" +
 							"shift+w,a,s,d - decrease snippet size\n" +
 							"i,j,k,l - move snippet\n" +
-							"arrows - navigate";
+							"arrows - navigate\n\n" +
+							"Mouse Controller Cheatsheat:\n" +
+							"left click - select snippet\n" +
+							"shift + left drag - rotate snippet\n" +
+							"right drag - move snippet\n\n" +
+							"Secondary Mouse Controller Cheatsheat:\n" +
+							"left drag - create snippet";
 			JOptionPane.showMessageDialog(root, text, "Help", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
