@@ -1,1 +1,2 @@
-java -jar lib/ant-launcher.jar
+#!/bin/bash
+java -jar lib/ant-launcher.jar $*

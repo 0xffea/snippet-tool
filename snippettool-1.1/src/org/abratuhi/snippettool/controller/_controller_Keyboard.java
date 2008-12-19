@@ -34,10 +34,10 @@ public class _controller_Keyboard implements KeyListener{
 			inscript.rotateSnippet(inscript.activeCharacter , Math.toRadians(-1));
 			break;
 		case 87:	// 'w'
-			inscript.resizeSnippet(inscript.activeCharacter, "n", 0, step * resizeSign);
+			inscript.resizeSnippet(inscript.activeCharacter, "n", 0, -step * resizeSign);
 			break;
 		case 65:	// 'a'
-			inscript.resizeSnippet(inscript.activeCharacter, "w", step * resizeSign, 0);
+			inscript.resizeSnippet(inscript.activeCharacter, "w", -step * resizeSign, 0);
 			break;
 		case 83:	// 's'
 			inscript.resizeSnippet(inscript.activeCharacter, "s", 0, step * resizeSign);

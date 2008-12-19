@@ -139,6 +139,7 @@ public class _menubar_SnippetTool extends JMenuBar implements ActionListener{
 							"arrows - navigate\n\n" +
 							"Mouse Controller Cheatsheat:\n" +
 							"left click - select snippet\n" +
+							"left drag - resize snippet\n" +
 							"shift + left drag - rotate snippet\n" +
 							"right drag - move snippet\n\n" +
 							"Secondary Mouse Controller Cheatsheat:\n" +

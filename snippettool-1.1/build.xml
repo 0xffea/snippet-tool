@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="build" name="Create Runnable Jar for Project Snippet-Tool">
+<project basedir="." default="dist" name="Create Runnable Jar for Project Snippet-Tool">
 	<path id="classpath.core">
         <fileset dir="lib" includes="*.jar" />
     </path>
+    
+    <target name="clean">
+    	<delete dir="./bin" />
+    	<delete><fileset dir="." includes="*.jar" /></delete>
+    </target>
 
-    <target name="compile">
+    <target name="compile" depends="clean">
+    	<mkdir dir="./bin" />
         <javac destdir="./bin" srcdir="./src">
             <classpath refid="classpath.core" />
         </javac>
     </target>
 	
-	
-    <target name="build" depends="compile">
+    <target name="dist" depends="compile,imagecutter">
         <jar destfile="snippettool-1.1.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Built-By" value="${user.name}"/>
@@ -34,5 +39,33 @@
             <zipfileset excludes="META-INF/*.SF" src="./lib/saxon9-dom.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="./lib/saxon9-xpath.jar"/>
         </jar>
+    </target>
+    
+    <target name="imagecutter" depends="compile">
+    	<jar destfile="imagecutter.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <attribute name="Main-Class" value="org.abratuhi.snippettool.model.ImageCutter"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="./bin">
+            	<exclude name="./bin/org/abratuhi/snippettool/gui/*"/>
+            	<exclude name="./bin/org/abratuhi/snippettool/controller/*"/>
+            </fileset>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/xmldb.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/xmlrpc-1.2-patched.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/exist.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/exist-optional.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/saxon9.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/xercesImpl-2.9.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/xml-apis.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/jdom.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/ant.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/ant-launcher.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/colorchooser.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/log4j-1.2.15.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/saxon9-dom.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/saxon9-xpath.jar"/>
+    	</jar>
     </target>
 </project>

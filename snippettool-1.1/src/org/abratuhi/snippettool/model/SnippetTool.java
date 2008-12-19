@@ -45,6 +45,7 @@ public class SnippetTool {
 		String inscriptText = null;
 		
 		if(!collection.endsWith(File.separator)) collection += File.separator;
+		if(resource.startsWith(File.separator)) resource = resource.substring(1);
 
 		if(mode.equals("remote")){
 			String user = props.getProperty("db.data.user");
@@ -74,6 +75,7 @@ public class SnippetTool {
 		File image = null;
 		
 		if(!collection.endsWith(File.separator)) collection += File.separator;
+		if(resource.startsWith(File.separator)) resource = resource.substring(1);
 
 		if(mode.equals("remote")){
 			String user = props.getProperty("db.data.user");
@@ -124,7 +126,11 @@ public class SnippetTool {
 	}
 
 	public void submitInscript(){
-		// coordinates
+		submitInscriptCoordinates();
+		submitInscriptSnippets(new String("snippet"));
+	}
+	
+	public void submitInscriptCoordinates(){
 		String uri = props.getProperty("db.unicode.uri");
 		String collection = props.getProperty("db.unicode.dir");
 		String user = props.getProperty("db.unicode.user");
@@ -132,12 +138,12 @@ public class SnippetTool {
 
 		XMLUtil.clearAppearances(user, password, collection, inscript.id);
 		XMLUtil.updateXML(inscript.getXUpdate("/db/"+collection.substring(uri.length())), user, password, collection);
-		//System.out.println("Coordinates stored.");
-
-		// snippets
-		collection = props.getProperty("db.snippet.dir");
-		user = props.getProperty("db.snippet.user");
-		password = props.getProperty("db.snippet.password");
+	}
+	
+	public void submitInscriptSnippets(String snippetBasename){
+		String collection = props.getProperty("db.snippet.dir");
+		String user = props.getProperty("db.snippet.user");
+		String password = props.getProperty("db.snippet.password");
 
 		String snippetdir = props.getProperty("local.snippet.dir");
 		String imagedir = props.getProperty("local.image.dir");
@@ -158,7 +164,6 @@ public class SnippetTool {
 		for(int i=0; i<preferredSnippets.length; i++){
 			inscript.updatePathToSnippet(preferredSnippets[i].getName(), i);
 		}
-		//System.out.println("Snippets stored.");
 	}
 
 	public void clearInscript(){
@@ -166,7 +171,11 @@ public class SnippetTool {
 	}
 
 	public void saveLocal(){
-		// coordinates
+		saveLocalCoordinates();
+		saveLocalSnippets(new String("tcut"));
+	}
+	
+	public void saveLocalCoordinates(){
 		String unicodedir = props.getProperty("local.unicode.dir");
 		if(!unicodedir.endsWith(File.separator)) unicodedir += File.separator;
 
@@ -185,9 +194,9 @@ public class SnippetTool {
 		}
 
 		FileUtil.writeXMLDocumentToFile(new File(unicodedir + "tmarking_" + inscript.id + ".xml"), document);
-		
-
-		// snippets
+	}
+	
+	public void saveLocalSnippets(String snippetBasename){
 		String snippetdir = props.getProperty("local.snippet.dir");
 		String imagedir = props.getProperty("local.image.dir");
 		
@@ -202,7 +211,7 @@ public class SnippetTool {
 		}
 
 		ImageUtil.store(inscript.image, "PNG", inputImageFile);
-		ImageUtil.cutSnippets(inputImageFile, preferredReading, snippetdir, "tcut");
+		ImageUtil.cutSnippets(inputImageFile, preferredReading, snippetdir, snippetBasename);
 	}
 
 	@SuppressWarnings("unchecked")
