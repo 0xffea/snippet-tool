@@ -1,1 +1,1 @@
-java -Xms512m -Xmx512m -XX:PermSize=256m -XX:MaxPermSize=256m -jar snippettool-1.1.jar
+"%JAVA_HOME%\bin\java" -Xms512m -Xmx512m -jar snippettool-1.1.jar
