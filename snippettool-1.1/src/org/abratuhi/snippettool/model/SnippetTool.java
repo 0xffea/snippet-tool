@@ -43,9 +43,6 @@ public class SnippetTool {
 	public void setInscriptText(String mode, String collection, String resource){
 		String xsltFilename = props.getProperty("local.xslt.file");
 		String inscriptText = null;
-		
-		if(!collection.endsWith(File.separator)) collection += File.separator;
-		if(resource.startsWith(File.separator)) resource = resource.substring(1);
 
 		if(mode.equals("remote")){
 			String user = props.getProperty("db.data.user");
@@ -55,6 +52,9 @@ public class SnippetTool {
 			inscriptText = FileUtil.readStringFromFile(DbUtil.downloadXMLResource(collection, resource, user, password, xml_temp_dir));
 		}
 		else if(mode.equals("local")){
+			if(!collection.endsWith(File.separator)) collection += File.separator;
+			if(resource.startsWith(File.separator)) resource = resource.substring(1);
+			
 			inscriptText = FileUtil.readStringFromFile(collection+resource);
 		}
 
@@ -74,9 +74,6 @@ public class SnippetTool {
 	public void setInscriptImage(String mode, String collection, String resource){
 		File image = null;
 		
-		if(!collection.endsWith(File.separator)) collection += File.separator;
-		if(resource.startsWith(File.separator)) resource = resource.substring(1);
-
 		if(mode.equals("remote")){
 			String user = props.getProperty("db.data.user");
 			String password = props.getProperty("db.data.password");
@@ -87,6 +84,8 @@ public class SnippetTool {
 		}
 		else if(mode.equals("local")){
 			if(!collection.endsWith(File.separator)) collection += File.separator;
+			if(resource.startsWith(File.separator)) resource = resource.substring(1);
+			
 			image = new File(collection + resource);
 		}
 
