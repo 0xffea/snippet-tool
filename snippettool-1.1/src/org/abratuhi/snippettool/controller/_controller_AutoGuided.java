@@ -165,7 +165,7 @@ public class _controller_AutoGuided implements MouseListener, MouseMotionListene
 		}
 		
 		// shift + left button 
-		if(MouseEvent.getMouseModifiersText(me.getModifiers()).equals("Shift+Button1") && inscript.activeCharacter!=null){
+		if(MouseEvent.getMouseModifiersText(me.getModifiers()).equals(MouseEvent.getMouseModifiersText(MouseEvent.SHIFT_MASK)+"+Button1") && inscript.activeCharacter!=null){
 			inscript.rotateSnippet(inscript.activeCharacter, Math.toRadians(1.0)*(dx>0?-1:1));
 		}
 		
