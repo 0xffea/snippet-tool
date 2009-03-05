@@ -37,8 +37,15 @@ public class ImageUtil {
 		double dy = border.getHeight();
 		for(int i=0; i<shape.npoints; i++){
 			int nexti = i<shape.npoints-1? i+1 : 0;
-			double distx = Line2D.ptLineDist(shape.xpoints[i], shape.ypoints[i], shape.xpoints[nexti], shape.ypoints[nexti], border.getX(), border.getY()+border.getHeight());
-			double disty = Line2D.ptLineDist(shape.xpoints[i], shape.ypoints[i], shape.xpoints[nexti], shape.ypoints[nexti], border.getX(), border.getY());
+			double distx=0, disty=0;
+			if(angle>0){
+				distx = Line2D.ptLineDist(shape.xpoints[i], shape.ypoints[i], shape.xpoints[nexti], shape.ypoints[nexti], border.getX(), border.getY()+border.getHeight());
+				disty = Line2D.ptLineDist(shape.xpoints[i], shape.ypoints[i], shape.xpoints[nexti], shape.ypoints[nexti], border.getX(), border.getY());
+			}
+			else{
+				distx = Line2D.ptLineDist(shape.xpoints[i], shape.ypoints[i], shape.xpoints[nexti], shape.ypoints[nexti], border.getX()+border.getWidth(), border.getY()+border.getHeight());
+				disty = Line2D.ptLineDist(shape.xpoints[i], shape.ypoints[i], shape.xpoints[nexti], shape.ypoints[nexti], border.getX()+border.getWidth(), border.getY());
+			}
 			if(distx < dx) dx = distx;
 			if(disty < dy) dy = disty;
 		}
