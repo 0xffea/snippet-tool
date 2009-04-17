@@ -204,7 +204,7 @@ public class XMLUtil {
 				if(element.getName().equals("supplied")){					
 					element.getParentElement().removeContent(element);
 					
-					boolean ignoreSupplied = (element.getAttribute("rend") != null && element.getAttributeValue("rend") != "")? true : false;
+					boolean ignoreSupplied = true; 
 					List<Element> suppliedChildren = element.getChildren();
 					
 					int iterations = suppliedChildren.size();
