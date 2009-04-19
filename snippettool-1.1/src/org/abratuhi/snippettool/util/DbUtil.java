@@ -52,10 +52,10 @@ public class DbUtil {
 		return null;
 	}
 	
-	public static File downloadXMLResource(String collection, String resource, String user, String password, String tempdir){
+	public static File downloadXMLResource(String collection, String resource, String user, String password, String tempdirName){
 		try {
-			if(!tempdir.endsWith(File.separator)) tempdir += File.separator;
-			File f = new File(tempdir + resource);
+			File tempdir = getTempdir(tempdirName);
+			File f = new File(tempdir, resource);
 			Database database = (Database) Class.forName("org.exist.xmldb.DatabaseImpl").newInstance();   
 			DatabaseManager.registerDatabase(database); 
 			Collection col = DatabaseManager.getCollection(collection);
@@ -77,12 +77,29 @@ public class DbUtil {
 		}
 		return null;
 	}
+
+	/**
+	 * Gets the directory at tempdir name, creating it if did not exist.
+	 * @param tempdirName
+	 * @return a file object representing the tempdir
+	 * @throws IOException
+	 */
+	private static File getTempdir(String tempdirName) throws IOException {
+		File tempdir = new File(tempdirName);
+		if (!tempdir.isDirectory()) {
+			if (tempdir.exists())
+				throw new IllegalArgumentException("Supplied tempdirName \""+tempdirName+"\" is not a directory");
+			if (!tempdir.mkdirs())
+				throw new IOException("Could not create tempdir at tempdirName \""+tempdirName+"\"");
+		}
+		return tempdir;
+	}
 	
-	public static File downloadBinaryResource(String collection, String resource, String user, String password, String tempdir){
+	public static File downloadBinaryResource(String collection, String resource, String user, String password, String tempdirName){
 		//System.out.println("DbUtil.downloadBinaryResource("+collection+", "+resource+", "+user+", "+password+", "+tempdir+")");
 		try {
-			if(!tempdir.endsWith(File.separator)) tempdir += File.separator;
-			File f = new File(tempdir + resource);
+			File tempdir = getTempdir(tempdirName);
+			File f = new File(tempdir, resource);
 			Database database = (Database) Class.forName("org.exist.xmldb.DatabaseImpl").newInstance();   
 			DatabaseManager.registerDatabase(database); 
 			Collection col = DatabaseManager.getCollection(collection);
