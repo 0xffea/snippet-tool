@@ -252,7 +252,7 @@ public class InscriptCharacter {
 			"           <xu:attribute name=\"cert\">"+this.cert+"</xu:attribute>" +
 			"           <xu:attribute name=\"nr\">"+inscript.id+"_"+this.number+"</xu:attribute>" +
 			"           <source>"+inscript.id+"</source>" +
-			"           <rubbing>"+inscript.path_rubbing+"</rubbing>" +
+			"           <rubbing>"+inscript.getRelativeRubbingPath()+"</rubbing>" +
 			"           <graphic>"+path_to_snippet+"</graphic>" +
 			"           <coordinates>" +
 			"           <base x=\""+shape.base.x+"\" y=\""+shape.base.y+"\" width=\""+shape.base.width+"\" height=\""+shape.base.height+"\" />" +
@@ -284,7 +284,7 @@ public class InscriptCharacter {
 		source.setText(inscript.id);
 
 		Element rubbing = new Element("rubbing");
-		rubbing.setText(inscript.path_rubbing);
+		rubbing.setText(inscript.getAbsoluteRubbingPath());
 
 		Element graphic = new Element("graphic");
 		graphic.setText(this.path_to_snippet);

@@ -13,8 +13,12 @@ import org.abratuhi.snippettool.util.PrefUtil;
 import org.abratuhi.snippettool.util.XMLUtil;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SnippetTool {
+	Logger logger = LoggerFactory.getLogger(SnippetTool.class);
+
 	/** Default .properties file **/
 	public final static String DEFAULT_PROPERTIES_FILE = "snippet-tool.properties";
 
@@ -82,10 +86,12 @@ public class SnippetTool {
 		String standardizedText = XMLUtil
 				.standardizeXML(transformedInscriptText);
 
-		// FileUtil.writeXMLStringToFile(new File("1.xml"), inscriptText);
-		// FileUtil.writeXMLStringToFile(new File("2.xml"),
-		// transformedInscriptText);
-		// FileUtil.writeXMLStringToFile(new File("3.xml"), standardizedText);
+		if (logger.isDebugEnabled()) {
+			FileUtil.writeXMLStringToFile(new File("1.xml"), inscriptText);
+			FileUtil.writeXMLStringToFile(new File("2.xml"),
+					transformedInscriptText);
+			FileUtil.writeXMLStringToFile(new File("3.xml"), standardizedText);
+		}
 
 		inscript.id = resource
 				.substring(0, resource.length() - ".xml".length());
@@ -93,27 +99,25 @@ public class SnippetTool {
 		inscript.setTextFromXML(standardizedText);
 	}
 
-	public void setInscriptImage(String mode, String collection, String resource) {
-		File image = null;
+	public void setInscriptImageToLocalFile(File file) {
+		inscript.setAbsoluteRubbingPath(file.getPath());
+		inscript.setImage(file);
+		scale = 1.0f;
+	}
 
-		if (mode.equals("remote")) {
-			String user = props.getProperty("db.data.user");
-			String password = props.getProperty("db.data.password");
-			String image_temp_dir = props.getProperty("local.image.dir");
+	public void setInscriptImageToRemoteRessource(String url) {
+		String user = props.getProperty("db.data.user");
+		String password = props.getProperty("db.data.password");
+		String image_temp_dir = props.getProperty("local.image.dir");
 
-			image = DbUtil.downloadBinaryResource(collection, resource, user,
-					password, image_temp_dir);
-			inscript.setImage(image);
-		} else if (mode.equals("local")) {
-			if (!collection.endsWith(File.separator))
-				collection += File.separator;
-			if (resource.startsWith(File.separator))
-				resource = resource.substring(1);
+		String collection = url.substring(0, url.lastIndexOf("/"));
+		String resource = url.substring(url.lastIndexOf("/") + 1);
 
-			image = new File(collection + resource);
-		}
+		File image = DbUtil.downloadBinaryResource(collection, resource, user,
+				password, image_temp_dir);
+		inscript.setImage(image);
 
-		inscript.path_rubbing = collection + resource;
+		inscript.setAbsoluteRubbingPath(url);
 		inscript.setImage(image);
 		scale = 1.0f;
 	}
@@ -128,8 +132,20 @@ public class SnippetTool {
 
 			String[] paths = DbUtil.convertResourceSetToStrings(DbUtil
 					.executeQuery(collection, user, password, query));
-			if (paths.length > 0)
-				inscript.path_rubbing = paths[0];
+			if (paths.length > 0) {
+				String rubbingPath = paths[0];
+				if (rubbingPath.startsWith("xmldb:")) {
+					logger.warn("Rubbing path {} is absolute.", rubbingPath);
+					rubbingPath = rubbingPath.replaceFirst("xmldb:.*?/db/",
+							props.getProperty("db.data.uri"));
+					logger.debug("Mapping to {}", rubbingPath);
+					// TODO: Push fixed path into DB
+				} else {
+					rubbingPath = props.getProperty("db.data.uri")
+							+ rubbingPath;
+				}
+				inscript.setAbsoluteRubbingPath(rubbingPath);
+			}
 		} else if (mode.equals("local")) {
 
 		}
@@ -214,7 +230,7 @@ public class SnippetTool {
 
 		Document document = new Document(new Element("inscript").setAttribute(
 				"id", inscript.id).setAttribute("xml", inscript.path_file)
-				.setAttribute("img", inscript.path_rubbing));
+				.setAttribute("img", inscript.getAbsoluteRubbingPath()));
 
 		for (int i = 0; i < inscript.text.size(); i++) {
 			for (int j = 0; j < inscript.text.get(i).size(); j++) {
@@ -256,17 +272,15 @@ public class SnippetTool {
 		if (f == null)
 			return;
 
-		Document docin = FileUtil.readXMLDocumentFromFile(f);
-		Element docinroot = docin.getRootElement();
-		String xml = docinroot.getAttributeValue("xml");
-		String img = docinroot.getAttributeValue("img");
+		Document document = FileUtil.readXMLDocumentFromFile(f);
+		Element documentRootElement = document.getRootElement();
+		String xml = documentRootElement.getAttributeValue("xml");
+		String img = documentRootElement.getAttributeValue("img");
 
+		// TODO: Remove use of local/remote method strings
 		String xml_collection = null;
 		String xml_resource = xml;
 		String xml_method = "local";
-		String img_collection = null;
-		String img_resource = img;
-		String img_method = "local";
 
 		if (xml.startsWith("xmldb:")) {
 			xml_collection = xml.substring(0, xml.lastIndexOf("/"));
@@ -274,16 +288,14 @@ public class SnippetTool {
 			xml_method = "remote";
 		}
 
-		if (img.startsWith("xmldb:")) {
-			img_collection = img.substring(0, img.lastIndexOf("/"));
-			img_resource = img.substring(img.lastIndexOf("/") + 1);
-			img_method = "remote";
-		}
-
 		setInscriptText(xml_method, xml_collection, xml_resource);
-		setInscriptImage(img_method, img_collection, img_resource);
 
-		List<Element> apps = docinroot.getChildren("appearance");
+		if (img.startsWith("xmldb:")) {
+			setInscriptImageToRemoteRessource(img);
+		} else {
+			setInscriptImageToLocalFile(new File(img));
+		}
+		List<Element> apps = documentRootElement.getChildren("appearance");
 		inscript.updateCoordinates(apps.toArray(new Element[apps.size()]));
 
 	}

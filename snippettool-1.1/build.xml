@@ -38,6 +38,10 @@
             <zipfileset excludes="META-INF/*.SF" src="./lib/saxon9-dom.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="./lib/saxon9-xpath.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="./lib/jopt-simple-3.1-rc1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/slf4j-api-1.5.6.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/logback-core-0.9.15.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/logback-classic-0.9.15.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/log4j-over-slf4j-1.5.6.jar"/>
         </jar>
     </target>
     
@@ -66,6 +70,10 @@
             <zipfileset excludes="META-INF/*.SF" src="./lib/saxon9-dom.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="./lib/saxon9-xpath.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="./lib/jopt-simple-3.1-rc1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/slf4j-api-1.5.6.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/logback-core-0.9.15.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/logback-classic-0.9.15.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/log4j-over-slf4j-1.5.6.jar"/>
     	</jar>
     </target>
 </project>

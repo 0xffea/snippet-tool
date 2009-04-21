@@ -10,6 +10,8 @@ import javax.swing.JSplitPane;
 
 import org.abratuhi.snippettool.model.SnippetTool;
 import org.abratuhi.snippettool.util.PrefUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Snippet-tool application window. Contains all other components and a
@@ -22,6 +24,8 @@ import org.abratuhi.snippettool.util.PrefUtil;
  */
 @SuppressWarnings("serial")
 public class _frame_SnippetTool extends JFrame implements WindowListener {
+
+	Logger logger = LoggerFactory.getLogger(_frame_SnippetTool.class);
 
 	public SnippetTool snippettool;
 	public Properties preferences;
@@ -125,6 +129,7 @@ public class _frame_SnippetTool extends JFrame implements WindowListener {
 
 	public void status(String status) {
 		this.status.setStatus(status);
+		logger.trace("Triggering repaint.");
 		this.status.repaint();
 	}
 
