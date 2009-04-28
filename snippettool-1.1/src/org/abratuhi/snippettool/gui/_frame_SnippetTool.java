@@ -25,7 +25,8 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings("serial")
 public class _frame_SnippetTool extends JFrame implements WindowListener {
 
-	Logger logger = LoggerFactory.getLogger(_frame_SnippetTool.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(_frame_SnippetTool.class);
 
 	public SnippetTool snippettool;
 	public Properties preferences;

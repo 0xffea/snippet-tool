@@ -28,7 +28,8 @@ import org.slf4j.LoggerFactory;
 public class _controller_ManualSelective implements MouseListener,
 		MouseMotionListener {
 
-	Logger logger = LoggerFactory.getLogger(_controller_ManualSelective.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(_controller_ManualSelective.class);
 
 	/** Refernce to parent component **/
 	_panel_Mainimage main_image;
@@ -107,7 +108,8 @@ public class _controller_ManualSelective implements MouseListener,
 			}
 
 			// get active character
-			InscriptCharacter activeChar = snippettool.inscript.activeCharacter;
+			InscriptCharacter activeChar = snippettool.inscript
+					.getActiveCharacter();
 
 			// update dimension of snippet marking
 			snippettool.inscript.updateSnippet(new SnippetShape(r),
@@ -146,7 +148,8 @@ public class _controller_ManualSelective implements MouseListener,
 			Rectangle r = new Rectangle(pr, dr);
 
 			// get active character
-			InscriptCharacter activeChar = snippettool.inscript.activeCharacter;
+			InscriptCharacter activeChar = snippettool.inscript
+					.getActiveCharacter();
 
 			// update dimension of snippet marking
 			snippettool.inscript.updateSnippet(new SnippetShape(r),

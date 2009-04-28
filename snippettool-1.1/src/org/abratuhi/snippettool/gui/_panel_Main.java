@@ -2,10 +2,11 @@ package org.abratuhi.snippettool.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -24,9 +25,10 @@ import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("serial")
 public class _panel_Main extends JPanel implements ActionListener,
-		ChangeListener {
+		ChangeListener, Observer {
 
-	Logger logger = LoggerFactory.getLogger(_panel_Main.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(_panel_Main.class);
 
 	/** as reference **/
 	_frame_SnippetTool root;
@@ -77,6 +79,7 @@ public class _panel_Main extends JPanel implements ActionListener,
 		this.root = jf;
 		this.snippettool = snippettool;
 		this.inscript = snippettool.inscript;
+		inscript.addObserver(this);
 		this.main_image = new _panel_Mainimage(jf, snippettool);
 
 		setLayout(new BorderLayout());
@@ -85,7 +88,6 @@ public class _panel_Main extends JPanel implements ActionListener,
 		main_navigation.add(zoom_out);
 		main_navigation.add(zoomer);
 		main_navigation.add(zoom_in);
-
 		zoom_in.addActionListener(this);
 		zoomer.addChangeListener(this);
 		zoom_out.addActionListener(this);
@@ -115,18 +117,6 @@ public class _panel_Main extends JPanel implements ActionListener,
 		add(main_workspace, BorderLayout.EAST);
 	}
 
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-
-		if (inscript != null) {
-			setBorder(new TitledBorder("main: [ "
-					+ inscript.getAbsoluteRubbingPath() + " ]"));
-		} else {
-			setBorder(new TitledBorder("main: "));
-		}
-	}
-
 	public void actionPerformed(ActionEvent ae) {
 		String cmd = ae.getActionCommand();
 		if (cmd.equals(zoom_in.getActionCommand())) {
@@ -136,10 +126,9 @@ public class _panel_Main extends JPanel implements ActionListener,
 			zoomer.setZoom(snippettool.scale);
 			// adjust view
 			main_image.sub.setPreferredSize(new Dimension(
-					(int) (snippettool.scale * inscript.image
-							.getWidth(main_image)),
-					(int) (snippettool.scale * inscript.image
-							.getHeight(main_image))));
+					(int) (snippettool.scale * inscript.getImage().getWidth(
+							main_image)), (int) (snippettool.scale * inscript
+							.getImage().getHeight(main_image))));
 			main_image.sub.revalidate();
 			// repaint
 			logger.trace("Triggering repaint.");
@@ -152,10 +141,9 @@ public class _panel_Main extends JPanel implements ActionListener,
 			zoomer.setZoom(snippettool.scale);
 			// adjust view
 			main_image.sub.setPreferredSize(new Dimension(
-					(int) (snippettool.scale * inscript.image
-							.getWidth(main_image)),
-					(int) (snippettool.scale * inscript.image
-							.getHeight(main_image))));
+					(int) (snippettool.scale * inscript.getImage().getWidth(
+							main_image)), (int) (snippettool.scale * inscript
+							.getImage().getHeight(main_image))));
 			main_image.sub.revalidate();
 			// repaint
 			logger.trace("Triggering repaint.");
@@ -164,8 +152,8 @@ public class _panel_Main extends JPanel implements ActionListener,
 		if (cmd.equals(fit_image_max.getActionCommand())) {
 			// compute scale ratio
 			Dimension dim_workspace = main_image.getSize();
-			Dimension dim_image = new Dimension(inscript.image.getWidth(),
-					inscript.image.getHeight());
+			Dimension dim_image = new Dimension(inscript.getImage().getWidth(),
+					inscript.getImage().getHeight());
 			double horizontal_ratio = dim_workspace.width
 					/ (double) (dim_image.width);
 			double vertical_ratio = dim_workspace.height
@@ -177,10 +165,9 @@ public class _panel_Main extends JPanel implements ActionListener,
 			// scale
 			snippettool.scale = scale_ratio;
 			main_image.sub.setPreferredSize(new Dimension(
-					(int) (snippettool.scale * inscript.image
-							.getWidth(main_image)),
-					(int) (snippettool.scale * inscript.image
-							.getHeight(main_image))));
+					(int) (snippettool.scale * inscript.getImage().getWidth(
+							main_image)), (int) (snippettool.scale * inscript
+							.getImage().getHeight(main_image))));
 			main_image.sub.revalidate();
 			logger.trace("Triggering repaint.");
 			root.main.main_image.repaint();
@@ -188,8 +175,8 @@ public class _panel_Main extends JPanel implements ActionListener,
 		if (cmd.equals(fit_image_min.getActionCommand())) {
 			// compute scale ratio
 			Dimension dim_workspace = main_image.getSize();
-			Dimension dim_image = new Dimension(inscript.image.getWidth(),
-					inscript.image.getHeight());
+			Dimension dim_image = new Dimension(inscript.getImage().getWidth(),
+					inscript.getImage().getHeight());
 			double horizontal_ratio = dim_workspace.width
 					/ (double) (dim_image.width);
 			double vertical_ratio = dim_workspace.height
@@ -201,10 +188,9 @@ public class _panel_Main extends JPanel implements ActionListener,
 			// scale
 			snippettool.scale = scale_ratio;
 			main_image.sub.setPreferredSize(new Dimension(
-					(int) (snippettool.scale * inscript.image
-							.getWidth(main_image)),
-					(int) (snippettool.scale * inscript.image
-							.getHeight(main_image))));
+					(int) (snippettool.scale * inscript.getImage().getWidth(
+							main_image)), (int) (snippettool.scale * inscript
+							.getImage().getHeight(main_image))));
 			main_image.sub.revalidate();
 			logger.trace("Triggering repaint.");
 			root.main.main_image.repaint();
@@ -212,11 +198,11 @@ public class _panel_Main extends JPanel implements ActionListener,
 		if (cmd.equals(clear.getActionCommand())) {
 
 			// clear shapes
-			for (int i = 0; i < inscript.text.size(); i++) {
-				for (int j = 0; j < inscript.text.get(i).size(); j++) {
-					for (int k = 0; k < inscript.text.get(i).get(j).size(); k++) {
-						InscriptCharacter csign = inscript.text.get(i).get(j)
-								.get(k);
+			for (int i = 0; i < inscript.getText().size(); i++) {
+				for (int j = 0; j < inscript.getText().get(i).size(); j++) {
+					for (int k = 0; k < inscript.getText().get(i).get(j).size(); k++) {
+						InscriptCharacter csign = inscript.getText().get(i)
+								.get(j).get(k);
 						Rectangle zeroRectangle = new Rectangle(0, 0, 0, 0);
 						csign.shape = new SnippetShape(zeroRectangle);
 					}
@@ -245,14 +231,22 @@ public class _panel_Main extends JPanel implements ActionListener,
 	public void stateChanged(ChangeEvent e) {
 		// scale
 		snippettool.scale = zoomer.getZoom();
-		main_image.sub
-				.setPreferredSize(new Dimension(
-						(int) (snippettool.scale * inscript.image
-								.getWidth(main_image)),
-						(int) (snippettool.scale * inscript.image
-								.getHeight(main_image))));
+		main_image.sub.setPreferredSize(new Dimension(
+				(int) (snippettool.scale * inscript.getImage().getWidth(
+						main_image)), (int) (snippettool.scale * inscript
+						.getImage().getHeight(main_image))));
 		main_image.sub.revalidate();
 		logger.trace("Triggering repaint.");
 		root.main.main_image.repaint();
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		if (inscript != null) {
+			setBorder(new TitledBorder("main: [ "
+					+ inscript.getAbsoluteRubbingPath() + " ]"));
+		} else {
+			setBorder(new TitledBorder("main: "));
+		}
 	}
 }

@@ -41,7 +41,8 @@ import org.slf4j.LoggerFactory;
 public class _panel_Options extends JPanel implements ActionListener,
 		ItemListener, ChangeListener {
 
-	Logger logger = LoggerFactory.getLogger(_panel_Options.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(_panel_Options.class);
 
 	/** Size of input field for snippet marking related values **/
 	public final static int SIZE_FIELD_LENGTH = 4;
@@ -252,22 +253,22 @@ public class _panel_Options extends JPanel implements ActionListener,
 
 	public void itemStateChanged(ItemEvent ie) {
 		if (rb_left_to_right.isSelected())
-			snippettool.inscript.is_left_to_right = true;
+			snippettool.inscript.setLeftToRight(true);
 		if (rb_right_to_left.isSelected())
-			snippettool.inscript.is_left_to_right = false;
+			snippettool.inscript.setLeftToRight(false);
 
 		if (rb_id.isSelected())
-			snippettool.inscript.showCharacter = true;
+			snippettool.inscript.setCharacterVisible(true);
 		else
-			snippettool.inscript.showCharacter = false;
+			snippettool.inscript.setCharacterVisible(false);
 		if (rb_n.isSelected())
-			snippettool.inscript.showNumber = true;
+			snippettool.inscript.setNumberVisible(true);
 		else
-			snippettool.inscript.showNumber = false;
+			snippettool.inscript.setNumberVisible(false);
 		if (rb_rc.isSelected())
-			snippettool.inscript.showRowColumn = true;
+			snippettool.inscript.setRowColumnVisible(true);
 		else
-			snippettool.inscript.showRowColumn = false;
+			snippettool.inscript.setRowColumnVisible(false);
 
 		if (rb_auto.isSelected())
 			root.main.main_image.changeMouseController("auto");

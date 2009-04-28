@@ -1,9 +1,12 @@
 package org.abratuhi.snippettool.model;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+import javax.swing.JOptionPane;
 
 import org.abratuhi.snippettool.gui._frame_SnippetTool;
 import org.abratuhi.snippettool.util.DbUtil;
@@ -17,7 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SnippetTool {
-	Logger logger = LoggerFactory.getLogger(SnippetTool.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(SnippetTool.class);
 
 	/** Default .properties file **/
 	public final static String DEFAULT_PROPERTIES_FILE = "snippet-tool.properties";
@@ -93,15 +97,15 @@ public class SnippetTool {
 			FileUtil.writeXMLStringToFile(new File("3.xml"), standardizedText);
 		}
 
-		inscript.id = resource
-				.substring(0, resource.length() - ".xml".length());
-		inscript.path_file = collection + resource;
+		inscript.setId(resource.substring(0, resource.length()
+				- ".xml".length()));
+		inscript.setPath(collection + resource);
 		inscript.setTextFromXML(standardizedText);
 	}
 
 	public void setInscriptImageToLocalFile(File file) {
 		inscript.setAbsoluteRubbingPath(file.getPath());
-		inscript.setImage(file);
+		inscript.loadLocalImage(file);
 		scale = 1.0f;
 	}
 
@@ -115,10 +119,10 @@ public class SnippetTool {
 
 		File image = DbUtil.downloadBinaryResource(collection, resource, user,
 				password, image_temp_dir);
-		inscript.setImage(image);
+		inscript.loadLocalImage(image);
 
 		inscript.setAbsoluteRubbingPath(url);
-		inscript.setImage(image);
+		inscript.loadLocalImage(image);
 		scale = 1.0f;
 	}
 
@@ -127,7 +131,7 @@ public class SnippetTool {
 			String collection = props.getProperty("db.unicode.dir");
 			String user = props.getProperty("db.unicode.user");
 			String password = props.getProperty("db.unicode.password");
-			String query = "//appearance[contains(@id, '" + inscript.id
+			String query = "//appearance[contains(@id, '" + inscript.getId()
 					+ "_')]/rubbing/text()";
 
 			String[] paths = DbUtil.convertResourceSetToStrings(DbUtil
@@ -139,7 +143,6 @@ public class SnippetTool {
 					rubbingPath = rubbingPath.replaceFirst("xmldb:.*?/db/",
 							props.getProperty("db.data.uri"));
 					logger.debug("Mapping to {}", rubbingPath);
-					// TODO: Push fixed path into DB
 				} else {
 					rubbingPath = props.getProperty("db.data.uri")
 							+ rubbingPath;
@@ -156,7 +159,7 @@ public class SnippetTool {
 			String collection = props.getProperty("db.unicode.dir");
 			String user = props.getProperty("db.unicode.user");
 			String password = props.getProperty("db.unicode.password");
-			String query = "//appearance[source='" + inscript.id
+			String query = "//appearance[source='" + inscript.getId()
 					+ "'][@variant='0']";
 
 			Element[] appearances = DbUtil.convertResourceSetToElements(DbUtil
@@ -169,7 +172,7 @@ public class SnippetTool {
 
 	public void submitInscript() {
 		submitInscriptCoordinates();
-		submitInscriptSnippets(new String("snippet"));
+		submitInscriptSnippets("snippet");
 	}
 
 	public void submitInscriptCoordinates() {
@@ -178,7 +181,7 @@ public class SnippetTool {
 		String user = props.getProperty("db.unicode.user");
 		String password = props.getProperty("db.unicode.password");
 
-		XMLUtil.clearAppearances(user, password, collection, inscript.id);
+		XMLUtil.clearAppearances(user, password, collection, inscript.getId());
 		XMLUtil.updateXML(inscript.getXUpdate("/db/"
 				+ collection.substring(uri.length())), user, password,
 				collection);
@@ -197,20 +200,30 @@ public class SnippetTool {
 		if (!imagedir.endsWith(File.separator))
 			imagedir += File.separator;
 
-		File inputImageFile = new File(imagedir + inscript.id + ".png");
+		File inputImageFile = new File(imagedir + inscript.getId() + ".png");
 
 		ArrayList<InscriptCharacter> preferredReading = new ArrayList<InscriptCharacter>();
-		for (int i = 0; i < inscript.text.size(); i++) {
-			preferredReading.add(inscript.text.get(i).get(0).get(0));
+		for (int i = 0; i < inscript.getText().size(); i++) {
+			preferredReading.add(inscript.getText().get(i).get(0).get(0));
 		}
 
-		ImageUtil.store(inscript.image, "PNG", inputImageFile);
-		File[] preferredSnippets = ImageUtil.cutSnippets(inputImageFile,
-				preferredReading, snippetdir, "subimage");
-		DbUtil.uploadBinaryResources(preferredSnippets, collection, user,
-				password);
-		for (int i = 0; i < preferredSnippets.length; i++) {
-			inscript.updatePathToSnippet(preferredSnippets[i].getName(), i);
+		ImageUtil.store(inscript.getImage(), "PNG", inputImageFile);
+		File[] preferredSnippets;
+		try {
+			preferredSnippets = ImageUtil.cutSnippets(inputImageFile,
+					preferredReading, snippetdir, "subimage");
+
+			DbUtil.uploadBinaryResources(preferredSnippets, collection, user,
+					password);
+			for (int i = 0; i < preferredSnippets.length; i++) {
+				inscript.updatePathToSnippet(preferredSnippets[i].getName(), i);
+			}
+		} catch (IOException e) {
+			logger.error("I/O error while cutting snippets", e);
+			JOptionPane.showMessageDialog(gui,
+					"I/O error while cutting snippets: "
+							+ e.getLocalizedMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -220,7 +233,7 @@ public class SnippetTool {
 
 	public void saveLocal() {
 		saveLocalCoordinates();
-		saveLocalSnippets(new String("tcut"));
+		saveLocalSnippets("tcut");
 	}
 
 	public void saveLocalCoordinates() {
@@ -229,13 +242,13 @@ public class SnippetTool {
 			unicodedir += File.separator;
 
 		Document document = new Document(new Element("inscript").setAttribute(
-				"id", inscript.id).setAttribute("xml", inscript.path_file)
+				"id", inscript.getId()).setAttribute("xml", inscript.getPath())
 				.setAttribute("img", inscript.getAbsoluteRubbingPath()));
 
-		for (int i = 0; i < inscript.text.size(); i++) {
-			for (int j = 0; j < inscript.text.get(i).size(); j++) {
-				for (int k = 0; k < inscript.text.get(i).get(j).size(); k++) {
-					InscriptCharacter csign = inscript.text.get(i).get(j)
+		for (int i = 0; i < inscript.getText().size(); i++) {
+			for (int j = 0; j < inscript.getText().get(i).size(); j++) {
+				for (int k = 0; k < inscript.getText().get(i).get(j).size(); k++) {
+					InscriptCharacter csign = inscript.getText().get(i).get(j)
 							.get(k);
 					document.getRootElement().addContent(csign.toAppearance());
 				}
@@ -243,7 +256,7 @@ public class SnippetTool {
 		}
 
 		FileUtil.writeXMLDocumentToFile(new File(unicodedir + "tmarking_"
-				+ inscript.id + ".xml"), document);
+				+ inscript.getId() + ".xml"), document);
 	}
 
 	public void saveLocalSnippets(String snippetBasename) {
@@ -255,16 +268,24 @@ public class SnippetTool {
 		if (!imagedir.endsWith(File.separator))
 			imagedir += File.separator;
 
-		File inputImageFile = new File(imagedir + inscript.id + ".png");
+		File inputImageFile = new File(imagedir + inscript.getId() + ".png");
 
 		ArrayList<InscriptCharacter> preferredReading = new ArrayList<InscriptCharacter>();
-		for (int i = 0; i < inscript.text.size(); i++) {
-			preferredReading.add(inscript.text.get(i).get(0).get(0));
+		for (int i = 0; i < inscript.getText().size(); i++) {
+			preferredReading.add(inscript.getText().get(i).get(0).get(0));
 		}
 
-		ImageUtil.store(inscript.image, "PNG", inputImageFile);
-		ImageUtil.cutSnippets(inputImageFile, preferredReading, snippetdir,
-				snippetBasename);
+		ImageUtil.store(inscript.getImage(), "PNG", inputImageFile);
+		try {
+			ImageUtil.cutSnippets(inputImageFile, preferredReading, snippetdir,
+					snippetBasename);
+		} catch (IOException e) {
+			logger.error("I/O error while cutting snippets", e);
+			JOptionPane.showMessageDialog(gui,
+					"I/O error while cutting snippets: "
+							+ e.getLocalizedMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	@SuppressWarnings("unchecked")

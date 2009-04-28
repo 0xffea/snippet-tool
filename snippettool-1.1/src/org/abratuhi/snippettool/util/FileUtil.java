@@ -141,4 +141,21 @@ public class FileUtil {
 		}
 	}
 
+	/**
+	 * Gets the directory at tempdir name, creating it if did not exist.
+	 * @param tempdirName
+	 * @return a file object representing the tempdir
+	 * @throws IOException
+	 */
+	static File getTempdir(String tempdirName) throws IOException {
+		File tempdir = new File(tempdirName);
+		if (!tempdir.isDirectory()) {
+			if (tempdir.exists())
+				throw new IllegalArgumentException("Supplied tempdirName \""+tempdirName+"\" is not a directory");
+			if (!tempdir.mkdirs())
+				throw new IOException("Could not create tempdir at tempdirName \""+tempdirName+"\"");
+		}
+		return tempdir;
+	}
+
 }

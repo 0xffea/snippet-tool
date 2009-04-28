@@ -23,7 +23,8 @@ import org.slf4j.LoggerFactory;
 public class _controller_AutoGuided implements MouseListener,
 		MouseMotionListener {
 
-	Logger logger = LoggerFactory.getLogger(_controller_AutoGuided.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(_controller_AutoGuided.class);
 
 	/** Refernce to parent component **/
 	_panel_Mainimage main_image;
@@ -68,19 +69,20 @@ public class _controller_AutoGuided implements MouseListener,
 		// left button used
 		if (me.getButton() == me.BUTTON1) {
 			// if not still the same sign used as active
-			if (inscript.activeCharacter == null
-					|| !inscript.activeCharacter.shape.main
+			if (inscript.getActiveCharacter() == null
+					|| !inscript.getActiveCharacter().shape.main
 							.contains(mouse_pressed)) {
 				// find sign that should be active
-				for (int i = 0; i < inscript.text.size(); i++) {
+				for (int i = 0; i < inscript.getText().size(); i++) {
 					// check, whether marking bounds contain mousePressed
 					// coordinates
-					InscriptCharacter sign = inscript.text.get(i).get(0).get(0);
+					InscriptCharacter sign = inscript.getText().get(i).get(0)
+							.get(0);
 					if (sign.shape.main.contains(mouse_current_new)) {
 						// set flag: found existing sign
 						snippettool.existingSign = true;
 						// set character
-						inscript.activeCharacter = sign;
+						inscript.setActiveCharacter(sign);
 						// no need to look for a valid sign further
 						break;
 					}
@@ -88,21 +90,21 @@ public class _controller_AutoGuided implements MouseListener,
 			}
 			// same (old) sign used as active
 			else {
-				if (inscript.activeCharacter != null)
+				if (inscript.getActiveCharacter() != null)
 					snippettool.existingSign = true;
 				else
 					snippettool.existingSign = false;
 			}
 
 			// mark selected sign in text JPanel
-			if (inscript.activeCharacter != null)
-				main_image.root.text.setSelected(inscript.activeCharacter);
+			if (inscript.getActiveCharacter() != null)
+				main_image.root.text.setSelected(inscript.getActiveCharacter());
 
 			// if mouse pressed outside any existing markup field, set the
 			// information fields correspondingly
 			if (!snippettool.existingSign) {
-				inscript.activeCharacter = null;
-				main_image.root.text.setSelected(inscript.activeCharacter);
+				inscript.setActiveCharacter(null);
+				main_image.root.text.setSelected(inscript.getActiveCharacter());
 			}
 		}
 
@@ -110,37 +112,38 @@ public class _controller_AutoGuided implements MouseListener,
 		if (me.getButton() == me.BUTTON3) {
 			// select active sign
 			// if not still the same sign used as active
-			if (inscript.activeCharacter == null
-					|| !inscript.activeCharacter.shape.main
+			if (inscript.getActiveCharacter() == null
+					|| !inscript.getActiveCharacter().shape.main
 							.contains(mouse_pressed)) {
 				// find sign that should be active
-				for (int i = 0; i < inscript.text.size(); i++) {
+				for (int i = 0; i < inscript.getText().size(); i++) {
 					//
-					InscriptCharacter sign = inscript.text.get(i).get(0).get(0);
+					InscriptCharacter sign = inscript.getText().get(i).get(0)
+							.get(0);
 					if (sign.shape.main.contains(mouse_current_new)) {
 						// found existing sign
 						snippettool.existingSign = true;
 						// set selected sign as active
-						inscript.activeCharacter = sign;
+						inscript.setActiveCharacter(sign);
 						// no need to look for a valid sign further
 						break;
 					}
 				}
 			} else {
-				if (inscript.activeCharacter != null)
+				if (inscript.getActiveCharacter() != null)
 					snippettool.existingSign = true;
 				else
 					snippettool.existingSign = false;
 			}
 
 			// mark selected sign in text JPanel
-			main_image.root.text.setSelected(inscript.activeCharacter);
+			main_image.root.text.setSelected(inscript.getActiveCharacter());
 
 			// if mouse pressed outside any existing markup field, set the
 			// information fields correspondingly
 			if (!snippettool.existingSign) {
-				inscript.activeCharacter = null;
-				main_image.root.text.setSelected(inscript.activeCharacter);
+				inscript.setActiveCharacter(null);
+				main_image.root.text.setSelected(inscript.getActiveCharacter());
 			}
 
 			// change Cursor appearance
@@ -159,14 +162,16 @@ public class _controller_AutoGuided implements MouseListener,
 		int dx = mouse_released.x - mouse_current_new.x;
 		int dy = mouse_released.y - mouse_current_new.y;
 		// left button used
-		if (me.getButton() == me.BUTTON1 && inscript.activeCharacter != null) {
-			inscript.resizeSnippet(inscript.activeCharacter,
-					inscript.activeCharacter.computeMoveDirection(main_image
-							.getCursor()), dx, dy);
+		if (me.getButton() == me.BUTTON1
+				&& inscript.getActiveCharacter() != null) {
+			inscript.resizeSnippet(inscript.getActiveCharacter(), inscript
+					.getActiveCharacter().computeMoveDirection(
+							main_image.getCursor()), dx, dy);
 		}
 		// right button used
-		if (me.getButton() == me.BUTTON3 && inscript.activeCharacter != null) {
-			inscript.moveSnippet(inscript.activeCharacter, dx, dy);
+		if (me.getButton() == me.BUTTON3
+				&& inscript.getActiveCharacter() != null) {
+			inscript.moveSnippet(inscript.getActiveCharacter(), dx, dy);
 			main_image.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 
@@ -185,26 +190,26 @@ public class _controller_AutoGuided implements MouseListener,
 
 		// left button used
 		if (me.getModifiers() == me.BUTTON1_MASK
-				&& inscript.activeCharacter != null) {
-			inscript.resizeSnippet(inscript.activeCharacter,
-					inscript.activeCharacter.computeMoveDirection(main_image
-							.getCursor()), dx, dy);
+				&& inscript.getActiveCharacter() != null) {
+			inscript.resizeSnippet(inscript.getActiveCharacter(), inscript
+					.getActiveCharacter().computeMoveDirection(
+							main_image.getCursor()), dx, dy);
 		}
 
 		// shift + left button
 		if (MouseEvent.getMouseModifiersText(me.getModifiers()).equals(
 				MouseEvent.getMouseModifiersText(MouseEvent.SHIFT_MASK)
 						+ "+Button1")
-				&& inscript.activeCharacter != null) {
-			inscript.rotateSnippet(inscript.activeCharacter, Math
+				&& inscript.getActiveCharacter() != null) {
+			inscript.rotateSnippet(inscript.getActiveCharacter(), Math
 					.toRadians(1.0)
 					* (dx > 0 ? -1 : 1));
 		}
 
 		// right button used
 		if (me.getModifiers() == me.BUTTON3_MASK
-				&& inscript.activeCharacter != null) {
-			inscript.moveSnippet(inscript.activeCharacter, dx, dy);
+				&& inscript.getActiveCharacter() != null) {
+			inscript.moveSnippet(inscript.getActiveCharacter(), dx, dy);
 		}
 
 		// repaint
@@ -219,8 +224,8 @@ public class _controller_AutoGuided implements MouseListener,
 				(int) (me.getY() / snippettool.scale));
 
 		// change cursor appearance
-		if (inscript.activeCharacter != null) {
-			String cursorPlace = inscript.activeCharacter.shape
+		if (inscript.getActiveCharacter() != null) {
+			String cursorPlace = inscript.getActiveCharacter().shape
 					.getPointRelative(mouse_current_new);
 			if (cursorPlace != null && !cursorPlace.equals("none")) {
 				if (cursorPlace.equals("nw")) {

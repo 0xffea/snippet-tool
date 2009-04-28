@@ -1,20 +1,20 @@
-#Sat Dec 13 20:14:06 CET 2008
-local.window.position=-4,25
-local.window.text.size=1009x55
+#Tue Apr 28 21:43:32 CEST 2009
+local.window.position=0,29
+local.window.text.size=666x78
 local.color.rubbing=ffffff
-local.window.options.size=265x604
+local.window.options.size=265x564
 local.alpha.marking.p=0.6
-local.window.info.size=262x55
-local.window.size=1289x731
+local.window.info.size=340x78
+local.window.size=1024x710
 local.color.marking.border=c0c0c0
 local.window.divider.width=8
 local.color.text=fff847
 local.alpha.marking.border=0.75
 local.alpha.text=0.58
-local.window.status.size=1279x10
-local.window.main.size=715x604
+local.window.status.size=1014x10
+local.window.main.size=580x564
 local.color.marking.p=c0c0c0
 local.alpha.marking.a=0.31
 local.color.marking.a=00ff
-local.window.explorer.size=283x604
+local.window.explorer.size=153x564
 local.alpha.rubbing=1.0

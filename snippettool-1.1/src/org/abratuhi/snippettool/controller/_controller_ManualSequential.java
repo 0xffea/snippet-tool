@@ -28,7 +28,8 @@ import org.slf4j.LoggerFactory;
 public class _controller_ManualSequential implements MouseListener,
 		MouseMotionListener {
 
-	Logger logger = LoggerFactory.getLogger(_controller_ManualSequential.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(_controller_ManualSequential.class);
 
 	/** Refernce to parent component **/
 	_panel_Mainimage main_image;
@@ -63,9 +64,10 @@ public class _controller_ManualSequential implements MouseListener,
 	 */
 	public void reset() {
 		this.currentIndex = 0;
-		snippettool.inscript.activeCharacter = snippettool.inscript
-				.getCharacterNV(0, 0);
-		main_image.root.text.setSelected(snippettool.inscript.activeCharacter);
+		snippettool.inscript.setActiveCharacter(snippettool.inscript
+				.getCharacterNV(0, 0));
+		main_image.root.text.setSelected(snippettool.inscript
+				.getActiveCharacter());
 	}
 
 	public void mouseClicked(MouseEvent me) {
@@ -121,7 +123,8 @@ public class _controller_ManualSequential implements MouseListener,
 			}
 
 			// get active character
-			InscriptCharacter activeChar = snippettool.inscript.activeCharacter;
+			InscriptCharacter activeChar = snippettool.inscript
+					.getActiveCharacter();
 
 			// update dimension of snippet marking
 			snippettool.inscript.updateSnippet(new SnippetShape(r),
@@ -131,8 +134,8 @@ public class _controller_ManualSequential implements MouseListener,
 			currentIndex++;
 
 			// set next active
-			snippettool.inscript.activeCharacter = snippettool.inscript
-					.getCharacterNV(activeChar.number + 1 - 1, 0); // +1 for
+			snippettool.inscript.setActiveCharacter(snippettool.inscript
+					.getCharacterNV(activeChar.number + 1 - 1, 0)); // +1 for
 			// next, -1
 			// for
 			// indexing
@@ -167,7 +170,8 @@ public class _controller_ManualSequential implements MouseListener,
 			Rectangle r = new Rectangle(pr, dr);
 
 			// get active character
-			InscriptCharacter activeChar = snippettool.inscript.activeCharacter;
+			InscriptCharacter activeChar = snippettool.inscript
+					.getActiveCharacter();
 
 			// update dimension of snippet marking
 			snippettool.inscript.updateSnippet(new SnippetShape(r),

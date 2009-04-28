@@ -3,6 +3,7 @@ package org.abratuhi.snippettool.gui;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -14,9 +15,10 @@ import javax.swing.tree.TreePath;
 
 import org.abratuhi.snippettool.model.SnippetTool;
 import org.abratuhi.snippettool.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
-import org.xmldb.api.base.Database;
 import org.xmldb.api.base.XMLDBException;
 
 /**
@@ -29,6 +31,9 @@ import org.xmldb.api.base.XMLDBException;
  */
 @SuppressWarnings("serial")
 public class _panel_Explorer extends JPanel implements TreeSelectionListener {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(_panel_Explorer.class);
 
 	/** Reference to parent component **/
 	_frame_SnippetTool root;
@@ -81,7 +86,7 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 		db_data_user = snippettool.props.getProperty("db.data.user");
 		db_data_password = snippettool.props.getProperty("db.data.password");
 
-		rootnode = new DefaultMutableTreeNode(new String(db_data_uri));
+		rootnode = new DefaultMutableTreeNode(db_data_uri);
 		explorer = new JTree(rootnode);
 
 		explorer.addTreeSelectionListener(this);
@@ -105,9 +110,7 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 		}
 		selectedDir = selectedDir.substring(0, selectedDir.length() - 1);
 		try {
-			Database database = (Database) Class.forName(
-					"org.exist.xmldb.DatabaseImpl").newInstance();
-			DatabaseManager.registerDatabase(database);
+
 			Collection col = DatabaseManager.getCollection(selectedDir,
 					db_data_user, db_data_password);
 
@@ -151,10 +154,6 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 							snippettool
 									.setInscriptImageToRemoteRessource(selected);
 							root.status("Loaded Image");
-							try {
-								sleep(10);
-							} catch (InterruptedException e) {
-							}
 						}
 					};
 					t3.start();
@@ -168,10 +167,6 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 							snippettool
 									.updateInscriptImagePathFromAppearances("remote");
 							root.status("Loaded Inscript");
-							try {
-								sleep(10);
-							} catch (InterruptedException e) {
-							}
 						}
 					};
 					t1.start();
@@ -182,7 +177,7 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 
 					// image loading thread
 					if (snippettool.inscript.getAbsoluteRubbingPath() != null
-							&& snippettool.inscript.getAbsoluteRubbingPath() != new String()
+							&& snippettool.inscript.getAbsoluteRubbingPath() != ""
 							&& snippettool.inscript.getAbsoluteRubbingPath()
 									.contains("/")) {
 						Thread t3 = new Thread() {
@@ -192,10 +187,6 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 										.setInscriptImageToRemoteRessource(snippettool.inscript
 												.getAbsoluteRubbingPath());
 								root.status("Loaded Image");
-								try {
-									sleep(10);
-								} catch (InterruptedException e) {
-								}
 							}
 						};
 						t3.start();
@@ -203,33 +194,22 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 
 					// coordinates loading thread
 					if (snippettool.inscript.getAbsoluteRubbingPath() != null
-							&& snippettool.inscript.getAbsoluteRubbingPath() != new String()) {
+							&& snippettool.inscript.getAbsoluteRubbingPath() != "") {
 						Thread t2 = new Thread() {
 							@Override
 							public void run() {
 								snippettool.updateInscriptCoordinates("remote");
 								root.status("Loaded Coordinates");
-								try {
-									sleep(10);
-								} catch (InterruptedException e) {
-								}
 							}
 						};
 						t2.start();
 					}
-					/*
-					 * try { t2.join(); } catch (InterruptedException e1) {}
-					 */
 				}
 			}
-		} catch (ClassNotFoundException ee) {
-			ee.printStackTrace();
-		} catch (InstantiationException ee) {
-			ee.printStackTrace();
-		} catch (IllegalAccessException ee) {
-			ee.printStackTrace();
-		} catch (XMLDBException ee) {
-			ee.printStackTrace();
+		} catch (XMLDBException e) {
+			logger.error("XMLDBException in valueChanged(): ", e);
+			JOptionPane.showMessageDialog(this, e.getLocalizedMessage(),
+					"Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }

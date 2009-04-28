@@ -2,24 +2,23 @@ package org.abratuhi.snippettool.model;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 import org.abratuhi.snippettool.gui._panel_Options;
 import org.abratuhi.snippettool.util.ImageUtil;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
 /**
@@ -29,20 +28,23 @@ import org.xml.sax.InputSource;
  * @author Alexei Bratuhin
  * 
  */
-public class Inscript {
+public class Inscript extends Observable {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(Inscript.class);
 
 	/** Inscript's id, e.g., HDS_1 **/
-	public String id = new String();
+	private String id = "";
 
 	/** Absolute database server path to inscript's image **/
 	// FIXME: Inscript shouldn't know full path
-	private String absoluteRubbingPath = new String();
+	private String absoluteRubbingPath = "";
 
 	/** Absolute database server path to inscript's .xml description **/
-	public String path_file = new String();
+	private String path = "";
 
 	/** Inscript's image **/
-	public BufferedImage image = null;
+	private BufferedImage image = null;
 
 	/**
 	 * Inscript's text. Structure: 1st index: continuous character numbering;
@@ -50,51 +52,47 @@ public class Inscript {
 	 * supplementary index for the case, when not preferred reading contains
 	 * more characters, than preferred one
 	 **/
-	public ArrayList<ArrayList<ArrayList<InscriptCharacter>>> text = new ArrayList<ArrayList<ArrayList<InscriptCharacter>>>();
+	private ArrayList<ArrayList<ArrayList<InscriptCharacter>>> text = new ArrayList<ArrayList<ArrayList<InscriptCharacter>>>();
 
 	/** Whether text is read left-to-right **/
-	public boolean is_left_to_right = false;
+	private boolean leftToRight = false;
 
 	/** Whether character should be drawn **/
-	public boolean showCharacter = true;
+	private boolean characterVisible = true;
 
 	/** Whether character's number should be drawn **/
-	public boolean showNumber = false;
+	private boolean numberVisible = false;
 
 	/** Whether character's row, column must be drawn **/
-	public boolean showRowColumn = false;
+	private boolean rowColumnVisible = false;
 
 	/** Currently selected character index **/
-	public InscriptCharacter activeCharacter = null;
+	private InscriptCharacter activeCharacter = null;
 
 	/** Font used to draw characters **/
-	Font f;
+	private Font f;
 
 	/** Marking values **/
 
 	/** X Offset **/
-	int oa;
+	private int oa;
 
 	/** Y Offset **/
-	int ob;
+	private int ob;
 
 	/** Snippet width **/
-	int a;
+	private int a;
 
 	/** Snippet height **/
-	int b;
+	private int b;
 
 	/** X distance between snippets **/
-	int da;
+	private int da;
 
 	/** Y distance between snippets **/
-	int db;
+	private int db;
 
 	public Inscript() {
-	}
-
-	public void setFont(Font f) {
-		this.f = f;
 	}
 
 	public void setFont(String localFont) {
@@ -102,12 +100,10 @@ public class Inscript {
 			FileInputStream fontStream = new FileInputStream(localFont);
 			Font basisfont = Font.createFont(Font.TRUETYPE_FONT, fontStream);
 			f = basisfont.deriveFont(14.0f);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (FontFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			this.setChanged();
+			this.notifyObservers();
+		} catch (Exception e) {
+			logger.error("Could not load font", e);
 		}
 	}
 
@@ -121,16 +117,18 @@ public class Inscript {
 	 * @param img
 	 *            absolute path to image
 	 */
-	public void setImage(File img) {
-		this.image = ImageUtil.load(img);
+	public void loadLocalImage(File img) {
+		this.setImage(ImageUtil.load(img));
+		this.setChanged();
+		this.notifyObservers();
 	}
 
 	public String getPlainText() {
-		String out = new String();
+		String out = "";
 		int row = 1;
 		int crow = 1;
-		for (int i = 0; i < text.size(); i++) {
-			InscriptCharacter csign = text.get(i).get(0).get(0);
+		for (int i = 0; i < getText().size(); i++) {
+			InscriptCharacter csign = getText().get(i).get(0).get(0);
 			crow = csign.row;
 
 			if (crow != row) { // add breakline
@@ -155,7 +153,7 @@ public class Inscript {
 	@SuppressWarnings("unchecked")
 	public void setTextFromXML(String xml) {
 		// clear old text
-		text.clear();
+		getText().clear();
 
 		// prepare index variables
 		int current_number = 1;
@@ -227,7 +225,7 @@ public class Inscript {
 					for (int j = 0; j < basiclength; j++) {
 						ArrayList<ArrayList<InscriptCharacter>> signVariants = new ArrayList<ArrayList<InscriptCharacter>>();
 						ArrayList<InscriptCharacter> signs = new ArrayList<InscriptCharacter>();
-						InscriptCharacter csign = new InscriptCharacter();
+						InscriptCharacter csign = null;
 						boolean supplied = false;
 
 						for (int v = 0; v < lvariants.size(); v++) {
@@ -288,9 +286,10 @@ public class Inscript {
 
 						if (!supplied) {
 							// add variants arraylist to sutra text
-							text
-									.add((ArrayList<ArrayList<InscriptCharacter>>) signVariants
-											.clone());
+							getText()
+									.add(
+											(ArrayList<ArrayList<InscriptCharacter>>) signVariants
+													.clone());
 							//
 							current_column++;
 							current_number++;
@@ -301,7 +300,7 @@ public class Inscript {
 
 					// proceed extra length
 					for (int j = basiclength; j < maxlength; j++) {
-						InscriptCharacter csign = new InscriptCharacter();
+						InscriptCharacter csign = null;
 						int current_number_for_extra = current_number - 1; // current_number
 						// was
 						// already
@@ -359,18 +358,18 @@ public class Inscript {
 									// sign
 									// -1, current_number starts with 1, not 0
 									// and in arraylist numbering starts with 0
-									text.get(current_number_for_extra - 1).get(
-											variantnumber).add(csign);
+									getText().get(current_number_for_extra - 1)
+											.get(variantnumber).add(csign);
 								}
 							}
 						}
 					}
 				}
 			}
-		} catch (JDOMException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			this.setChanged();
+			this.notifyObservers();
+		} catch (Exception e) {
+			logger.error("Could not setTextFromXML()", e);
 		}
 	}
 
@@ -396,10 +395,10 @@ public class Inscript {
 
 		// check, whether all signs have become coordinates assigned, if not,
 		// mark those as missing
-		for (int i = 0; i < text.size(); i++) {
-			for (int j = 0; j < text.get(i).size(); j++) {
-				for (int k = 0; k < text.get(i).get(j).size(); k++) {
-					InscriptCharacter csign = text.get(i).get(j).get(k);
+		for (int i = 0; i < getText().size(); i++) {
+			for (int j = 0; j < getText().get(i).size(); j++) {
+				for (int k = 0; k < getText().get(i).get(j).size(); k++) {
+					InscriptCharacter csign = getText().get(i).get(j).get(k);
 					if (csign.shape.base.width == 0
 							|| csign.shape.base.height == 0) {
 						csign.missing = true;
@@ -407,89 +406,16 @@ public class Inscript {
 				}
 			}
 		}
-	}
-
-	/**
-	 * 
-	 * @param list
-	 *            list of character objects
-	 */
-	@SuppressWarnings("unchecked")
-	public void setTextFromArrayList(ArrayList<InscriptCharacter> list) {
-		// sort tarrayOfSigns after their continuous number
-		for (int i = 0; i < list.size(); i++) {
-			for (int j = i; j < list.size(); j++) {
-				if (list.get(i).number > list.get(j).number) { // handle
-					// different
-					// signs
-					InscriptCharacter tempsign = list.get(i);
-					list.set(i, list.get(j));
-					list.set(j, tempsign);
-				} else {
-					if (list.get(i).number == list.get(j).number
-							&& list.get(i).variant > list.get(j).variant) { // handle
-						// variants
-						// of
-						// the
-						// same
-						// sign
-						InscriptCharacter tempsign = list.get(i);
-						list.set(i, list.get(j));
-						list.set(j, tempsign);
-					}
-				}
-			}
-		}
-
-		// add sign-variants to inscript's signs
-		int lnumber = 0; // remembering that numbers start from 1
-		int lvariant = 0;
-
-		text.clear();
-
-		ArrayList<ArrayList<InscriptCharacter>> signVariants = new ArrayList<ArrayList<InscriptCharacter>>();
-		ArrayList<InscriptCharacter> signs = new ArrayList<InscriptCharacter>();
-		InscriptCharacter csign = new InscriptCharacter();
-
-		for (int i = 0; i < list.size(); i++) {
-			csign = list.get(i);
-			int cnumber = csign.number;
-			int cvariant = csign.variant;
-			if (cnumber == lnumber) {
-				if (cvariant == lvariant) {
-					signVariants = text.get(cnumber);
-					signs = signVariants.get(cvariant);
-					signs.add(csign);
-				} else {
-					signs = new ArrayList<InscriptCharacter>();
-
-					signs.add(csign);
-					signVariants.add(signs);
-				}
-			} else {
-				lvariant = 0;
-
-				signVariants = new ArrayList<ArrayList<InscriptCharacter>>();
-				signs = new ArrayList<InscriptCharacter>();
-
-				signs.add(csign);
-				signVariants.add(signs);
-				text.add((ArrayList<ArrayList<InscriptCharacter>>) signVariants
-						.clone());
-			}
-
-			lnumber = cnumber;
-			lvariant = cvariant;
-		}
-
+		this.setChanged();
+		this.notifyObservers();
 	}
 
 	public InscriptCharacter getCharacterNV(int n, int v) {
-		return text.get(n).get(v).get(0);
+		return getText().get(n).get(v).get(0);
 	}
 
 	public InscriptCharacter getCharacterRC(int r, int c) {
-		for (int i = 0; i < text.size(); i++) {
+		for (int i = 0; i < getText().size(); i++) {
 			InscriptCharacter ch = getCharacterNV(i, 0);
 			if (ch.row == r && ch.column == c) {
 				return ch;
@@ -515,11 +441,14 @@ public class Inscript {
 	 */
 	public void resizeSnippet(InscriptCharacter sn, String dir, int dx, int dy) {
 		int index = sn.getNumber() - 1; // all variants must be resized
-		for (int j = 0; j < this.text.get(index).size(); j++) {
-			for (int k = 0; k < this.text.get(index).get(j).size(); k++) {
-				this.text.get(index).get(j).get(k).resizeSnippet(dir, dx, dy);
+		for (int j = 0; j < this.getText().get(index).size(); j++) {
+			for (int k = 0; k < this.getText().get(index).get(j).size(); k++) {
+				this.getText().get(index).get(j).get(k).resizeSnippet(dir, dx,
+						dy);
 			}
 		}
+		this.setChanged();
+		this.notifyObservers();
 	}
 
 	/**
@@ -537,27 +466,31 @@ public class Inscript {
 	 */
 	public void moveSnippet(InscriptCharacter sn, int dx, int dy) {
 		int index = sn.getNumber() - 1; // all variants must be moved
-		for (int j = 0; j < this.text.get(index).size(); j++) {
-			for (int k = 0; k < this.text.get(index).get(j).size(); k++) {
-				this.text.get(index).get(j).get(k).moveSnippet(dx, dy);
+		for (int j = 0; j < this.getText().get(index).size(); j++) {
+			for (int k = 0; k < this.getText().get(index).get(j).size(); k++) {
+				this.getText().get(index).get(j).get(k).moveSnippet(dx, dy);
 			}
 		}
+		this.setChanged();
+		this.notifyObservers();
 	}
 
 	public void rotateSnippet(InscriptCharacter sn, double phi) {
 		int index = sn.getNumber() - 1; // all variants must be moved
-		for (int j = 0; j < this.text.get(index).size(); j++) {
-			for (int k = 0; k < this.text.get(index).get(j).size(); k++) {
-				this.text.get(index).get(j).get(k).rotateSnippet(phi);
+		for (int j = 0; j < this.getText().get(index).size(); j++) {
+			for (int k = 0; k < this.getText().get(index).get(j).size(); k++) {
+				this.getText().get(index).get(j).get(k).rotateSnippet(phi);
 			}
 		}
+		this.setChanged();
+		this.notifyObservers();
 	}
 
 	public void updateSnippet(SnippetShape shape, int r, int c) {
 		int indexTarget = -1;
-		for (int i = 0; i < text.size(); i++) {
-			if (text.get(i).get(0).get(0).row == r
-					&& text.get(i).get(0).get(0).column == c) {
+		for (int i = 0; i < getText().size(); i++) {
+			if (getText().get(i).get(0).get(0).row == r
+					&& getText().get(i).get(0).get(0).column == c) {
 				indexTarget = i;
 				break;
 			}
@@ -565,20 +498,25 @@ public class Inscript {
 
 		// check whether indexTarget found
 		if (indexTarget != -1) {
-			for (int j = 0; j < text.get(indexTarget).size(); j++) {
-				for (int k = 0; k < text.get(indexTarget).get(j).size(); k++) {
-					text.get(indexTarget).get(j).get(k).updateSnippet(shape);
+			for (int j = 0; j < getText().get(indexTarget).size(); j++) {
+				for (int k = 0; k < getText().get(indexTarget).get(j).size(); k++) {
+					getText().get(indexTarget).get(j).get(k).updateSnippet(
+							shape);
 				}
 			}
 		}
+		this.setChanged();
+		this.notifyObservers();
 	}
 
 	public void updatePathToSnippet(String pathToSnippet, int indexTarget) {
-		for (int j = 0; j < this.text.get(indexTarget).size(); j++) {
-			for (int k = 0; k < this.text.get(indexTarget).get(j).size(); k++) {
-				text.get(indexTarget).get(j).get(k).path_to_snippet = pathToSnippet;
+		for (int j = 0; j < this.getText().get(indexTarget).size(); j++) {
+			for (int k = 0; k < this.getText().get(indexTarget).get(j).size(); k++) {
+				getText().get(indexTarget).get(j).get(k).path_to_snippet = pathToSnippet;
 			}
 		}
+		this.setChanged();
+		this.notifyObservers();
 	}
 
 	/**
@@ -601,17 +539,17 @@ public class Inscript {
 
 		// check whether all markup snippets are seen
 		// use preferred reading's signs
-		int dim_x = image.getWidth();
-		int dim_y = image.getHeight();
+		int dim_x = getImage().getWidth();
+		int dim_y = getImage().getHeight();
 		int x_width = 0;
 		int y_height = 0;
 		int max_row = 0;
 		int max_column = 0;
-		for (int i = 0; i < text.size(); i++) {
-			if (text.get(i).get(0).get(0).column > max_column)
-				max_column = text.get(i).get(0).get(0).column;
-			if (text.get(i).get(0).get(0).row > max_row)
-				max_row = text.get(i).get(0).get(0).row;
+		for (int i = 0; i < getText().size(); i++) {
+			if (getText().get(i).get(0).get(0).column > max_column)
+				max_column = getText().get(i).get(0).get(0).column;
+			if (getText().get(i).get(0).get(0).row > max_row)
+				max_row = getText().get(i).get(0).get(0).row;
 		}
 		x_width = oa + (max_row - 1) * (a + da);
 		y_height = ob + (max_column - 1) * (b + db);
@@ -620,8 +558,9 @@ public class Inscript {
 		}
 
 		// apply parameters if check passed
-		for (int i = 0; i < text.size(); i++) {
-			ArrayList<ArrayList<InscriptCharacter>> signvariants = text.get(i);
+		for (int i = 0; i < getText().size(); i++) {
+			ArrayList<ArrayList<InscriptCharacter>> signvariants = getText()
+					.get(i);
 			for (int j = 0; j < signvariants.size(); j++) {
 				for (int k = 0; k < signvariants.get(j).size(); k++) {
 					InscriptCharacter csign = signvariants.get(j).get(k);
@@ -633,7 +572,7 @@ public class Inscript {
 					} else {
 						int r = csign.getRow() - 1;
 						int c = csign.getColumn() - 1;
-						if (is_left_to_right) {
+						if (isLeftToRight()) {
 							csign.shape = new SnippetShape(new Rectangle(
 									new Point(oa + (a + da) * r, ob + (b + db)
 											* c), new Dimension(a, b)));
@@ -647,14 +586,17 @@ public class Inscript {
 				}
 			}
 		}
+		this.setChanged();
+		this.notifyObservers();
 	}
 
 	public String getXUpdate(String collection) {
 		String xupdate = "";
-		for (int i = 0; i < text.size(); i++) {
-			for (int j = 0; j < text.get(i).size(); j++) {
-				for (int k = 0; k < text.get(i).get(j).size(); k++) {
-					xupdate += text.get(i).get(j).get(k).getXUpdate(collection);
+		for (int i = 0; i < getText().size(); i++) {
+			for (int j = 0; j < getText().get(i).size(); j++) {
+				for (int k = 0; k < getText().get(i).get(j).size(); k++) {
+					xupdate += getText().get(i).get(j).get(k).getXUpdate(
+							collection);
 				}
 			}
 		}
@@ -669,12 +611,14 @@ public class Inscript {
 	 * clear inscript's information
 	 */
 	public void clear() {
-		image = null;
-		text.clear();
-		id = new String();
-		path_file = new String();
-		setAbsoluteRubbingPath(new String());
-		activeCharacter = null;
+		setImage(null);
+		getText().clear();
+		setId("");
+		setPath("");
+		setAbsoluteRubbingPath("");
+		setActiveCharacter(null);
+		this.setChanged();
+		this.notifyObservers();
 	}
 
 	/**
@@ -683,6 +627,8 @@ public class Inscript {
 	 */
 	public void setAbsoluteRubbingPath(String absoluteRubbingPath) {
 		this.absoluteRubbingPath = absoluteRubbingPath;
+		this.setChanged();
+		this.notifyObservers();
 	}
 
 	/**
@@ -696,6 +642,157 @@ public class Inscript {
 
 	public String getRelativeRubbingPath() {
 		return absoluteRubbingPath.replaceFirst("xmldb:.*?/db/", "");
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(String id) {
+		this.id = id;
+		this.setChanged();
+		this.notifyObservers();
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @param path_file
+	 *            the path_file to set
+	 */
+	public void setPath(String path_file) {
+		this.path = path_file;
+		this.setChanged();
+		this.notifyObservers();
+	}
+
+	/**
+	 * @return the path_file
+	 */
+	public String getPath() {
+		return path;
+	}
+
+	/**
+	 * @param image
+	 *            the image to set
+	 */
+	public void setImage(BufferedImage image) {
+		this.image = image;
+		this.setChanged();
+		this.notifyObservers();
+	}
+
+	/**
+	 * @return the image
+	 */
+	public BufferedImage getImage() {
+		return image;
+	}
+
+	/**
+	 * @param text
+	 *            the text to set
+	 */
+	public void setText(ArrayList<ArrayList<ArrayList<InscriptCharacter>>> text) {
+		this.text = text;
+		this.setChanged();
+		this.notifyObservers();
+	}
+
+	/**
+	 * @return the text
+	 */
+	public ArrayList<ArrayList<ArrayList<InscriptCharacter>>> getText() {
+		return text;
+	}
+
+	/**
+	 * @param leftToRight
+	 *            the leftToRight to set
+	 */
+	public void setLeftToRight(boolean leftToRight) {
+		this.leftToRight = leftToRight;
+	}
+
+	/**
+	 * @return the leftToRight
+	 */
+	public boolean isLeftToRight() {
+		return leftToRight;
+	}
+
+	/**
+	 * @param characterVisible
+	 *            the characterVisible to set
+	 */
+	public void setCharacterVisible(boolean characterVisible) {
+		this.characterVisible = characterVisible;
+		this.setChanged();
+		this.notifyObservers();
+	}
+
+	/**
+	 * @return the characterVisible
+	 */
+	public boolean isCharacterVisible() {
+		return characterVisible;
+	}
+
+	/**
+	 * @param numberVisible
+	 *            the numberVisible to set
+	 */
+	public void setNumberVisible(boolean numberVisible) {
+		this.numberVisible = numberVisible;
+		this.setChanged();
+		this.notifyObservers();
+	}
+
+	/**
+	 * @return the numberVisible
+	 */
+	public boolean isNumberVisible() {
+		return numberVisible;
+	}
+
+	/**
+	 * @param rowColumnVisible
+	 *            the rowColumnVisible to set
+	 */
+	public void setRowColumnVisible(boolean rowColumnVisible) {
+		this.rowColumnVisible = rowColumnVisible;
+		this.setChanged();
+		this.notifyObservers();
+	}
+
+	/**
+	 * @return the rowColumnVisible
+	 */
+	public boolean isRowColumnVisible() {
+		return rowColumnVisible;
+	}
+
+	/**
+	 * @param activeCharacter
+	 *            the activeCharacter to set
+	 */
+	public void setActiveCharacter(InscriptCharacter activeCharacter) {
+		this.activeCharacter = activeCharacter;
+		this.setChanged();
+		this.notifyObservers();
+	}
+
+	/**
+	 * @return the activeCharacter
+	 */
+	public InscriptCharacter getActiveCharacter() {
+		return activeCharacter;
 	}
 
 }

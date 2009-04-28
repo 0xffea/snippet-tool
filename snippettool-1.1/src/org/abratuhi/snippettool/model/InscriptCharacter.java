@@ -127,7 +127,7 @@ public class InscriptCharacter {
 		this.setColumn(c);
 		this.setRow(r);
 		this.setNumber(n);
-		this.id = this.inscript.id+"_"+this.row+"_"+this.column;
+		this.id = this.inscript.getId()+"_"+this.row+"_"+this.column;
 		this.shape = sh;
 	}
 	
@@ -250,8 +250,8 @@ public class InscriptCharacter {
 			"           <xu:attribute name=\"preferred_reading\">"+this.preferred_reading+"</xu:attribute>" +
 			"           <xu:attribute name=\"variant\">"+this.variant+"</xu:attribute>" +
 			"           <xu:attribute name=\"cert\">"+this.cert+"</xu:attribute>" +
-			"           <xu:attribute name=\"nr\">"+inscript.id+"_"+this.number+"</xu:attribute>" +
-			"           <source>"+inscript.id+"</source>" +
+			"           <xu:attribute name=\"nr\">"+inscript.getId()+"_"+this.number+"</xu:attribute>" +
+			"           <source>"+inscript.getId()+"</source>" +
 			"           <rubbing>"+inscript.getRelativeRubbingPath()+"</rubbing>" +
 			"           <graphic>"+path_to_snippet+"</graphic>" +
 			"           <coordinates>" +
@@ -278,10 +278,10 @@ public class InscriptCharacter {
 		appearance.setAttribute("preferred_reading", String.valueOf(this.preferred_reading));
 		appearance.setAttribute("variant", String.valueOf(this.variant));
 		appearance.setAttribute("cert", String.valueOf(this.cert));
-		appearance.setAttribute("nr", String.valueOf(inscript.id+"_"+this.number));
+		appearance.setAttribute("nr", String.valueOf(inscript.getId()+"_"+this.number));
 
 		Element source = new Element("source");
-		source.setText(inscript.id);
+		source.setText(inscript.getId());
 
 		Element rubbing = new Element("rubbing");
 		rubbing.setText(inscript.getAbsoluteRubbingPath());
@@ -314,8 +314,8 @@ public class InscriptCharacter {
 		boolean preferred = Boolean.parseBoolean(appearance.getAttributeValue("preferred_reading"));
 		float cert = Float.parseFloat(appearance.getAttributeValue("cert"));
 		int var = Integer.parseInt(appearance.getAttributeValue("variant"));
-		int n = Integer.parseInt(appearance.getAttributeValue("nr").substring((inscript.id+"_").length()));
-		String rc = chId.substring((inscript.id+"_").length());
+		int n = Integer.parseInt(appearance.getAttributeValue("nr").substring((inscript.getId()+"_").length()));
+		String rc = chId.substring((inscript.getId()+"_").length());
 		int r = Integer.parseInt(rc.substring(0, rc.indexOf("_")));
 		int c = Integer.parseInt(rc.substring(rc.indexOf("_")+1));
 		SnippetShape shape = SnippetShape.fromElement(appearance.getChild("coordinates"));

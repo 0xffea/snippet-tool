@@ -28,50 +28,50 @@ public class _controller_Keyboard implements KeyListener{
 		int resizeSign = (e.isShiftDown())? -1 : 1;
 		switch (code) {
 		case 81:	// 'q'
-			inscript.rotateSnippet(inscript.activeCharacter , Math.toRadians(1));
+			inscript.rotateSnippet(inscript.getActiveCharacter() , Math.toRadians(1));
 			break;
 		case 69:	// 'e'
-			inscript.rotateSnippet(inscript.activeCharacter , Math.toRadians(-1));
+			inscript.rotateSnippet(inscript.getActiveCharacter() , Math.toRadians(-1));
 			break;
 		case 87:	// 'w'
-			inscript.resizeSnippet(inscript.activeCharacter, "n", 0, -step * resizeSign);
+			inscript.resizeSnippet(inscript.getActiveCharacter(), "n", 0, -step * resizeSign);
 			break;
 		case 65:	// 'a'
-			inscript.resizeSnippet(inscript.activeCharacter, "w", -step * resizeSign, 0);
+			inscript.resizeSnippet(inscript.getActiveCharacter(), "w", -step * resizeSign, 0);
 			break;
 		case 83:	// 's'
-			inscript.resizeSnippet(inscript.activeCharacter, "s", 0, step * resizeSign);
+			inscript.resizeSnippet(inscript.getActiveCharacter(), "s", 0, step * resizeSign);
 			break;
 		case 68:	// 'd' 
-			inscript.resizeSnippet(inscript.activeCharacter, "e", step * resizeSign, 0);
+			inscript.resizeSnippet(inscript.getActiveCharacter(), "e", step * resizeSign, 0);
 			break;
 		case 73:	// 'i'
-			inscript.moveSnippet(inscript.activeCharacter, 0, -step);
+			inscript.moveSnippet(inscript.getActiveCharacter(), 0, -step);
 			break;
 		case 74:	// 'j'
-			inscript.moveSnippet(inscript.activeCharacter, -step, 0);
+			inscript.moveSnippet(inscript.getActiveCharacter(), -step, 0);
 			break;
 		case 75:	// 'k'
-			inscript.moveSnippet(inscript.activeCharacter, 0, step);
+			inscript.moveSnippet(inscript.getActiveCharacter(), 0, step);
 			break;
 		case 76:	// 'l'
-			inscript.moveSnippet(inscript.activeCharacter, step, 0);
+			inscript.moveSnippet(inscript.getActiveCharacter(), step, 0);
 			break;
 		case 37:	// l_arrow
-			InscriptCharacter chl = inscript.getCharacterRC(inscript.activeCharacter.row+1, inscript.activeCharacter.column);
-			if(chl != null) inscript.activeCharacter = chl;
+			InscriptCharacter chl = inscript.getCharacterRC(inscript.getActiveCharacter().row+1, inscript.getActiveCharacter().column);
+			if(chl != null) inscript.setActiveCharacter(chl);
 			break;
 		case 38:	// u_arrow
-			InscriptCharacter chu = inscript.getCharacterRC(inscript.activeCharacter.row, inscript.activeCharacter.column-1);
-			if(chu != null) inscript.activeCharacter = chu;
+			InscriptCharacter chu = inscript.getCharacterRC(inscript.getActiveCharacter().row, inscript.getActiveCharacter().column-1);
+			if(chu != null) inscript.setActiveCharacter(chu);
 			break;
 		case 39:	// r_arrow
-			InscriptCharacter chr = inscript.getCharacterRC(inscript.activeCharacter.row-1, inscript.activeCharacter.column);
-			if(chr != null) inscript.activeCharacter = chr;
+			InscriptCharacter chr = inscript.getCharacterRC(inscript.getActiveCharacter().row-1, inscript.getActiveCharacter().column);
+			if(chr != null) inscript.setActiveCharacter(chr);
 			break;
 		case 40:	// d_arrow
-			InscriptCharacter chd = inscript.getCharacterRC(inscript.activeCharacter.row, inscript.activeCharacter.column+1);
-			if(chd != null) inscript.activeCharacter = chd;
+			InscriptCharacter chd = inscript.getCharacterRC(inscript.getActiveCharacter().row, inscript.getActiveCharacter().column+1);
+			if(chd != null) inscript.setActiveCharacter(chd);
 			break;
 
 		default:

@@ -36,7 +36,7 @@ public class _controller_Text implements MouseListener{
 			}
 
 			// set active marking snippet corresponding to selected character
-			snippettool.inscript.activeCharacter = snippettool.inscript.getCharacterNV(selected_begin-selected_in_row, 0);	// +1: added for compatibility of numbering starting from 1 and no from 0 as thougth
+			snippettool.inscript.setActiveCharacter(snippettool.inscript.getCharacterNV(selected_begin-selected_in_row, 0));	// +1: added for compatibility of numbering starting from 1 and no from 0 as thougth
 		}
 	}
 }
