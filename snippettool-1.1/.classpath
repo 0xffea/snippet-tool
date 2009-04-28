@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry exported="true" kind="lib" path="lib/xmldb.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xmldb.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://www.cfoster.net/html/xmldb/javadoc-xmldb-api/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/xmlrpc-1.2-patched.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/exist.jar"/>
 	<classpathentry kind="lib" path="lib/exist-optional.jar"/>
@@ -10,7 +14,11 @@
 	<classpathentry exported="true" kind="lib" path="lib/xml-apis.jar"/>
 	<classpathentry kind="lib" path="lib/logback-classic-0.9.15.jar"/>
 	<classpathentry kind="lib" path="lib/logback-core-0.9.15.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-api-1.5.6.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.5.6.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://www.slf4j.org/apidocs/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/log4j-over-slf4j-1.5.6.jar"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="lib/jdom.jar"/>
