@@ -29,6 +29,9 @@ public class SnippetTool {
 	/** Default .preferences file **/
 	public final static String PREFERENCES_FILE = "snippet-tool.preferences";
 
+	/** Backup .preferences file **/
+	public final static String BACKUP_PREFERENCES_FILE = "data/snippet-tool.preferences";
+
 	/** Application is initialized together with an Inscript Object **/
 	public Inscript inscript;
 	public _frame_SnippetTool gui;
@@ -49,7 +52,11 @@ public class SnippetTool {
 	 */
 	public SnippetTool(String propertiesFile) {
 		props = PrefUtil.loadProperties(propertiesFile);
-		prefs = PrefUtil.loadProperties(PREFERENCES_FILE);
+
+		if (new File(PREFERENCES_FILE).canRead())
+			prefs = PrefUtil.loadProperties(PREFERENCES_FILE);
+		else
+			prefs = PrefUtil.loadProperties(BACKUP_PREFERENCES_FILE);
 
 		inscript = new Inscript();
 		inscript.setFont(props.getProperty("local.font.file"));
