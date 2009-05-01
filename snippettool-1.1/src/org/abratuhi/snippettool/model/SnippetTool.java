@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import javax.swing.JOptionPane;
+import javax.imageio.ImageIO;
 
 import org.abratuhi.snippettool.gui._frame_SnippetTool;
 import org.abratuhi.snippettool.util.DbUtil;
@@ -206,24 +206,18 @@ public class SnippetTool {
 		String password = props.getProperty("db.snippet.password");
 
 		String snippetdir = props.getProperty("local.snippet.dir");
-		String imagedir = props.getProperty("local.image.dir");
 
 		if (!snippetdir.endsWith(File.separator))
 			snippetdir += File.separator;
-		if (!imagedir.endsWith(File.separator))
-			imagedir += File.separator;
-
-		File inputImageFile = new File(imagedir + inscript.getId() + ".png");
 
 		ArrayList<InscriptCharacter> preferredReading = new ArrayList<InscriptCharacter>();
 		for (int i = 0; i < inscript.getText().size(); i++) {
 			preferredReading.add(inscript.getText().get(i).get(0).get(0));
 		}
 
-		ImageUtil.store(inscript.getImage(), "PNG", inputImageFile);
 		File[] preferredSnippets;
 		try {
-			preferredSnippets = ImageUtil.cutSnippets(inputImageFile,
+			preferredSnippets = ImageUtil.cutSnippets(inscript.getImageFile(),
 					preferredReading, snippetdir, "subimage");
 
 			DbUtil.uploadBinaryResources(preferredSnippets, collection, user,
@@ -285,16 +279,13 @@ public class SnippetTool {
 			preferredReading.add(inscript.getText().get(i).get(0).get(0));
 		}
 
-		ImageUtil.store(inscript.getImage(), "PNG", inputImageFile);
 		try {
+			ImageIO.write(inscript.getImage(), "PNG", inputImageFile);
 			ImageUtil.cutSnippets(inputImageFile, preferredReading, snippetdir,
 					snippetBasename);
 		} catch (IOException e) {
 			logger.error("I/O error while cutting snippets", e);
-			JOptionPane.showMessageDialog(gui,
-					"I/O error while cutting snippets: "
-							+ e.getLocalizedMessage(), "Error",
-					JOptionPane.ERROR_MESSAGE);
+			ErrorUtil.showError(gui, "I/O error while cutting snippets", e);
 		}
 	}
 

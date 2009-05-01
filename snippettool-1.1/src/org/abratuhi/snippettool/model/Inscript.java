@@ -7,13 +7,16 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
+import javax.imageio.ImageIO;
+
 import org.abratuhi.snippettool.gui._panel_Options;
-import org.abratuhi.snippettool.util.ImageUtil;
+import org.abratuhi.snippettool.util.ErrorUtil;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -33,18 +36,21 @@ public class Inscript extends Observable {
 	private static final Logger logger = LoggerFactory
 			.getLogger(Inscript.class);
 
-	/** Inscript's id, e.g., HDS_1 **/
+	/** Inscript's id, e.g., HDS_1. **/
 	private String id = "";
 
-	/** Absolute database server path to inscript's image **/
+	/** Absolute database server path to inscript's image. **/
 	// FIXME: Inscript shouldn't know full path
 	private String absoluteRubbingPath = "";
 
-	/** Absolute database server path to inscript's .xml description **/
+	/** Absolute database server path to inscript's .xml description. **/
 	private String path = "";
 
-	/** Inscript's image **/
+	/** Inscript's image. **/
 	private BufferedImage image = null;
+
+	/** The image file which is currently loaded */
+	private File imageFile = null;
 
 	/**
 	 * Inscript's text. Structure: 1st index: continuous character numbering;
@@ -118,9 +124,13 @@ public class Inscript extends Observable {
 	 *            absolute path to image
 	 */
 	public void loadLocalImage(File img) {
-		this.setImage(ImageUtil.load(img));
-		this.setChanged();
-		this.notifyObservers();
+		try {
+			this.setImage(ImageIO.read(img));
+			this.setImageFile(img);
+		} catch (IOException e) {
+			logger.error("IOException occurred in loadLocalImage", e);
+			ErrorUtil.showError(null, "Error loading local image: ", e);
+		}
 	}
 
 	public String getPlainText() {
@@ -612,6 +622,7 @@ public class Inscript extends Observable {
 	 */
 	public void clear() {
 		setImage(null);
+		this.setImageFile(null);
 		getText().clear();
 		setId("");
 		setPath("");
@@ -682,7 +693,7 @@ public class Inscript extends Observable {
 	 * @param image
 	 *            the image to set
 	 */
-	public void setImage(BufferedImage image) {
+	private void setImage(BufferedImage image) {
 		this.image = image;
 		this.setChanged();
 		this.notifyObservers();
@@ -793,6 +804,21 @@ public class Inscript extends Observable {
 	 */
 	public InscriptCharacter getActiveCharacter() {
 		return activeCharacter;
+	}
+
+	/**
+	 * @param imageFile
+	 *            the imageFile to set
+	 */
+	private void setImageFile(final File imageFile) {
+		this.imageFile = imageFile;
+	}
+
+	/**
+	 * @return the imageFile
+	 */
+	public File getImageFile() {
+		return imageFile;
 	}
 
 }
