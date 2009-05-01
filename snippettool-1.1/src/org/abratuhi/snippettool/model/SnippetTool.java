@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 
 import org.abratuhi.snippettool.gui._frame_SnippetTool;
 import org.abratuhi.snippettool.util.DbUtil;
+import org.abratuhi.snippettool.util.ErrorUtil;
 import org.abratuhi.snippettool.util.FileUtil;
 import org.abratuhi.snippettool.util.ImageUtil;
 import org.abratuhi.snippettool.util.PrefUtil;
@@ -124,13 +125,18 @@ public class SnippetTool {
 		String collection = url.substring(0, url.lastIndexOf("/"));
 		String resource = url.substring(url.lastIndexOf("/") + 1);
 
-		File image = DbUtil.downloadBinaryResource(collection, resource, user,
-				password, image_temp_dir);
-		inscript.loadLocalImage(image);
+		try {
+			File image = DbUtil.downloadBinaryResource(collection, resource,
+					user, password, image_temp_dir);
+			inscript.loadLocalImage(image);
+			inscript.setAbsoluteRubbingPath(url);
+			scale = 1.0f;
+		} catch (IOException e) {
+			logger.error("IOException occurred in "
+					+ "setInscriptImageToRemoteRessource", e);
+			ErrorUtil.showError(gui, "I/O error while loading image", e);
+		}
 
-		inscript.setAbsoluteRubbingPath(url);
-		inscript.loadLocalImage(image);
-		scale = 1.0f;
 	}
 
 	public void updateInscriptImagePathFromAppearances(String mode) {
@@ -227,10 +233,7 @@ public class SnippetTool {
 			}
 		} catch (IOException e) {
 			logger.error("I/O error while cutting snippets", e);
-			JOptionPane.showMessageDialog(gui,
-					"I/O error while cutting snippets: "
-							+ e.getLocalizedMessage(), "Error",
-					JOptionPane.ERROR_MESSAGE);
+			ErrorUtil.showError(gui, "I/O error while cutting snippets", e);
 		}
 	}
 
