@@ -23,6 +23,9 @@ import javax.swing.event.ChangeListener;
 
 import net.java.dev.colorchooser.ColorChooser;
 
+import org.abratuhi.snippettool.controller._controller_AutoGuided;
+import org.abratuhi.snippettool.controller._controller_ManualSelective;
+import org.abratuhi.snippettool.controller._controller_ManualSequential;
 import org.abratuhi.snippettool.model.SnippetTool;
 import org.abratuhi.snippettool.util.PrefUtil;
 import org.abratuhi.snippettool.util.SpringUtilities;
@@ -270,12 +273,35 @@ public class _panel_Options extends JPanel implements ActionListener,
 		else
 			snippettool.inscript.setRowColumnVisible(false);
 
-		if (rb_auto.isSelected())
-			root.main.main_image.changeMouseController("auto");
-		if (rb_man1.isSelected())
-			root.main.main_image.changeMouseController("manual1");
-		if (rb_man2.isSelected())
-			root.main.main_image.changeMouseController("manual2");
+		if (rb_auto.isSelected()) {
+			/** 'Main' mouse controller. Implements drag-n-resize functionality. **/
+			_controller_AutoGuided mouse1 = new _controller_AutoGuided(
+					root.main.main_image);
+
+			root.main.main_image.imageCanvas.setMouseListener(mouse1);
+			root.main.main_image.imageCanvas.setMouseMotionListener(mouse1);
+		}
+		if (rb_man1.isSelected()) {
+			/**
+			 * 'Complementary' mouse controller. Implements continuous manual
+			 * marking.
+			 **/
+			_controller_ManualSequential mouse2 = new _controller_ManualSequential(
+					root.main.main_image);
+
+			root.main.main_image.imageCanvas.setMouseListener(mouse2);
+			root.main.main_image.imageCanvas.setMouseMotionListener(mouse2);
+		}
+		if (rb_man2.isSelected()) {
+			/**
+			 * 'Complementary' mouse controller. Implements selective manual
+			 * marking.
+			 **/
+			_controller_ManualSelective mouse3 = new _controller_ManualSelective(
+					root.main.main_image);
+			root.main.main_image.imageCanvas.setMouseListener(mouse3);
+			root.main.main_image.imageCanvas.setMouseMotionListener(mouse3);
+		}
 
 		logger.trace("Triggering repaint.");
 		root.main.repaint();

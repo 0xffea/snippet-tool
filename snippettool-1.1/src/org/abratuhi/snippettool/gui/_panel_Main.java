@@ -20,6 +20,7 @@ import org.abratuhi.snippettool.model.Inscript;
 import org.abratuhi.snippettool.model.InscriptCharacter;
 import org.abratuhi.snippettool.model.SnippetShape;
 import org.abratuhi.snippettool.model.SnippetTool;
+import org.abratuhi.snippettool.util.ErrorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,80 +122,48 @@ public class _panel_Main extends JPanel implements ActionListener,
 		String cmd = ae.getActionCommand();
 		if (cmd.equals(zoom_in.getActionCommand())) {
 			// compute new scale factor
-			snippettool.scale *= snippettool.scaleFactor;
+			snippettool.setScale(snippettool.getScale()
+					* snippettool.scaleFactor);
 			// set zoomer jslider
-			zoomer.setZoom(snippettool.scale);
-			// adjust view
-			main_image.sub.setPreferredSize(new Dimension(
-					(int) (snippettool.scale * inscript.getImage().getWidth(
-							main_image)), (int) (snippettool.scale * inscript
-							.getImage().getHeight(main_image))));
-			main_image.sub.revalidate();
-			// repaint
-			logger.trace("Triggering repaint.");
-			root.main.main_image.repaint();
+			zoomer.setZoom(snippettool.getScale());
 		}
 		if (cmd.equals(zoom_out.getActionCommand())) {
 			// compute new scale factor
-			snippettool.scale *= 1 / snippettool.scaleFactor;
+			snippettool.setScale(snippettool.getScale()
+					* (1 / snippettool.scaleFactor));
 			// set zoomer jslider
-			zoomer.setZoom(snippettool.scale);
-			// adjust view
-			main_image.sub.setPreferredSize(new Dimension(
-					(int) (snippettool.scale * inscript.getImage().getWidth(
-							main_image)), (int) (snippettool.scale * inscript
-							.getImage().getHeight(main_image))));
-			main_image.sub.revalidate();
-			// repaint
-			logger.trace("Triggering repaint.");
-			root.main.main_image.repaint();
+			zoomer.setZoom(snippettool.getScale());
 		}
-		if (cmd.equals(fit_image_max.getActionCommand())) {
+		if (cmd.equals(fit_image_max.getActionCommand())
+				|| cmd.equals(fit_image_min.getActionCommand())) {
 			// compute scale ratio
-			Dimension dim_workspace = main_image.getSize();
-			Dimension dim_image = new Dimension(inscript.getImage().getWidth(),
-					inscript.getImage().getHeight());
-			double horizontal_ratio = dim_workspace.width
-					/ (double) (dim_image.width);
-			double vertical_ratio = dim_workspace.height
-					/ (double) (dim_image.height);
-			double scale_ratio = ((horizontal_ratio < vertical_ratio) ? horizontal_ratio
-					: vertical_ratio);
-			// set zoomer jslider
-			zoomer.setZoom(scale_ratio);
-			// scale
-			snippettool.scale = scale_ratio;
-			main_image.sub.setPreferredSize(new Dimension(
-					(int) (snippettool.scale * inscript.getImage().getWidth(
-							main_image)), (int) (snippettool.scale * inscript
-							.getImage().getHeight(main_image))));
-			main_image.sub.revalidate();
-			logger.trace("Triggering repaint.");
-			root.main.main_image.repaint();
+			try {
+				Dimension viewportDimension = main_image.scroll_image
+						.getViewport().getExtentSize();
+				Dimension imageDimension = inscript.getPyramidalImage()
+						.getDimension();
+				double horizontalRatio = viewportDimension.getWidth()
+						/ imageDimension.getWidth();
+				double verticalRatio = viewportDimension.getHeight()
+						/ imageDimension.getHeight();
+				double scale = 1.0;
+
+				if (cmd.equals(fit_image_max.getActionCommand())) {
+					scale = Math.max(horizontalRatio, verticalRatio);
+				} else {
+					scale = Math.min(horizontalRatio, verticalRatio);
+				}
+
+				// set zoomer jslider
+				zoomer.setZoom(scale);
+				// scale
+				snippettool.setScale(scale);
+			} catch (Exception e) {
+				logger.error("Error in actionPerformed:", e);
+				ErrorUtil.showError(this, "Error", e);
+			}
 		}
-		if (cmd.equals(fit_image_min.getActionCommand())) {
-			// compute scale ratio
-			Dimension dim_workspace = main_image.getSize();
-			Dimension dim_image = new Dimension(inscript.getImage().getWidth(),
-					inscript.getImage().getHeight());
-			double horizontal_ratio = dim_workspace.width
-					/ (double) (dim_image.width);
-			double vertical_ratio = dim_workspace.height
-					/ (double) (dim_image.height);
-			double scale_ratio = ((horizontal_ratio > vertical_ratio) ? horizontal_ratio
-					: vertical_ratio);
-			// set zoomer jslider
-			zoomer.setZoom(scale_ratio);
-			// scale
-			snippettool.scale = scale_ratio;
-			main_image.sub.setPreferredSize(new Dimension(
-					(int) (snippettool.scale * inscript.getImage().getWidth(
-							main_image)), (int) (snippettool.scale * inscript
-							.getImage().getHeight(main_image))));
-			main_image.sub.revalidate();
-			logger.trace("Triggering repaint.");
-			root.main.main_image.repaint();
-		}
+
 		if (cmd.equals(clear.getActionCommand())) {
 
 			// clear shapes
@@ -209,8 +178,7 @@ public class _panel_Main extends JPanel implements ActionListener,
 				}
 			}
 
-			// reset mouse2 counter
-			main_image.mouse2.reset();
+			root.options.rb_auto.doClick();
 
 			logger.trace("Triggering repaint.");
 			root.repaint();
@@ -230,14 +198,7 @@ public class _panel_Main extends JPanel implements ActionListener,
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		// scale
-		snippettool.scale = zoomer.getZoom();
-		main_image.sub.setPreferredSize(new Dimension(
-				(int) (snippettool.scale * inscript.getImage().getWidth(
-						main_image)), (int) (snippettool.scale * inscript
-						.getImage().getHeight(main_image))));
-		main_image.sub.revalidate();
-		logger.trace("Triggering repaint.");
-		root.main.main_image.repaint();
+		snippettool.setScale(zoomer.getZoom());
 	}
 
 	@Override

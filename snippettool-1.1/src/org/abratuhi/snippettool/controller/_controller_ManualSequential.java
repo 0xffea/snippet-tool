@@ -84,8 +84,8 @@ public class _controller_ManualSequential implements MouseListener,
 		if (me.getButton() == me.BUTTON1) {
 			// 
 			main_image.requestFocusInWindow();
-			mouse_pressed = new Point((int) (me.getX() / snippettool.scale),
-					(int) (me.getY() / snippettool.scale));
+			mouse_pressed = new Point((int) (me.getX() / snippettool.getScale()),
+					(int) (me.getY() / snippettool.getScale()));
 
 			// repaint
 			logger.trace("Triggering repaint.");
@@ -96,8 +96,8 @@ public class _controller_ManualSequential implements MouseListener,
 	@SuppressWarnings("static-access")
 	public void mouseReleased(MouseEvent me) {
 		if (me.getButton() == me.BUTTON1) {
-			mouse_released = new Point((int) (me.getX() / snippettool.scale),
-					(int) (me.getY() / snippettool.scale));
+			mouse_released = new Point((int) (me.getX() / snippettool.getScale()),
+					(int) (me.getY() / snippettool.getScale()));
 
 			// compute new dimension of snippet marking
 			Dimension dr = new Dimension(Math.abs(mouse_current_new.x
@@ -154,8 +154,8 @@ public class _controller_ManualSequential implements MouseListener,
 			mouse_current_old = new Point(mouse_current_new.x,
 					mouse_current_new.y);
 			mouse_current_new = new Point(
-					(int) (me.getX() / snippettool.scale),
-					(int) (me.getY() / snippettool.scale));
+					(int) (me.getX() / snippettool.getScale()),
+					(int) (me.getY() / snippettool.getScale()));
 
 			// compute new dimension of snippet marking
 			Dimension dr = new Dimension(Math.abs(mouse_current_new.x

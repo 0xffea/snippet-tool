@@ -63,8 +63,8 @@ public class _controller_AutoGuided implements MouseListener,
 	public void mousePressed(MouseEvent me) {
 		//
 		main_image.requestFocusInWindow();
-		mouse_pressed = new Point((int) (me.getX() / snippettool.scale),
-				(int) (me.getY() / snippettool.scale));
+		mouse_pressed = new Point((int) (me.getX() / snippettool.getScale()),
+				(int) (me.getY() / snippettool.getScale()));
 
 		// left button used
 		if (me.getButton() == me.BUTTON1) {
@@ -157,8 +157,8 @@ public class _controller_AutoGuided implements MouseListener,
 
 	@SuppressWarnings("static-access")
 	public void mouseReleased(MouseEvent me) {
-		mouse_released = new Point((int) (me.getX() / snippettool.scale),
-				(int) (me.getY() / snippettool.scale));
+		mouse_released = new Point((int) (me.getX() / snippettool.getScale()),
+				(int) (me.getY() / snippettool.getScale()));
 		int dx = mouse_released.x - mouse_current_new.x;
 		int dy = mouse_released.y - mouse_current_new.y;
 		// left button used
@@ -183,8 +183,8 @@ public class _controller_AutoGuided implements MouseListener,
 	@SuppressWarnings("static-access")
 	public void mouseDragged(MouseEvent me) {
 		mouse_current_old = new Point(mouse_current_new);
-		mouse_current_new = new Point((int) (me.getX() / snippettool.scale),
-				(int) (me.getY() / snippettool.scale));
+		mouse_current_new = new Point((int) (me.getX() / snippettool.getScale()),
+				(int) (me.getY() / snippettool.getScale()));
 		int dx = mouse_current_new.x - mouse_current_old.x;
 		int dy = mouse_current_new.y - mouse_current_old.y;
 
@@ -220,8 +220,8 @@ public class _controller_AutoGuided implements MouseListener,
 	public void mouseMoved(MouseEvent me) {
 		main_image.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		mouse_current_old = new Point(mouse_current_new.x, mouse_current_new.y);
-		mouse_current_new = new Point((int) (me.getX() / snippettool.scale),
-				(int) (me.getY() / snippettool.scale));
+		mouse_current_new = new Point((int) (me.getX() / snippettool.getScale()),
+				(int) (me.getY() / snippettool.getScale()));
 
 		// change cursor appearance
 		if (inscript.getActiveCharacter() != null) {

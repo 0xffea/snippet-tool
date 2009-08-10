@@ -67,8 +67,8 @@ public class _controller_ManualSelective implements MouseListener,
 	public void mousePressed(MouseEvent me) {
 		if (me.getButton() == me.BUTTON1) {
 			main_image.requestFocusInWindow();
-			mouse_pressed = new Point((int) (me.getX() / snippettool.scale),
-					(int) (me.getY() / snippettool.scale));
+			mouse_pressed = new Point((int) (me.getX() / snippettool.getScale()),
+					(int) (me.getY() / snippettool.getScale()));
 
 			// repaint
 			logger.trace("Triggering repaint.");
@@ -79,8 +79,8 @@ public class _controller_ManualSelective implements MouseListener,
 	@SuppressWarnings("static-access")
 	public void mouseReleased(MouseEvent me) {
 		if (me.getButton() == me.BUTTON1) {
-			mouse_released = new Point((int) (me.getX() / snippettool.scale),
-					(int) (me.getY() / snippettool.scale));
+			mouse_released = new Point((int) (me.getX() / snippettool.getScale()),
+					(int) (me.getY() / snippettool.getScale()));
 			// int dx = mouse_released.x - mouse_current_new.x;
 			// int dy = mouse_released.y - mouse_current_new.y;
 
@@ -130,8 +130,8 @@ public class _controller_ManualSelective implements MouseListener,
 			mouse_current_old = new Point(mouse_current_new.x,
 					mouse_current_new.y);
 			mouse_current_new = new Point(
-					(int) (me.getX() / snippettool.scale),
-					(int) (me.getY() / snippettool.scale));
+					(int) (me.getX() / snippettool.getScale()),
+					(int) (me.getY() / snippettool.getScale()));
 			// int dx = mouse_current_new.x - mouse_current_old.x;
 			// int dy = mouse_current_new.y - mouse_current_old.y;
 

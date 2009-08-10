@@ -4,15 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 import java.util.Properties;
-
-import javax.imageio.ImageIO;
 
 import org.abratuhi.snippettool.gui._frame_SnippetTool;
 import org.abratuhi.snippettool.util.DbUtil;
 import org.abratuhi.snippettool.util.ErrorUtil;
 import org.abratuhi.snippettool.util.FileUtil;
-import org.abratuhi.snippettool.util.ImageUtil;
 import org.abratuhi.snippettool.util.PrefUtil;
 import org.abratuhi.snippettool.util.XMLUtil;
 import org.jdom.Document;
@@ -20,7 +18,7 @@ import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SnippetTool {
+public class SnippetTool extends Observable {
 	private static final Logger logger = LoggerFactory
 			.getLogger(SnippetTool.class);
 
@@ -41,7 +39,7 @@ public class SnippetTool {
 	public Properties prefs;
 
 	public boolean existingSign = false;
-	public double scale = 1.0;
+	private double scale = 1.0;
 	public double scaleFactor = 1.1;
 
 	/**
@@ -114,7 +112,7 @@ public class SnippetTool {
 	public void setInscriptImageToLocalFile(File file) {
 		inscript.setAbsoluteRubbingPath(file.getPath());
 		inscript.loadLocalImage(file);
-		scale = 1.0f;
+		setScale(1.0f);
 	}
 
 	public void setInscriptImageToRemoteRessource(String url) {
@@ -130,7 +128,7 @@ public class SnippetTool {
 					user, password, image_temp_dir);
 			inscript.loadLocalImage(image);
 			inscript.setAbsoluteRubbingPath(url);
-			scale = 1.0f;
+			setScale(1.0f);
 		} catch (IOException e) {
 			logger.error("IOException occurred in "
 					+ "setInscriptImageToRemoteRessource", e);
@@ -217,7 +215,7 @@ public class SnippetTool {
 
 		File[] preferredSnippets;
 		try {
-			preferredSnippets = ImageUtil.cutSnippets(inscript.getImageFile(),
+			preferredSnippets = inscript.getPyramidalImage().cutSnippets(
 					preferredReading, snippetdir, "subimage");
 
 			DbUtil.uploadBinaryResources(preferredSnippets, collection, user,
@@ -272,17 +270,14 @@ public class SnippetTool {
 		if (!imagedir.endsWith(File.separator))
 			imagedir += File.separator;
 
-		File inputImageFile = new File(imagedir + inscript.getId() + ".png");
-
 		ArrayList<InscriptCharacter> preferredReading = new ArrayList<InscriptCharacter>();
 		for (int i = 0; i < inscript.getText().size(); i++) {
 			preferredReading.add(inscript.getText().get(i).get(0).get(0));
 		}
 
 		try {
-			ImageIO.write(inscript.getImage(), "PNG", inputImageFile);
-			ImageUtil.cutSnippets(inputImageFile, preferredReading, snippetdir,
-					snippetBasename);
+			inscript.getPyramidalImage().cutSnippets(preferredReading,
+					snippetdir, snippetBasename);
 		} catch (IOException e) {
 			logger.error("I/O error while cutting snippets", e);
 			ErrorUtil.showError(gui, "I/O error while cutting snippets", e);
@@ -326,6 +321,23 @@ public class SnippetTool {
 		// PrefUtil.saveProperties(props, propfile);
 		PrefUtil.saveProperties(prefs, PREFERENCES_FILE);
 		System.exit(0);
+	}
+
+	/**
+	 * @param scale
+	 *            the scale to set
+	 */
+	public void setScale(double scale) {
+		this.scale = scale;
+		setChanged();
+		notifyObservers();
+	}
+
+	/**
+	 * @return the scale
+	 */
+	public double getScale() {
+		return scale;
 	}
 
 }

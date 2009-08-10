@@ -20,45 +20,45 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 /**
- * Collection of functions to handle different file I/O operations for 'all' and 'xml' files.
+ * Collection of functions to handle different file I/O operations for 'all' and
+ * 'xml' files.
  * 
  * @author Alexei Bratuhin
- *
+ * 
  */
 public class FileUtil {
 
-	public static String readStringFromFile(String pathname){
+	public static String readStringFromFile(String pathname) {
 		return readStringFromFile(new File(pathname));
 	}
 
-	public static String readStringFromFile(File f){
-		ArrayList<String> out=new ArrayList<String>();
+	public static String readStringFromFile(File f) {
+		ArrayList<String> out = new ArrayList<String>();
 
-		//open streams
+		// open streams
 		try {
-			FileInputStream fis=new FileInputStream(f);
+			FileInputStream fis = new FileInputStream(f);
 			BufferedReader br = null;
 			try {
 				br = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
 			} catch (UnsupportedEncodingException e1) {
 				e1.printStackTrace();
 			}
-			//read line from stream
-			String str=new String();
-			for(;;){
+			// read line from stream
+			String str = new String();
+			for (;;) {
 				try {
-					str=br.readLine();
+					str = br.readLine();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				if(str==null){
+				if (str == null) {
 					break;
-				}
-				else{
+				} else {
 					out.add(str);
 				}
 			}
-			//close streams
+			// close streams
 			try {
 				br.close();
 				fis.close();
@@ -67,18 +67,19 @@ public class FileUtil {
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		}	
+		}
 		String s = new String();
-		for(int i=0; i<out.size(); i++){
+		for (int i = 0; i < out.size(); i++) {
 			s += out.get(i);
 		}
 		return s;
 	}
 
-	public static void writeStringToFile(String file, String str){
+	public static void writeStringToFile(String file, String str) {
 		try {
 			FileOutputStream fos = new FileOutputStream(file);
-			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos,"UTF-8"));
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos,
+					"UTF-8"));
 			bw.write(str);
 			bw.flush();
 			bw.close();
@@ -92,8 +93,8 @@ public class FileUtil {
 			e.printStackTrace();
 		}
 	}
-	
-	public static void writeXMLStringToFile(File file, String str){
+
+	public static void writeXMLStringToFile(File file, String str) {
 		SAXBuilder saxb = new SAXBuilder();
 		StringReader sr = new StringReader(str);
 		try {
@@ -108,10 +109,8 @@ public class FileUtil {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
-	public static Document readXMLDocumentFromFile(File file){
+
+	public static Document readXMLDocumentFromFile(File file) {
 		try {
 			SAXBuilder builder = new SAXBuilder();
 			Document d = builder.build(new FileInputStream(file));
@@ -125,8 +124,8 @@ public class FileUtil {
 		}
 		return null;
 	}
-	
-	public static void writeXMLDocumentToFile(File file, Document document){
+
+	public static void writeXMLDocumentToFile(File file, Document document) {
 		try {
 			FileOutputStream fos = new FileOutputStream(file);
 			XMLOutputter xmlout = new XMLOutputter();
@@ -143,17 +142,21 @@ public class FileUtil {
 
 	/**
 	 * Gets the directory at tempdir name, creating it if did not exist.
+	 * 
 	 * @param tempdirName
 	 * @return a file object representing the tempdir
 	 * @throws IOException
 	 */
-	static File getTempdir(String tempdirName) throws IOException {
+	public static File getTempdir(String tempdirName) throws IOException {
 		File tempdir = new File(tempdirName);
 		if (!tempdir.isDirectory()) {
 			if (tempdir.exists())
-				throw new IllegalArgumentException("Supplied tempdirName \""+tempdirName+"\" is not a directory");
+				throw new IllegalArgumentException("Supplied tempdirName \""
+						+ tempdirName + "\" is not a directory");
 			if (!tempdir.mkdirs())
-				throw new IOException("Could not create tempdir at tempdirName \""+tempdirName+"\"");
+				throw new IOException(
+						"Could not create tempdir at tempdirName \""
+								+ tempdirName + "\"");
 		}
 		return tempdir;
 	}

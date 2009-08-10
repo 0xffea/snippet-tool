@@ -25,13 +25,7 @@ public final class ErrorUtil {
 	 * 
 	 * @param parentComponent
 	 *            Defines the Component that is to be the parent of this dialog
-	 *            box. It is used in two ways: the Frame that contains it is
-	 *            used as the Frame parent for the dialog box, and its screen
-	 *            coordinates are used in the placement of the dialog box. In
-	 *            general, the dialog box is placed just below the component.
-	 *            This parameter may be null, in which case a default Frame is
-	 *            used as the parent, and the dialog will be centered on the
-	 *            screen (depending on the L&F).
+	 *            box. May be null.
 	 * @param message
 	 *            The message to be displayed to the user as an explanation for
 	 *            the error.
@@ -44,6 +38,23 @@ public final class ErrorUtil {
 			JOptionPane.showMessageDialog(parentComponent, message + ": "
 					+ e.getLocalizedMessage(), "Error",
 					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	/**
+	 * Shows a warning dialog.
+	 * 
+	 * @param parentComponent
+	 *            Defines the Component that is to be the parent of this dialog
+	 *            box. May be null.
+	 * @param message
+	 *            The warning message to be displayed to the user.
+	 */
+	public static void showWarning(final Component parentComponent,
+			final String message) {
+		if (!GraphicsEnvironment.isHeadless()) {
+			JOptionPane.showMessageDialog(parentComponent, message, "Warning",
+					JOptionPane.WARNING_MESSAGE);
 		}
 	}
 }

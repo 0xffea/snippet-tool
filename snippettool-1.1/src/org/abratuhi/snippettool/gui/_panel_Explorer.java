@@ -145,8 +145,10 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 				// if resource is an image
 				if (autoload
 						&& (selectedResource.endsWith(".png")
-								|| selectedResource.endsWith(".jpeg") || selectedResource
-								.endsWith(".jpg"))) {
+								|| selectedResource.endsWith(".jpeg")
+								|| selectedResource.endsWith(".jpg")
+								|| selectedResource.endsWith(".tiff") || selectedResource
+								.endsWith(".tif"))) {
 
 					Thread t3 = new Thread() {
 						@Override

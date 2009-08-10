@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,8 +11,6 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
-
-import javax.imageio.ImageIO;
 
 import org.abratuhi.snippettool.gui._panel_Options;
 import org.abratuhi.snippettool.util.ErrorUtil;
@@ -46,11 +43,8 @@ public class Inscript extends Observable {
 	/** Absolute database server path to inscript's .xml description. **/
 	private String path = "";
 
-	/** Inscript's image. **/
-	private BufferedImage image = null;
-
-	/** The image file which is currently loaded */
-	private File imageFile = null;
+	/** Inscript's pyramidal image **/
+	private PyramidalImage pyramidalImage = null;
 
 	/**
 	 * Inscript's text. Structure: 1st index: continuous character numbering;
@@ -125,8 +119,7 @@ public class Inscript extends Observable {
 	 */
 	public void loadLocalImage(File img) {
 		try {
-			this.setImage(ImageIO.read(img));
-			this.setImageFile(img);
+			this.setPyramidalImage(PyramidalImage.loadImage(img));
 		} catch (IOException e) {
 			logger.error("IOException occurred in loadLocalImage", e);
 			ErrorUtil.showError(null, "Error loading local image: ", e);
@@ -549,8 +542,16 @@ public class Inscript extends Observable {
 
 		// check whether all markup snippets are seen
 		// use preferred reading's signs
-		int dim_x = getImage().getWidth();
-		int dim_y = getImage().getHeight();
+		int dim_x;
+		int dim_y;
+		try {
+			dim_x = getPyramidalImage().getWidth();
+			dim_y = getPyramidalImage().getHeight();
+		} catch (IOException e) {
+			logger.error("IOException occurred in loadMarkingSchema", e);
+			ErrorUtil.showError(null, "Could not access image file", e);
+			return;
+		}
 		int x_width = 0;
 		int y_height = 0;
 		int max_row = 0;
@@ -563,7 +564,10 @@ public class Inscript extends Observable {
 		}
 		x_width = oa + (max_row - 1) * (a + da);
 		y_height = ob + (max_column - 1) * (b + db);
-		if (x_width > dim_x || y_height > dim_y) { // TODO: show warning message
+		if (x_width > dim_x || y_height > dim_y) {
+			// TODO: What's going on here? Why we need to warn?
+			logger.warn("loadMarkingSchema failed");
+			ErrorUtil.showWarning(null, "loadMarkingSchema failed");
 			return;
 		}
 
@@ -621,8 +625,6 @@ public class Inscript extends Observable {
 	 * clear inscript's information
 	 */
 	public void clear() {
-		setImage(null);
-		this.setImageFile(null);
 		getText().clear();
 		setId("");
 		setPath("");
@@ -687,23 +689,6 @@ public class Inscript extends Observable {
 	 */
 	public String getPath() {
 		return path;
-	}
-
-	/**
-	 * @param image
-	 *            the image to set
-	 */
-	private void setImage(BufferedImage image) {
-		this.image = image;
-		this.setChanged();
-		this.notifyObservers();
-	}
-
-	/**
-	 * @return the image
-	 */
-	public BufferedImage getImage() {
-		return image;
 	}
 
 	/**
@@ -807,18 +792,21 @@ public class Inscript extends Observable {
 	}
 
 	/**
-	 * @param imageFile
-	 *            the imageFile to set
+	 * @return the pyramidalImage
 	 */
-	private void setImageFile(final File imageFile) {
-		this.imageFile = imageFile;
+	public PyramidalImage getPyramidalImage() {
+		return pyramidalImage;
 	}
 
 	/**
-	 * @return the imageFile
+	 * @param pyramidalImage
+	 *            the pyramidalImage to set
 	 */
-	public File getImageFile() {
-		return imageFile;
+	private void setPyramidalImage(PyramidalImage pyramidalImage) {
+		this.pyramidalImage = pyramidalImage;
+		setChanged();
+		notifyObservers();
+		System.gc();
 	}
 
 }
