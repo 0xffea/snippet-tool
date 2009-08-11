@@ -113,8 +113,10 @@ public class PyramidalImage {
 	/** Tile cache with soft references to the values. */
 	private final Map<Tile, BufferedImage> cache;
 	
-	/** height */
+	/** height of the image */
 	private final int height; 
+	
+	/** width of the image */
 	private final int width; 
 
 	/**
@@ -128,6 +130,7 @@ public class PyramidalImage {
 	public PyramidalImage(final ImageReader reader) throws IOException {
 		this.reader = reader;
 		
+		// TODO: This read access fixes a bug, that seems to stem from a non-thread-safe tiff library. Check if thread-safety is documented.
 		height = reader.getHeight(0);
 		width = reader.getWidth(0);
 		
