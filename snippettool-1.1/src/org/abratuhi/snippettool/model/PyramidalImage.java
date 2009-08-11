@@ -112,6 +112,10 @@ public class PyramidalImage {
 
 	/** Tile cache with soft references to the values. */
 	private final Map<Tile, BufferedImage> cache;
+	
+	/** height */
+	private final int height; 
+	private final int width; 
 
 	/**
 	 * Creates a PyramidalImage instance accessing the image through the
@@ -119,9 +123,14 @@ public class PyramidalImage {
 	 * 
 	 * @param reader
 	 *            the reader already set up to read the actual image.
+	 * @throws IOException if the image cannot be read
 	 */
-	public PyramidalImage(final ImageReader reader) {
+	public PyramidalImage(final ImageReader reader) throws IOException {
 		this.reader = reader;
+		
+		height = reader.getHeight(0);
+		width = reader.getWidth(0);
+		
 		cache = new MapMaker().softValues().makeComputingMap(
 				new Function<Tile, BufferedImage>() {
 					public BufferedImage apply(final Tile tile) {
@@ -223,7 +232,7 @@ public class PyramidalImage {
 	 * @throws IOException
 	 *             if the image cannot be read
 	 */
-	public Dimension getDimension() throws IOException {
+	public Dimension getDimension() {
 		return new Dimension(getWidth(), getHeight());
 	}
 
@@ -248,8 +257,8 @@ public class PyramidalImage {
 	 * @throws IOException
 	 *             if the image cannot be read
 	 */
-	public int getHeight() throws IOException {
-		return reader.getHeight(0);
+	public int getHeight() {
+		return height;
 	}
 
 	/**
@@ -259,8 +268,8 @@ public class PyramidalImage {
 	 * @throws IOException
 	 *             if the image cannot be read
 	 */
-	public int getWidth() throws IOException {
-		return reader.getWidth(0);
+	public int getWidth() {
+		return width;
 	}
 
 	/**

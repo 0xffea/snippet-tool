@@ -544,14 +544,14 @@ public class Inscript extends Observable {
 		// use preferred reading's signs
 		int dim_x;
 		int dim_y;
-		try {
+//		try {
 			dim_x = getPyramidalImage().getWidth();
 			dim_y = getPyramidalImage().getHeight();
-		} catch (IOException e) {
-			logger.error("IOException occurred in loadMarkingSchema", e);
-			ErrorUtil.showError(null, "Could not access image file", e);
-			return;
-		}
+//		} catch (IOException e) {
+//			logger.error("IOException occurred in loadMarkingSchema", e);
+//			ErrorUtil.showError(null, "Could not access image file", e);
+//			return;
+//		}
 		int x_width = 0;
 		int y_height = 0;
 		int max_row = 0;
