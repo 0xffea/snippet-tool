@@ -69,26 +69,34 @@ public class SnippetTool extends Observable {
 		this(DEFAULT_PROPERTIES_FILE);
 	}
 
-	public void setInscriptText(String mode, String collection, String resource) {
+	public void loadInscriptTextFromRemoteResource(String collection,
+			String resource) {
+		String user = props.getProperty("db.data.user");
+		String password = props.getProperty("db.data.password");
+		String xml_temp_dir = props.getProperty("local.inscript.dir");
+
+		String inscriptText = FileUtil.readStringFromFile(DbUtil
+				.downloadXMLResource(collection, resource, user, password,
+						xml_temp_dir));
+
+		setInscriptText(inscriptText);
+
+		inscript.setId(resource.substring(0, resource.length()
+				- ".xml".length()));
+		inscript.setPath(collection + resource);
+	}
+
+	public void loadInscriptTextFromLocalFile(File file) throws IOException {
+		String inscriptText = FileUtil.readStringFromFile(file);
+		setInscriptText(inscriptText);
+
+		String name = file.getName();
+		inscript.setId(name.substring(0, name.length() - ".xml".length()));
+		inscript.setPath(file.getCanonicalPath());
+	}
+
+	private void setInscriptText(String inscriptText) {
 		String xsltFilename = props.getProperty("local.xslt.file");
-		String inscriptText = null;
-
-		if (mode.equals("remote")) {
-			String user = props.getProperty("db.data.user");
-			String password = props.getProperty("db.data.password");
-			String xml_temp_dir = props.getProperty("local.inscript.dir");
-
-			inscriptText = FileUtil.readStringFromFile(DbUtil
-					.downloadXMLResource(collection, resource, user, password,
-							xml_temp_dir));
-		} else if (mode.equals("local")) {
-			if (!collection.endsWith(File.separator))
-				collection += File.separator;
-			if (resource.startsWith(File.separator))
-				resource = resource.substring(1);
-
-			inscriptText = FileUtil.readStringFromFile(collection + resource);
-		}
 
 		String xsltText = FileUtil.readStringFromFile(xsltFilename);
 		String transformedInscriptText = XMLUtil.transformXML(inscriptText,
@@ -103,9 +111,6 @@ public class SnippetTool extends Observable {
 			FileUtil.writeXMLStringToFile(new File("3.xml"), standardizedText);
 		}
 
-		inscript.setId(resource.substring(0, resource.length()
-				- ".xml".length()));
-		inscript.setPath(collection + resource);
 		inscript.setTextFromXML(standardizedText);
 	}
 
@@ -165,20 +170,16 @@ public class SnippetTool extends Observable {
 		}
 	}
 
-	public void updateInscriptCoordinates(String mode) {
-		if (mode.equals("remote")) {
-			String collection = props.getProperty("db.unicode.dir");
-			String user = props.getProperty("db.unicode.user");
-			String password = props.getProperty("db.unicode.password");
-			String query = "//appearance[source='" + inscript.getId()
-					+ "'][@variant='0']";
+	public void updateInscriptCoordinates() {
+		String collection = props.getProperty("db.unicode.dir");
+		String user = props.getProperty("db.unicode.user");
+		String password = props.getProperty("db.unicode.password");
+		String query = "//appearance[source='" + inscript.getId()
+				+ "'][@variant='0']";
 
-			Element[] appearances = DbUtil.convertResourceSetToElements(DbUtil
-					.executeQuery(collection, user, password, query));
-			inscript.updateCoordinates(appearances);
-		} else if (mode.equals("local")) {
-
-		}
+		Element[] appearances = DbUtil.convertResourceSetToElements(DbUtil
+				.executeQuery(collection, user, password, query));
+		inscript.updateCoordinates(appearances);
 	}
 
 	public void submitInscript() {
@@ -285,7 +286,7 @@ public class SnippetTool extends Observable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void loadLocal(File f) {
+	public void loadLocal(File f) throws IOException {
 		if (f == null)
 			return;
 
@@ -294,18 +295,13 @@ public class SnippetTool extends Observable {
 		String xml = documentRootElement.getAttributeValue("xml");
 		String img = documentRootElement.getAttributeValue("img");
 
-		// TODO: Remove use of local/remote method strings
-		String xml_collection = null;
-		String xml_resource = xml;
-		String xml_method = "local";
-
 		if (xml.startsWith("xmldb:")) {
-			xml_collection = xml.substring(0, xml.lastIndexOf("/"));
-			xml_resource = xml.substring(xml.lastIndexOf("/") + 1);
-			xml_method = "remote";
+			String xml_collection = xml.substring(0, xml.lastIndexOf("/"));
+			String xml_resource = xml.substring(xml.lastIndexOf("/") + 1);
+			loadInscriptTextFromRemoteResource(xml_collection, xml_resource);
+		} else {
+			loadInscriptTextFromLocalFile(new File(xml));
 		}
-
-		setInscriptText(xml_method, xml_collection, xml_resource);
 
 		if (img.startsWith("xmldb:")) {
 			setInscriptImageToRemoteRessource(img);

@@ -164,7 +164,7 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 					Thread t1 = new Thread() {
 						@Override
 						public void run() {
-							snippettool.setInscriptText("remote",
+							snippettool.loadInscriptTextFromRemoteResource(
 									selectedCollection, selectedResource);
 							snippettool
 									.updateInscriptImagePathFromAppearances("remote");
@@ -200,7 +200,7 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 						Thread t2 = new Thread() {
 							@Override
 							public void run() {
-								snippettool.updateInscriptCoordinates("remote");
+								snippettool.updateInscriptCoordinates();
 								root.status("Loaded Coordinates");
 							}
 						};

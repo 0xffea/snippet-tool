@@ -35,12 +35,12 @@ public class ImageCutter {
 
 		if (inscript_uri != null && rubbing_uri != null && mode != null
 				&& basename != null) {
-			imagecutter.snippettool.setInscriptText("remote", inscript_uri
-					.substring(0, inscript_uri.lastIndexOf("/")), inscript_uri
-					.substring(inscript_uri.lastIndexOf("/") + 1));
+			imagecutter.snippettool.loadInscriptTextFromRemoteResource(
+					inscript_uri.substring(0, inscript_uri.lastIndexOf("/")),
+					inscript_uri.substring(inscript_uri.lastIndexOf("/") + 1));
 			imagecutter.snippettool
 					.setInscriptImageToRemoteRessource(rubbing_uri);
-			imagecutter.snippettool.updateInscriptCoordinates("remote");
+			imagecutter.snippettool.updateInscriptCoordinates();
 			if (mode.equals("remote")) {
 				imagecutter.snippettool.submitInscriptSnippets(basename);
 			} else if (mode.equals("local")) {

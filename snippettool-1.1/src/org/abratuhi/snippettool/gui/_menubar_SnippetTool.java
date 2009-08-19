@@ -2,6 +2,7 @@ package org.abratuhi.snippettool.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
@@ -10,6 +11,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import org.abratuhi.snippettool.model.SnippetTool;
+import org.abratuhi.snippettool.util.ErrorUtil;
 
 /**
  * Snippet-Tool menubar component. File -> + Load Marking- load marking from
@@ -76,8 +78,13 @@ public class _menubar_SnippetTool extends JMenuBar implements ActionListener {
 					JFileChooser fc = new JFileChooser(snippettool.props
 							.getProperty("local.inscript.dir"));
 					fc.showOpenDialog(root);
-					snippettool.setInscriptText("local", fc.getSelectedFile()
-							.getParent(), fc.getSelectedFile().getName());
+					try {
+						snippettool.loadInscriptTextFromLocalFile(fc
+								.getSelectedFile());
+					} catch (IOException e) {
+						ErrorUtil.showError(fc,
+								"Could not load local inscript file", e);
+					}
 					root.status("Loaded Inscript.");
 				}
 			};
@@ -104,7 +111,12 @@ public class _menubar_SnippetTool extends JMenuBar implements ActionListener {
 					JFileChooser fc = new JFileChooser(snippettool.props
 							.getProperty("local.unicode.dir"));
 					fc.showOpenDialog(root);
-					snippettool.loadLocal(fc.getSelectedFile());
+					try {
+						snippettool.loadLocal(fc.getSelectedFile());
+					} catch (IOException e) {
+						ErrorUtil.showError(fc,
+								"Could not load local marking file", e);
+					}
 					root.status("Loaded Marking.");
 				}
 			};
