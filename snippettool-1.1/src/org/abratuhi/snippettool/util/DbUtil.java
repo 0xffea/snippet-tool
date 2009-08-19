@@ -7,6 +7,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 
 import org.exist.xmldb.EXistResource;
+import org.exist.xmldb.ExtendedResource;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
@@ -79,15 +80,17 @@ public class DbUtil {
 			File f = new File(tempdir, resource);
 			Collection col = DatabaseManager.getCollection(collection);
 			BinaryResource res = (BinaryResource) col.getResource(resource);
-			EXistResource eres = (EXistResource) res;
+			EXistResource exres = (EXistResource) res;
+			ExtendedResource eres = (ExtendedResource) res;
 
 			if (f.canRead()
-					&& f.lastModified() > eres.getLastModificationTime()
-							.getTime() && f.length() == eres.getContentLength()) {
+					&& f.lastModified() > exres.getLastModificationTime()
+							.getTime()
+					&& f.length() == exres.getContentLength()) {
 				logger.debug("Reusing downloaded image {}", f.getName());
 			} else {
 				logger.debug("Downloading {}", resource);
-				new FileOutputStream(f).write((byte[]) res.getContent());
+				eres.getContentIntoAFile(f);
 			}
 			return f;
 		} catch (XMLDBException e) {
