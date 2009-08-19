@@ -142,31 +142,26 @@ public class SnippetTool extends Observable {
 
 	}
 
-	public void updateInscriptImagePathFromAppearances(String mode) {
-		if (mode.equals("remote")) {
-			String collection = props.getProperty("db.unicode.dir");
-			String user = props.getProperty("db.unicode.user");
-			String password = props.getProperty("db.unicode.password");
-			String query = "//appearance[contains(@id, '" + inscript.getId()
-					+ "_')]/rubbing/text()";
+	public void updateInscriptImagePathFromAppearances() {
+		String collection = props.getProperty("db.unicode.dir");
+		String user = props.getProperty("db.unicode.user");
+		String password = props.getProperty("db.unicode.password");
+		String query = "//appearance[contains(@id, '" + inscript.getId()
+				+ "_')]/rubbing/text()";
 
-			String[] paths = DbUtil.convertResourceSetToStrings(DbUtil
-					.executeQuery(collection, user, password, query));
-			if (paths.length > 0) {
-				String rubbingPath = paths[0];
-				if (rubbingPath.startsWith("xmldb:")) {
-					logger.warn("Rubbing path {} is absolute.", rubbingPath);
-					rubbingPath = rubbingPath.replaceFirst("xmldb:.*?/db/",
-							props.getProperty("db.data.uri"));
-					logger.debug("Mapping to {}", rubbingPath);
-				} else {
-					rubbingPath = props.getProperty("db.data.uri")
-							+ rubbingPath;
-				}
-				inscript.setAbsoluteRubbingPath(rubbingPath);
+		String[] paths = DbUtil.convertResourceSetToStrings(DbUtil
+				.executeQuery(collection, user, password, query));
+		if (paths.length > 0) {
+			String rubbingPath = paths[0];
+			if (rubbingPath.startsWith("xmldb:")) {
+				logger.warn("Rubbing path {} is absolute.", rubbingPath);
+				rubbingPath = rubbingPath.replaceFirst("xmldb:.*?/db/", props
+						.getProperty("db.data.uri"));
+				logger.debug("Mapping to {}", rubbingPath);
+			} else {
+				rubbingPath = props.getProperty("db.data.uri") + rubbingPath;
 			}
-		} else if (mode.equals("local")) {
-
+			inscript.setAbsoluteRubbingPath(rubbingPath);
 		}
 	}
 
