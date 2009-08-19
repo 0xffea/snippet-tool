@@ -73,22 +73,23 @@ public class SnippetTool extends Observable {
 		String password = props.getProperty("db.data.password");
 		String xml_temp_dir = props.getProperty("local.inscript.dir");
 
+		inscript.setId(resource.substring(0, resource.length() - ".xml".length()));
+		inscript.setPath(collection + resource);
+
 		String inscriptText = FileUtil.readStringFromFile(DbUtil.downloadXMLResource(collection, resource, user,
 				password, xml_temp_dir));
 
 		setInscriptText(inscriptText);
 
-		inscript.setId(resource.substring(0, resource.length() - ".xml".length()));
-		inscript.setPath(collection + resource);
 	}
 
 	public void loadInscriptTextFromLocalFile(File file) throws Exception {
-		String inscriptText = FileUtil.readStringFromFile(file);
-		setInscriptText(inscriptText);
-
 		String name = file.getName();
 		inscript.setId(name.substring(0, name.length() - ".xml".length()));
 		inscript.setPath(file.getCanonicalPath());
+
+		String inscriptText = FileUtil.readStringFromFile(file);
+		setInscriptText(inscriptText);
 	}
 
 	private void setInscriptText(String inscriptText) throws Exception {
@@ -165,8 +166,8 @@ public class SnippetTool extends Observable {
 	}
 
 	public void submitInscript() {
-		submitInscriptCoordinates();
 		submitInscriptSnippets("snippet");
+		submitInscriptCoordinates();
 	}
 
 	public void submitInscriptCoordinates() {
@@ -189,7 +190,7 @@ public class SnippetTool extends Observable {
 		if (!snippetdir.endsWith(File.separator))
 			snippetdir += File.separator;
 
-		ArrayList<InscriptCharacter> preferredReading = new ArrayList<InscriptCharacter>();
+		List<InscriptCharacter> preferredReading = new ArrayList<InscriptCharacter>();
 		for (int i = 0; i < inscript.getText().size(); i++) {
 			preferredReading.add(inscript.getText().get(i).get(0).get(0));
 		}
@@ -200,7 +201,10 @@ public class SnippetTool extends Observable {
 
 			DbUtil.uploadBinaryResources(preferredSnippets, collection, user, password);
 			for (int i = 0; i < preferredSnippets.length; i++) {
-				inscript.updatePathToSnippet(preferredSnippets[i].getName(), i);
+				File snippet = preferredSnippets[i];
+				if (snippet != null) {
+					inscript.updatePathToSnippet(snippet.getName(), i);
+				}
 			}
 		} catch (IOException e) {
 			logger.error("I/O error while cutting snippets", e);
@@ -246,7 +250,7 @@ public class SnippetTool extends Observable {
 		if (!imagedir.endsWith(File.separator))
 			imagedir += File.separator;
 
-		ArrayList<InscriptCharacter> preferredReading = new ArrayList<InscriptCharacter>();
+		List<InscriptCharacter> preferredReading = new ArrayList<InscriptCharacter>();
 		for (int i = 0; i < inscript.getText().size(); i++) {
 			preferredReading.add(inscript.getText().get(i).get(0).get(0));
 		}

@@ -34,13 +34,10 @@ public class DbUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(DbUtil.class);
 
-	public static ResourceSet executeQuery(String collection, String user,
-			String password, String query) {
+	public static ResourceSet executeQuery(String collection, String user, String password, String query) {
 		try {
-			Collection col = DatabaseManager.getCollection(collection, user,
-					password);
-			XPathQueryService service = (XPathQueryService) col.getService(
-					"XPathQueryService", "1.0");
+			Collection col = DatabaseManager.getCollection(collection, user, password);
+			XPathQueryService service = (XPathQueryService) col.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
 
 			ResourceSet result = service.query(query);
@@ -52,15 +49,14 @@ public class DbUtil {
 		return null;
 	}
 
-	public static File downloadXMLResource(String collection, String resource,
-			String user, String password, String tempdirName) {
+	public static File downloadXMLResource(String collection, String resource, String user, String password,
+			String tempdirName) {
 		try {
 			File tempdir = FileUtil.getTempdir(tempdirName);
 			File f = new File(tempdir, resource);
 			Collection col = DatabaseManager.getCollection(collection);
 			XMLResource res = (XMLResource) col.getResource(resource);
-			new FileOutputStream(f).write(((String) res.getContent())
-					.getBytes());
+			new FileOutputStream(f).write(((String) res.getContent()).getBytes());
 			// alternative:
 			// FileUtil.writeXMLStringToFile(f, (String)res.getContent());
 			return f;
@@ -72,9 +68,8 @@ public class DbUtil {
 		return null;
 	}
 
-	public static File downloadBinaryResource(String collection,
-			String resource, String user, String password, String tempdirName)
-			throws IOException {
+	public static File downloadBinaryResource(String collection, String resource, String user, String password,
+			String tempdirName) throws IOException {
 		try {
 			File tempdir = FileUtil.getTempdir(tempdirName);
 			File f = new File(tempdir, resource);
@@ -83,9 +78,7 @@ public class DbUtil {
 			EXistResource exres = (EXistResource) res;
 			ExtendedResource eres = (ExtendedResource) res;
 
-			if (f.canRead()
-					&& f.lastModified() > exres.getLastModificationTime()
-							.getTime()
+			if (f.canRead() && f.lastModified() > exres.getLastModificationTime().getTime()
 					&& f.length() == exres.getContentLength()) {
 				logger.debug("Reusing downloaded image {}", f.getName());
 			} else {
@@ -99,13 +92,10 @@ public class DbUtil {
 		}
 	}
 
-	public static void uploadXMLResource(File f, String collection,
-			String user, String password) {
+	public static void uploadXMLResource(File f, String collection, String user, String password) {
 		try {
-			Collection current = DatabaseManager.getCollection(collection,
-					user, password);
-			XMLResource resource = (XMLResource) current.createResource(f
-					.getName(), "XMLResource");
+			Collection current = DatabaseManager.getCollection(collection, user, password);
+			XMLResource resource = (XMLResource) current.createResource(f.getName(), "XMLResource");
 			resource.setContent(f);
 			current.storeResource(resource);
 		} catch (XMLDBException e) {
@@ -113,13 +103,10 @@ public class DbUtil {
 		}
 	}
 
-	public static void uploadBinaryResource(File f, String collection,
-			String user, String password) {
+	public static void uploadBinaryResource(File f, String collection, String user, String password) {
 		try {
-			Collection current = DatabaseManager.getCollection(collection,
-					user, password);
-			BinaryResource resource = (BinaryResource) current.createResource(f
-					.getName(), "BinaryResource");
+			Collection current = DatabaseManager.getCollection(collection, user, password);
+			BinaryResource resource = (BinaryResource) current.createResource(f.getName(), "BinaryResource");
 			resource.setContent(f);
 			current.storeResource(resource);
 		} catch (XMLDBException e) {
@@ -127,16 +114,16 @@ public class DbUtil {
 		}
 	}
 
-	public static void uploadBinaryResources(File[] f, String collection,
-			String user, String password) {
+	public static void uploadBinaryResources(File[] f, String collection, String user, String password) {
 		try {
-			Collection current = DatabaseManager.getCollection(collection,
-					user, password);
+			Collection current = DatabaseManager.getCollection(collection, user, password);
 			for (File element : f) {
-				BinaryResource resource = (BinaryResource) current
-						.createResource(element.getName(), "BinaryResource");
-				resource.setContent(element);
-				current.storeResource(resource);
+				if (element != null) {
+					BinaryResource resource = (BinaryResource) current.createResource(element.getName(),
+							"BinaryResource");
+					resource.setContent(element);
+					current.storeResource(resource);
+				}
 			}
 		} catch (XMLDBException e) {
 			e.printStackTrace();
@@ -163,9 +150,8 @@ public class DbUtil {
 		Element element = null;
 		SAXBuilder saxbuilder = new SAXBuilder();
 		try {
-			element = (Element) saxbuilder.build(
-					new StringReader((String) xmlresource.getContent()))
-					.getRootElement().detach();
+			element = (Element) saxbuilder.build(new StringReader((String) xmlresource.getContent())).getRootElement()
+					.detach();
 		} catch (JDOMException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

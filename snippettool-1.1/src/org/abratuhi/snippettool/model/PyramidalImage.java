@@ -104,20 +104,19 @@ public class PyramidalImage {
 	}
 
 	/** Logger. */
-	private static final Logger logger = LoggerFactory
-			.getLogger(PyramidalImage.class);
+	private static final Logger logger = LoggerFactory.getLogger(PyramidalImage.class);
 
 	/** The image reader used to access the associated image. */
 	private final ImageReader reader;
 
 	/** Tile cache with soft references to the values. */
 	private final Map<Tile, BufferedImage> cache;
-	
+
 	/** height of the image */
-	private final int height; 
-	
+	private final int height;
+
 	/** width of the image */
-	private final int width; 
+	private final int width;
 
 	/**
 	 * Creates a PyramidalImage instance accessing the image through the
@@ -125,52 +124,46 @@ public class PyramidalImage {
 	 * 
 	 * @param reader
 	 *            the reader already set up to read the actual image.
-	 * @throws IOException if the image cannot be read
+	 * @throws IOException
+	 *             if the image cannot be read
 	 */
 	public PyramidalImage(final ImageReader reader) throws IOException {
 		this.reader = reader;
-		
-		// TODO: This read access fixes a bug, that seems to stem from a non-thread-safe tiff library. Check if thread-safety is documented.
+
+		// TODO: This read access fixes a bug, that seems to stem from a
+		// non-thread-safe tiff library. Check if thread-safety is documented.
 		height = reader.getHeight(0);
 		width = reader.getWidth(0);
-		
-		cache = new MapMaker().softValues().makeComputingMap(
-				new Function<Tile, BufferedImage>() {
-					public BufferedImage apply(final Tile tile) {
-						try {
-							long start = System.currentTimeMillis();
-							BufferedImage rawTile = reader.readTile(
-									tile.imageIndex, tile.x, tile.y);
 
-							// Create a compatible image for faster drawing ...
-							BufferedImage result = GraphicsEnvironment
-									.getLocalGraphicsEnvironment()
-									.getDefaultScreenDevice()
-									.getDefaultConfiguration()
-									.createCompatibleImage(rawTile.getWidth(),
-											rawTile.getHeight(),
-											Transparency.OPAQUE);
+		cache = new MapMaker().softValues().makeComputingMap(new Function<Tile, BufferedImage>() {
+			public BufferedImage apply(final Tile tile) {
+				try {
+					long start = System.currentTimeMillis();
+					BufferedImage rawTile = reader.readTile(tile.imageIndex, tile.x, tile.y);
 
-							// and copy the loaded tile onto it.
-							result.getGraphics().drawImage(rawTile, 0, 0, null);
+					// Create a compatible image for faster drawing ...
+					BufferedImage result = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
+							.getDefaultConfiguration().createCompatibleImage(rawTile.getWidth(), rawTile.getHeight(),
+									Transparency.OPAQUE);
 
-							long loadTime = System.currentTimeMillis() - start;
-							if (loadTime > 250) {
-								logger
-										.warn(
-												"Loading tile {} took {} ms - consider checking image format (tiling, ICC profile)",
-												tile, loadTime);
-							} else {
-								logger.trace("Loading tile {} took {} ms",
-										tile, loadTime);
-							}
-							return result;
-						} catch (IOException e) {
-							logger.error("Could not load" + tile, e);
-							return null;
-						}
+					// and copy the loaded tile onto it.
+					result.getGraphics().drawImage(rawTile, 0, 0, null);
+
+					long loadTime = System.currentTimeMillis() - start;
+					if (loadTime > 250) {
+						logger.warn(
+								"Loading tile {} took {} ms - consider checking image format (tiling, ICC profile)",
+								tile, loadTime);
+					} else {
+						logger.trace("Loading tile {} took {} ms", tile, loadTime);
 					}
-				});
+					return result;
+				} catch (IOException e) {
+					logger.error("Could not load" + tile, e);
+					return null;
+				}
+			}
+		});
 	}
 
 	/**
@@ -183,8 +176,7 @@ public class PyramidalImage {
 	 *             if reading the given file fails or if no suitable
 	 *             {@link ImageReader} is found
 	 */
-	public static PyramidalImage loadImage(final File imageFile)
-			throws IOException {
+	public static PyramidalImage loadImage(final File imageFile) throws IOException {
 		ImageInputStream is = new FileImageInputStream(imageFile);
 		ImageIO.scanForPlugins();
 		Iterator<ImageReader> readers = ImageIO.getImageReaders(is);
@@ -194,8 +186,7 @@ public class PyramidalImage {
 			reader = readers.next();
 		}
 		if (reader == null) {
-			throw new IOException("No ImageReader found for "
-					+ imageFile.toString() + " - is JAI Image I/O installed?");
+			throw new IOException("No ImageReader found for " + imageFile.toString() + " - is JAI Image I/O installed?");
 		} else {
 			reader.setInput(is);
 			return new PyramidalImage(reader);
@@ -223,8 +214,7 @@ public class PyramidalImage {
 	 * @throws IOException
 	 *             if the image cannot be read
 	 */
-	private BufferedImage getTile(final int imageIndex, final int x, final int y)
-			throws IOException {
+	private BufferedImage getTile(final int imageIndex, final int x, final int y) throws IOException {
 		return cache.get(new Tile(imageIndex, x, y));
 	}
 
@@ -249,8 +239,7 @@ public class PyramidalImage {
 	 *             if the image cannot be read
 	 */
 	public Dimension getDimension(final double scale) throws IOException {
-		return new Dimension((int) Math.floor(getWidth() * scale), (int) Math
-				.floor(getHeight() * scale));
+		return new Dimension((int) Math.floor(getWidth() * scale), (int) Math.floor(getHeight() * scale));
 	}
 
 	/**
@@ -287,8 +276,7 @@ public class PyramidalImage {
 	 * @throws IOException
 	 *             if the image cannot be read
 	 */
-	public void drawImage(final double scale, final Graphics g)
-			throws IOException {
+	public void drawImage(final double scale, final Graphics g) throws IOException {
 		double baseWidth = getWidth();
 		double requestedWidth = scale * baseWidth;
 
@@ -304,9 +292,8 @@ public class PyramidalImage {
 
 		double postScale = scale / preScale;
 
-		logger.trace("Requested scale of " + scale + " - selected index "
-				+ imageIndex + " with preScale " + preScale + " and postScale "
-				+ postScale);
+		logger.trace("Requested scale of " + scale + " - selected index " + imageIndex + " with preScale " + preScale
+				+ " and postScale " + postScale);
 
 		Rectangle clip = g.getClipBounds();
 
@@ -345,31 +332,24 @@ public class PyramidalImage {
 	 * @throws IOException
 	 *             if the image cannot be read
 	 */
-	private void drawSubimage(final Graphics g, final int imageIndex,
-			final double scale, final Rectangle clip) throws IOException {
+	private void drawSubimage(final Graphics g, final int imageIndex, final double scale, final Rectangle clip)
+			throws IOException {
 
 		// compute rect inside the image we should draw
-		Rectangle image = new Rectangle(
-				(int) (reader.getWidth(imageIndex) * scale), (int) (reader
-						.getHeight(imageIndex) * scale));
+		Rectangle image = new Rectangle((int) (reader.getWidth(imageIndex) * scale), (int) (reader
+				.getHeight(imageIndex) * scale));
 		Rectangle rect = clip.intersection(image);
 
-		int lastTileY = (int) (Math.ceil(1.0 * reader.getHeight(imageIndex)
-				/ reader.getTileHeight(imageIndex)) - 1);
-		int lastTileX = (int) Math.ceil(1.0 * reader.getWidth(imageIndex)
-				/ reader.getTileWidth(imageIndex)) - 1;
+		int lastTileY = (int) (Math.ceil(1.0 * reader.getHeight(imageIndex) / reader.getTileHeight(imageIndex)) - 1);
+		int lastTileX = (int) Math.ceil(1.0 * reader.getWidth(imageIndex) / reader.getTileWidth(imageIndex)) - 1;
 
 		double tileHeight = reader.getTileHeight(imageIndex) * scale;
 		double tileWidth = reader.getTileWidth(imageIndex) * scale;
 
-		int minTileX = (int) Math.floor(Math.max((rect.getMinX() / tileWidth),
-				0));
-		int maxTileX = Math.min((int) Math.ceil(rect.getMaxX() / tileWidth),
-				lastTileX);
-		int minTileY = (int) Math.floor(Math.max((rect.getMinY() / tileHeight),
-				0));
-		int maxTileY = Math.min((int) Math.ceil(rect.getMaxY() / tileHeight),
-				lastTileY);
+		int minTileX = (int) Math.floor(Math.max((rect.getMinX() / tileWidth), 0));
+		int maxTileX = Math.min((int) Math.ceil(rect.getMaxX() / tileWidth), lastTileX);
+		int minTileY = (int) Math.floor(Math.max((rect.getMinY() / tileHeight), 0));
+		int maxTileY = Math.min((int) Math.ceil(rect.getMaxY() / tileHeight), lastTileY);
 
 		for (int i = minTileX; i <= maxTileX; i++) {
 			for (int j = minTileY; j <= maxTileY; j++) {
@@ -383,9 +363,7 @@ public class PyramidalImage {
 				long start = System.currentTimeMillis();
 				g.drawImage(tile, x, y, width, height, null);
 				long drawTime = System.currentTimeMillis() - start;
-				logger.trace(
-						"Drawing of tile (" + i + "," + j + ") took {} ms",
-						drawTime);
+				logger.trace("Drawing of tile (" + i + "," + j + ") took {} ms", drawTime);
 			}
 		}
 	}
@@ -404,17 +382,19 @@ public class PyramidalImage {
 	 * @throws IOException
 	 *             if the image cannot be read or writing the snippets fails.
 	 */
-	public File[] cutSnippets(final List<InscriptCharacter> characters,
-			final String directory, final String basename) throws IOException {
+	public File[] cutSnippets(final List<InscriptCharacter> characters, final String directory, final String basename)
+			throws IOException {
 		File dir = FileUtil.getTempdir(directory);
 		File[] outputImageFiles = new File[characters.size()];
 		for (int i = 0; i < characters.size(); i++) {
 			InscriptCharacter ch = characters.get(i);
 
-			BufferedImage outputImage = cutImage(ch.shape);
-			outputImageFiles[i] = new File(dir, basename + "_"
-					+ ch.inscript.getId() + "_" + ch.getNumber() + ".png");
-			ImageIO.write(outputImage, "PNG", outputImageFiles[i]);
+			if (!ch.shape.isEmpty()) {
+				BufferedImage outputImage = cutImage(ch.shape);
+				outputImageFiles[i] = new File(dir, basename + "_" + ch.inscript.getId() + "_" + ch.getNumber()
+						+ ".png");
+				ImageIO.write(outputImage, "PNG", outputImageFiles[i]);
+			}
 		}
 		return outputImageFiles;
 	}
@@ -436,23 +416,17 @@ public class PyramidalImage {
 
 		// This makes sure that we can rotate around the center of the image,
 		// which is also the center of the shape
-		AffineTransformOp rotation = new AffineTransformOp(AffineTransform
-				.getRotateInstance(shape.angle, subImage.getWidth() / 2,
-						subImage.getHeight() / 2),
-				AffineTransformOp.TYPE_BICUBIC);
-		BufferedImage rotatedImage = rotation.createCompatibleDestImage(
-				subImage, null);
+		AffineTransformOp rotation = new AffineTransformOp(AffineTransform.getRotateInstance(shape.angle, subImage
+				.getWidth() / 2, subImage.getHeight() / 2), AffineTransformOp.TYPE_BICUBIC);
+		BufferedImage rotatedImage = rotation.createCompatibleDestImage(subImage, null);
 		rotation.filter(subImage, rotatedImage);
 
 		// Now we need to crop the image again, to the shape rectangle,
 		// which is now axis-aligned. We get the new position of the left upper
 		// point of the shape and cut accordingly.
-		Point upperLeftPoint = new Point(shape.main.xpoints[0] - bounds.x,
-				shape.main.ypoints[0] - bounds.y);
-		Point rotatedUpperLeftPoint = point2DToPoint(rotation.getPoint2D(
-				upperLeftPoint, null));
-		BufferedImage boundedImage = rotatedImage.getSubimage(
-				rotatedUpperLeftPoint.x, rotatedUpperLeftPoint.y,
+		Point upperLeftPoint = new Point(shape.main.xpoints[0] - bounds.x, shape.main.ypoints[0] - bounds.y);
+		Point rotatedUpperLeftPoint = point2DToPoint(rotation.getPoint2D(upperLeftPoint, null));
+		BufferedImage boundedImage = rotatedImage.getSubimage(rotatedUpperLeftPoint.x, rotatedUpperLeftPoint.y,
 				shape.base.width, shape.base.height);
 		return boundedImage;
 	}
@@ -469,10 +443,8 @@ public class PyramidalImage {
 	 * @throws IOException
 	 *             if the image cannot be read
 	 */
-	private BufferedImage getSubimage(final Rectangle bounds)
-			throws IOException {
-		BufferedImage result = new BufferedImage(bounds.width, bounds.height,
-				BufferedImage.TYPE_INT_ARGB);
+	private BufferedImage getSubimage(final Rectangle bounds) throws IOException {
+		BufferedImage result = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = result.createGraphics();
 		g.translate(-bounds.x, -bounds.y);
 		drawSubimage(g, 0, 1.0, bounds);
@@ -487,8 +459,7 @@ public class PyramidalImage {
 	 * @return a Point approximating the Point2D location, in integer precision.
 	 */
 	private static Point point2DToPoint(final Point2D point2D) {
-		return new Point((int) Math.round(point2D.getX()), (int) Math
-				.round(point2D.getY()));
+		return new Point((int) Math.round(point2D.getX()), (int) Math.round(point2D.getY()));
 	}
 
 }
