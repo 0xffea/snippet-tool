@@ -25,8 +25,7 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings("serial")
 public class _frame_SnippetTool extends JFrame implements WindowListener {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(_frame_SnippetTool.class);
+	private static final Logger logger = LoggerFactory.getLogger(_frame_SnippetTool.class);
 
 	public SnippetTool snippettool;
 	public Properties preferences;
@@ -81,12 +80,9 @@ public class _frame_SnippetTool extends JFrame implements WindowListener {
 		// construct GUI as consisting of JSplitPanes
 		setJMenuBar(menubar);
 
-		JSplitPane mainoption = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-				main, options);
-		JSplitPane up = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, explorer,
-				mainoption);
-		JSplitPane down = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, text,
-				info);
+		JSplitPane mainoption = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, main, options);
+		JSplitPane up = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, explorer, mainoption);
+		JSplitPane down = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, text, info);
 		JSplitPane all = new JSplitPane(JSplitPane.VERTICAL_SPLIT, up, down);
 
 		mainoption.setBorder(null);
@@ -95,16 +91,11 @@ public class _frame_SnippetTool extends JFrame implements WindowListener {
 		down.setBorder(null);
 		all.setBorder(null);
 
-		mainoption.setDividerSize(PrefUtil.string2integer(preferences
-				.getProperty("local.window.divider.width")));
-		up.setDividerSize(PrefUtil.string2integer(preferences
-				.getProperty("local.window.divider.width")));
-		down.setDividerSize(PrefUtil.string2integer(preferences
-				.getProperty("local.window.divider.width")));
-		down.setDividerSize(PrefUtil.string2integer(preferences
-				.getProperty("local.window.divider.width")));
-		all.setDividerSize(PrefUtil.string2integer(preferences
-				.getProperty("local.window.divider.width")));
+		mainoption.setDividerSize(PrefUtil.string2integer(preferences.getProperty("local.window.divider.width")));
+		up.setDividerSize(PrefUtil.string2integer(preferences.getProperty("local.window.divider.width")));
+		down.setDividerSize(PrefUtil.string2integer(preferences.getProperty("local.window.divider.width")));
+		down.setDividerSize(PrefUtil.string2integer(preferences.getProperty("local.window.divider.width")));
+		all.setDividerSize(PrefUtil.string2integer(preferences.getProperty("local.window.divider.width")));
 
 		// construct jframe
 		getContentPane().setLayout(new BorderLayout());
@@ -130,8 +121,6 @@ public class _frame_SnippetTool extends JFrame implements WindowListener {
 
 	public void status(String status) {
 		this.status.setStatus(status);
-		logger.trace("Triggering repaint.");
-		this.status.repaint();
 	}
 
 	/**
@@ -164,22 +153,14 @@ public class _frame_SnippetTool extends JFrame implements WindowListener {
 	 * restores from previous session
 	 */
 	public void loadLayout() {
-		setLocation(PrefUtil.string2point(preferences
-				.getProperty("local.window.position")));
-		setPreferredSize(PrefUtil.string2dimesion(preferences
-				.getProperty("local.window.size")));
-		main.setPreferredSize(PrefUtil.string2dimesion(preferences
-				.getProperty("local.window.main.size")));
-		explorer.setPreferredSize(PrefUtil.string2dimesion(preferences
-				.getProperty("local.window.explorer.size")));
-		options.setPreferredSize(PrefUtil.string2dimesion(preferences
-				.getProperty("local.window.options.size")));
-		text.setPreferredSize(PrefUtil.string2dimesion(preferences
-				.getProperty("local.window.text.size")));
-		info.setPreferredSize(PrefUtil.string2dimesion(preferences
-				.getProperty("local.window.info.size")));
-		status.setPreferredSize(PrefUtil.string2dimesion(preferences
-				.getProperty("local.window.status.size")));
+		setLocation(PrefUtil.string2point(preferences.getProperty("local.window.position")));
+		setPreferredSize(PrefUtil.string2dimesion(preferences.getProperty("local.window.size")));
+		main.setPreferredSize(PrefUtil.string2dimesion(preferences.getProperty("local.window.main.size")));
+		explorer.setPreferredSize(PrefUtil.string2dimesion(preferences.getProperty("local.window.explorer.size")));
+		options.setPreferredSize(PrefUtil.string2dimesion(preferences.getProperty("local.window.options.size")));
+		text.setPreferredSize(PrefUtil.string2dimesion(preferences.getProperty("local.window.text.size")));
+		info.setPreferredSize(PrefUtil.string2dimesion(preferences.getProperty("local.window.info.size")));
+		status.setPreferredSize(PrefUtil.string2dimesion(preferences.getProperty("local.window.status.size")));
 	}
 
 	public void exit() {

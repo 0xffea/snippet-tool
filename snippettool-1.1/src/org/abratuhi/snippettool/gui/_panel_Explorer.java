@@ -12,6 +12,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import org.abratuhi.snippettool.model.SnippetTool;
@@ -72,6 +73,8 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 	 **/
 	public String selectedResource;
 
+	private final DefaultTreeModel treeModel;
+
 	public _panel_Explorer(_frame_SnippetTool r, SnippetTool snippettool, boolean load) {
 		super();
 		setLayout(new GridLayout(1, 1));
@@ -86,6 +89,7 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 		db_data_password = snippettool.props.getProperty("db.data.password");
 
 		rootnode = new DefaultMutableTreeNode(db_data_uri);
+		treeModel = new DefaultTreeModel(rootnode);
 		explorer = new JTree(rootnode);
 
 		explorer.addTreeSelectionListener(this);
@@ -110,22 +114,26 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 
 			Collection col = DatabaseManager.getCollection(selectedDir, db_data_user, db_data_password);
 
-			// get child collections
-			if (col != null && col.getChildCollectionCount() > 0) {
-				String[] children = col.listChildCollections();
-				StringUtil.sortArrayofString(children);
-				for (String element : children) {
-					selectedNode.add(new DefaultMutableTreeNode(element));
+			if (col != null) {
+				// get child collections
+				if (col.getChildCollectionCount() > 0) {
+					String[] children = col.listChildCollections();
+					StringUtil.sortArrayofString(children);
+					for (String element : children) {
+						selectedNode.add(new DefaultMutableTreeNode(element));
+					}
 				}
-			}
 
-			// get child resources
-			if (col != null && col.getResourceCount() > 0) {
-				String[] resources = col.listResources();
-				StringUtil.sortArrayofString(resources);
-				for (String resource : resources) {
-					selectedNode.add(new DefaultMutableTreeNode(resource));
+				// get child resources
+				if (col.getResourceCount() > 0) {
+					String[] resources = col.listResources();
+					StringUtil.sortArrayofString(resources);
+					for (String resource : resources) {
+						selectedNode.add(new DefaultMutableTreeNode(resource));
+					}
 				}
+
+				treeModel.reload();
 			}
 
 			// set selected collection and resource
@@ -171,51 +179,56 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 
 						@Override
 						protected void done() {
-							super.done();
-							root.status("Inscript " + selectedResource + " loaded.");
+							try {
+								get();
+								root.status("Inscript " + selectedResource + " loaded.");
 
-							if (snippettool.inscript.getAbsoluteRubbingPath() != null
-									&& snippettool.inscript.getAbsoluteRubbingPath() != ""
-									&& snippettool.inscript.getAbsoluteRubbingPath().contains("/")) {
-								new SwingWorker<String, Object>() {
+								if (snippettool.inscript.getAbsoluteRubbingPath() != null
+										&& snippettool.inscript.getAbsoluteRubbingPath() != ""
+										&& snippettool.inscript.getAbsoluteRubbingPath().contains("/")) {
+									new SwingWorker<String, Object>() {
 
-									@Override
-									protected String doInBackground() throws Exception {
+										@Override
+										protected String doInBackground() throws Exception {
 
-										String rubbingPath = snippettool.inscript.getAbsoluteRubbingPath();
-										snippettool.setInscriptImageToRemoteRessource(rubbingPath);
-										return rubbingPath;
-									}
-
-									@Override
-									protected void done() {
-										try {
-											root.status("Image " + get() + " loaded.");
-										} catch (Exception e) {
-											logger.error("Error loading image", e);
-											root.status("Loading image failed: " + e.getLocalizedMessage());
+											String rubbingPath = snippettool.inscript.getAbsoluteRubbingPath();
+											snippettool.setInscriptImageToRemoteRessource(rubbingPath);
+											return rubbingPath;
 										}
-									}
 
-								}.execute();
-							}
+										@Override
+										protected void done() {
+											try {
+												root.status("Image " + get() + " loaded.");
+											} catch (Exception e) {
+												logger.error("Error loading image", e);
+												root.status("Loading image failed: " + e.getLocalizedMessage());
+											}
+										}
 
-							if (snippettool.inscript.getAbsoluteRubbingPath() != null
-									&& snippettool.inscript.getAbsoluteRubbingPath() != "") {
-								new SwingWorker<Object, Object>() {
+									}.execute();
+								}
 
-									@Override
-									protected Object doInBackground() throws Exception {
-										snippettool.updateInscriptCoordinates();
-										return null;
-									}
+								if (snippettool.inscript.getAbsoluteRubbingPath() != null
+										&& snippettool.inscript.getAbsoluteRubbingPath() != "") {
+									new SwingWorker<Object, Object>() {
 
-									@Override
-									protected void done() {
-										root.status("Coordinates loaded.");
-									}
+										@Override
+										protected Object doInBackground() throws Exception {
+											snippettool.updateInscriptCoordinates();
+											return null;
+										}
 
-								}.execute();
+										@Override
+										protected void done() {
+											root.status("Coordinates loaded.");
+										}
+
+									}.execute();
+								}
+							} catch (Exception e1) {
+								logger.error("Error loading inscript " + selectedResource, e1);
+								root.status.setError("Error loading inscript " + selectedResource, e1);
 							}
 						}
 

@@ -2,7 +2,6 @@ package org.abratuhi.snippettool.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
@@ -75,15 +74,12 @@ public class _menubar_SnippetTool extends JMenuBar implements ActionListener {
 			Thread t1 = new Thread() {
 				@Override
 				public void run() {
-					JFileChooser fc = new JFileChooser(snippettool.props
-							.getProperty("local.inscript.dir"));
+					JFileChooser fc = new JFileChooser(snippettool.props.getProperty("local.inscript.dir"));
 					fc.showOpenDialog(root);
 					try {
-						snippettool.loadInscriptTextFromLocalFile(fc
-								.getSelectedFile());
-					} catch (IOException e) {
-						ErrorUtil.showError(fc,
-								"Could not load local inscript file", e);
+						snippettool.loadInscriptTextFromLocalFile(fc.getSelectedFile());
+					} catch (Exception e) {
+						ErrorUtil.showError(fc, "Could not load local inscript file", e);
 					}
 					root.status("Loaded Inscript.");
 				}
@@ -94,11 +90,9 @@ public class _menubar_SnippetTool extends JMenuBar implements ActionListener {
 			Thread t1 = new Thread() {
 				@Override
 				public void run() {
-					JFileChooser fc = new JFileChooser(snippettool.props
-							.getProperty("local.image.dir"));
+					JFileChooser fc = new JFileChooser(snippettool.props.getProperty("local.image.dir"));
 					fc.showOpenDialog(root);
-					snippettool.setInscriptImageToLocalFile(fc
-							.getSelectedFile());
+					snippettool.setInscriptImageToLocalFile(fc.getSelectedFile());
 					root.status("Loaded Image.");
 				}
 			};
@@ -108,14 +102,12 @@ public class _menubar_SnippetTool extends JMenuBar implements ActionListener {
 			Thread t1 = new Thread() {
 				@Override
 				public void run() {
-					JFileChooser fc = new JFileChooser(snippettool.props
-							.getProperty("local.unicode.dir"));
+					JFileChooser fc = new JFileChooser(snippettool.props.getProperty("local.unicode.dir"));
 					fc.showOpenDialog(root);
 					try {
 						snippettool.loadLocal(fc.getSelectedFile());
-					} catch (IOException e) {
-						ErrorUtil.showError(fc,
-								"Could not load local marking file", e);
+					} catch (Exception e) {
+						ErrorUtil.showError(fc, "Could not load local marking file", e);
 					}
 					root.status("Loaded Marking.");
 				}
@@ -136,27 +128,18 @@ public class _menubar_SnippetTool extends JMenuBar implements ActionListener {
 			root.exit();
 		}
 		if (e.getActionCommand().equals(mi_about.getActionCommand())) {
-			String text = "Snippet Tool\n" + "Version: 1.1beta\n"
-					+ "Author: Alexei Bratuhin\n"
+			String text = "Snippet Tool\n" + "Version: 1.1beta\n" + "Author: Alexei Bratuhin\n"
 					+ "Produced for: Heidelberger Academy of Science";
-			JOptionPane.showMessageDialog(root, text, "About",
-					JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(root, text, "About", JOptionPane.INFORMATION_MESSAGE);
 		}
 		if (e.getActionCommand().equals(mi_help.getActionCommand())) {
-			String text = "Keyboard Controller Cheatsheat:\n"
-					+ "q,e - rotate snippet\n"
-					+ "w,a,s,d - increase snippet size\n"
-					+ "shift+w,a,s,d - decrease snippet size\n"
-					+ "i,j,k,l - move snippet\n" + "arrows - navigate\n\n"
-					+ "Mouse Controller Cheatsheat:\n"
-					+ "left click - select snippet\n"
-					+ "left drag - resize snippet\n"
-					+ "shift + left drag - rotate snippet\n"
-					+ "right drag - move snippet\n\n"
-					+ "Secondary Mouse Controller Cheatsheat:\n"
-					+ "left drag - create snippet";
-			JOptionPane.showMessageDialog(root, text, "Help",
-					JOptionPane.INFORMATION_MESSAGE);
+			String text = "Keyboard Controller Cheatsheat:\n" + "q,e - rotate snippet\n"
+					+ "w,a,s,d - increase snippet size\n" + "shift+w,a,s,d - decrease snippet size\n"
+					+ "i,j,k,l - move snippet\n" + "arrows - navigate\n\n" + "Mouse Controller Cheatsheat:\n"
+					+ "left click - select snippet\n" + "left drag - resize snippet\n"
+					+ "shift + left drag - rotate snippet\n" + "right drag - move snippet\n\n"
+					+ "Secondary Mouse Controller Cheatsheat:\n" + "left drag - create snippet";
+			JOptionPane.showMessageDialog(root, text, "Help", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 

@@ -19,8 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SnippetTool extends Observable {
-	private static final Logger logger = LoggerFactory
-			.getLogger(SnippetTool.class);
+	private static final Logger logger = LoggerFactory.getLogger(SnippetTool.class);
 
 	/** Default .properties file **/
 	public final static String DEFAULT_PROPERTIES_FILE = "snippet-tool.properties";
@@ -69,24 +68,21 @@ public class SnippetTool extends Observable {
 		this(DEFAULT_PROPERTIES_FILE);
 	}
 
-	public void loadInscriptTextFromRemoteResource(String collection,
-			String resource) {
+	public void loadInscriptTextFromRemoteResource(String collection, String resource) throws Exception {
 		String user = props.getProperty("db.data.user");
 		String password = props.getProperty("db.data.password");
 		String xml_temp_dir = props.getProperty("local.inscript.dir");
 
-		String inscriptText = FileUtil.readStringFromFile(DbUtil
-				.downloadXMLResource(collection, resource, user, password,
-						xml_temp_dir));
+		String inscriptText = FileUtil.readStringFromFile(DbUtil.downloadXMLResource(collection, resource, user,
+				password, xml_temp_dir));
 
 		setInscriptText(inscriptText);
 
-		inscript.setId(resource.substring(0, resource.length()
-				- ".xml".length()));
+		inscript.setId(resource.substring(0, resource.length() - ".xml".length()));
 		inscript.setPath(collection + resource);
 	}
 
-	public void loadInscriptTextFromLocalFile(File file) throws IOException {
+	public void loadInscriptTextFromLocalFile(File file) throws Exception {
 		String inscriptText = FileUtil.readStringFromFile(file);
 		setInscriptText(inscriptText);
 
@@ -95,19 +91,16 @@ public class SnippetTool extends Observable {
 		inscript.setPath(file.getCanonicalPath());
 	}
 
-	private void setInscriptText(String inscriptText) {
+	private void setInscriptText(String inscriptText) throws Exception {
 		String xsltFilename = props.getProperty("local.xslt.file");
 
 		String xsltText = FileUtil.readStringFromFile(xsltFilename);
-		String transformedInscriptText = XMLUtil.transformXML(inscriptText,
-				xsltText);
-		String standardizedText = XMLUtil
-				.standardizeXML(transformedInscriptText);
+		String transformedInscriptText = XMLUtil.transformXML(inscriptText, xsltText);
+		String standardizedText = XMLUtil.standardizeXML(transformedInscriptText);
 
 		if (logger.isDebugEnabled()) {
 			FileUtil.writeXMLStringToFile(new File("1.xml"), inscriptText);
-			FileUtil.writeXMLStringToFile(new File("2.xml"),
-					transformedInscriptText);
+			FileUtil.writeXMLStringToFile(new File("2.xml"), transformedInscriptText);
 			FileUtil.writeXMLStringToFile(new File("3.xml"), standardizedText);
 		}
 
@@ -129,14 +122,12 @@ public class SnippetTool extends Observable {
 		String resource = url.substring(url.lastIndexOf("/") + 1);
 
 		try {
-			File image = DbUtil.downloadBinaryResource(collection, resource,
-					user, password, image_temp_dir);
+			File image = DbUtil.downloadBinaryResource(collection, resource, user, password, image_temp_dir);
 			inscript.loadLocalImage(image);
 			inscript.setAbsoluteRubbingPath(url);
 			setScale(1.0f);
 		} catch (IOException e) {
-			logger.error("IOException occurred in "
-					+ "setInscriptImageToRemoteRessource", e);
+			logger.error("IOException occurred in " + "setInscriptImageToRemoteRessource", e);
 			ErrorUtil.showError(gui, "I/O error while loading image", e);
 		}
 
@@ -146,17 +137,14 @@ public class SnippetTool extends Observable {
 		String collection = props.getProperty("db.unicode.dir");
 		String user = props.getProperty("db.unicode.user");
 		String password = props.getProperty("db.unicode.password");
-		String query = "//appearance[contains(@id, '" + inscript.getId()
-				+ "_')]/rubbing/text()";
+		String query = "//appearance[contains(@id, '" + inscript.getId() + "_')]/rubbing/text()";
 
-		String[] paths = DbUtil.convertResourceSetToStrings(DbUtil
-				.executeQuery(collection, user, password, query));
+		String[] paths = DbUtil.convertResourceSetToStrings(DbUtil.executeQuery(collection, user, password, query));
 		if (paths.length > 0) {
 			String rubbingPath = paths[0];
 			if (rubbingPath.startsWith("xmldb:")) {
 				logger.warn("Rubbing path {} is absolute.", rubbingPath);
-				rubbingPath = rubbingPath.replaceFirst("xmldb:.*?/db/", props
-						.getProperty("db.data.uri"));
+				rubbingPath = rubbingPath.replaceFirst("xmldb:.*?/db/", props.getProperty("db.data.uri"));
 				logger.debug("Mapping to {}", rubbingPath);
 			} else {
 				rubbingPath = props.getProperty("db.data.uri") + rubbingPath;
@@ -169,11 +157,10 @@ public class SnippetTool extends Observable {
 		String collection = props.getProperty("db.unicode.dir");
 		String user = props.getProperty("db.unicode.user");
 		String password = props.getProperty("db.unicode.password");
-		String query = "//appearance[source='" + inscript.getId()
-				+ "'][@variant='0']";
+		String query = "//appearance[source='" + inscript.getId() + "'][@variant='0']";
 
-		Element[] appearances = DbUtil.convertResourceSetToElements(DbUtil
-				.executeQuery(collection, user, password, query));
+		Element[] appearances = DbUtil.convertResourceSetToElements(DbUtil.executeQuery(collection, user, password,
+				query));
 		inscript.updateCoordinates(appearances);
 	}
 
@@ -189,9 +176,7 @@ public class SnippetTool extends Observable {
 		String password = props.getProperty("db.unicode.password");
 
 		XMLUtil.clearAppearances(user, password, collection, inscript.getId());
-		XMLUtil.updateXML(inscript.getXUpdate("/db/"
-				+ collection.substring(uri.length())), user, password,
-				collection);
+		XMLUtil.updateXML(inscript.getXUpdate("/db/" + collection.substring(uri.length())), user, password, collection);
 	}
 
 	public void submitInscriptSnippets(String snippetBasename) {
@@ -211,11 +196,9 @@ public class SnippetTool extends Observable {
 
 		File[] preferredSnippets;
 		try {
-			preferredSnippets = inscript.getPyramidalImage().cutSnippets(
-					preferredReading, snippetdir, "subimage");
+			preferredSnippets = inscript.getPyramidalImage().cutSnippets(preferredReading, snippetdir, "subimage");
 
-			DbUtil.uploadBinaryResources(preferredSnippets, collection, user,
-					password);
+			DbUtil.uploadBinaryResources(preferredSnippets, collection, user, password);
 			for (int i = 0; i < preferredSnippets.length; i++) {
 				inscript.updatePathToSnippet(preferredSnippets[i].getName(), i);
 			}
@@ -239,22 +222,19 @@ public class SnippetTool extends Observable {
 		if (!unicodedir.endsWith(File.separator))
 			unicodedir += File.separator;
 
-		Document document = new Document(new Element("inscript").setAttribute(
-				"id", inscript.getId()).setAttribute("xml", inscript.getPath())
-				.setAttribute("img", inscript.getAbsoluteRubbingPath()));
+		Document document = new Document(new Element("inscript").setAttribute("id", inscript.getId()).setAttribute(
+				"xml", inscript.getPath()).setAttribute("img", inscript.getAbsoluteRubbingPath()));
 
 		for (int i = 0; i < inscript.getText().size(); i++) {
 			for (int j = 0; j < inscript.getText().get(i).size(); j++) {
 				for (int k = 0; k < inscript.getText().get(i).get(j).size(); k++) {
-					InscriptCharacter csign = inscript.getText().get(i).get(j)
-							.get(k);
+					InscriptCharacter csign = inscript.getText().get(i).get(j).get(k);
 					document.getRootElement().addContent(csign.toAppearance());
 				}
 			}
 		}
 
-		FileUtil.writeXMLDocumentToFile(new File(unicodedir + "tmarking_"
-				+ inscript.getId() + ".xml"), document);
+		FileUtil.writeXMLDocumentToFile(new File(unicodedir + "tmarking_" + inscript.getId() + ".xml"), document);
 	}
 
 	public void saveLocalSnippets(String snippetBasename) {
@@ -272,8 +252,7 @@ public class SnippetTool extends Observable {
 		}
 
 		try {
-			inscript.getPyramidalImage().cutSnippets(preferredReading,
-					snippetdir, snippetBasename);
+			inscript.getPyramidalImage().cutSnippets(preferredReading, snippetdir, snippetBasename);
 		} catch (IOException e) {
 			logger.error("I/O error while cutting snippets", e);
 			ErrorUtil.showError(gui, "I/O error while cutting snippets", e);
@@ -281,7 +260,7 @@ public class SnippetTool extends Observable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void loadLocal(File f) throws IOException {
+	public void loadLocal(File f) throws Exception {
 		if (f == null)
 			return;
 

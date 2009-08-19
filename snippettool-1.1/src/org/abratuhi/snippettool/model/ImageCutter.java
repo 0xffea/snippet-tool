@@ -3,7 +3,6 @@ package org.abratuhi.snippettool.model;
 import org.abratuhi.snippettool.util.GetOpts;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Database;
-import org.xmldb.api.base.XMLDBException;
 
 public class ImageCutter {
 
@@ -19,10 +18,8 @@ public class ImageCutter {
 				"usage: java -jar imagecutter.jar -inscript [inscript_uri] -rubbing [rubbing_uri] -savemode [remote/local] -basename [snippet_basename]");
 	}
 
-	public static void main(String[] args) throws InstantiationException,
-			IllegalAccessException, ClassNotFoundException, XMLDBException {
-		Database database = (Database) Class.forName(
-				"org.exist.xmldb.DatabaseImpl").newInstance();
+	public static void main(String[] args) throws Exception {
+		Database database = (Database) Class.forName("org.exist.xmldb.DatabaseImpl").newInstance();
 		DatabaseManager.registerDatabase(database);
 
 		ImageCutter imagecutter = new ImageCutter();
@@ -33,13 +30,10 @@ public class ImageCutter {
 		String mode = imagecutter.options.getOpt("savemode");
 		String basename = imagecutter.options.getOpt("basename");
 
-		if (inscript_uri != null && rubbing_uri != null && mode != null
-				&& basename != null) {
-			imagecutter.snippettool.loadInscriptTextFromRemoteResource(
-					inscript_uri.substring(0, inscript_uri.lastIndexOf("/")),
-					inscript_uri.substring(inscript_uri.lastIndexOf("/") + 1));
-			imagecutter.snippettool
-					.setInscriptImageToRemoteRessource(rubbing_uri);
+		if (inscript_uri != null && rubbing_uri != null && mode != null && basename != null) {
+			imagecutter.snippettool.loadInscriptTextFromRemoteResource(inscript_uri.substring(0, inscript_uri
+					.lastIndexOf("/")), inscript_uri.substring(inscript_uri.lastIndexOf("/") + 1));
+			imagecutter.snippettool.setInscriptImageToRemoteRessource(rubbing_uri);
 			imagecutter.snippettool.updateInscriptCoordinates();
 			if (mode.equals("remote")) {
 				imagecutter.snippettool.submitInscriptSnippets(basename);
