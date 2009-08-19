@@ -20,6 +20,10 @@ public class SnippetShape {
 		return base.isEmpty();
 	}
 
+	public void clear() {
+		base = new Rectangle();
+	}
+
 	public SnippetShape(Rectangle rectangle) {
 		base = new Rectangle(rectangle);
 		angle = 0.0f;
@@ -86,7 +90,7 @@ public class SnippetShape {
 			if (new Rectangle(out.x, out.y, (out.width - in.width) / 2, (out.height - in.height) / 2).contains(p))
 				return "nw";
 			else if (new Rectangle(out.x + (out.width - in.width) / 2, out.y, in.width, (out.height - in.height) / 2)
-					.contains(p))
+			.contains(p))
 				return "n";
 			else if (new Rectangle(out.x + (out.width - in.width) / 2 + in.width, out.y, (out.width - in.width) / 2,
 					(out.height - in.height) / 2).contains(p))
@@ -99,13 +103,13 @@ public class SnippetShape {
 				return "se";
 			else if (new Rectangle(out.x + (out.width - in.width) / 2,
 					out.y + (out.height - in.height) / 2 + in.height, in.width, (out.height - in.height) / 2)
-					.contains(p))
+			.contains(p))
 				return "s";
 			else if (new Rectangle(out.x, out.y + (out.height - in.height) / 2 + in.height, (out.width - in.width) / 2,
 					(out.height - in.height) / 2).contains(p))
 				return "sw";
 			else if (new Rectangle(out.x, out.y + (out.height - in.height) / 2, (out.width - in.width) / 2, in.height)
-					.contains(p))
+			.contains(p))
 				return "w";
 			else
 				return "cursor";
@@ -190,14 +194,14 @@ public class SnippetShape {
 			Element r = e.getChild("base");
 			Rectangle rectangle = new Rectangle(Integer.valueOf(r.getAttributeValue("x")), Integer.valueOf(r
 					.getAttributeValue("y")), Integer.valueOf(r.getAttributeValue("width")), Integer.valueOf(r
-					.getAttributeValue("height")));
+							.getAttributeValue("height")));
 			Element a = e.getChild("angle");
 			float angle = Float.valueOf(a.getAttributeValue("phi"));
 			sh = new SnippetShape(rectangle, angle);
 		} else {
 			Rectangle rectangle = new Rectangle(Integer.valueOf(e.getAttributeValue("x")), Integer.valueOf(e
 					.getAttributeValue("y")), Integer.valueOf(e.getAttributeValue("width")), Integer.valueOf(e
-					.getAttributeValue("height")));
+							.getAttributeValue("height")));
 			sh = new SnippetShape(rectangle);
 		}
 		return sh;

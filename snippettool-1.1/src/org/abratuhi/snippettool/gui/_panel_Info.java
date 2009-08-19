@@ -1,8 +1,11 @@
 package org.abratuhi.snippettool.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -27,12 +30,14 @@ import org.abratuhi.snippettool.util.SpringUtilities;
  * 
  */
 @SuppressWarnings("serial")
-public class _panel_Info extends JPanel implements Observer {
+public class _panel_Info extends JPanel implements Observer, ActionListener {
 
 	private final Inscript inscript;
 
 	/****/
 	final JTextArea jta_info = new JTextArea();
+
+	private final JButton clearShape = new JButton("Clear current character shape");
 
 	public _panel_Info(SnippetTool snippettool) {
 		// super
@@ -47,7 +52,12 @@ public class _panel_Info extends JPanel implements Observer {
 		setVisible(true);
 		setLayout(new SpringLayout());
 		add(new JScrollPane(jta_info));
-		SpringUtilities.makeCompactGrid(this, 1, 1, 0, 0, 0, 0);
+
+		clearShape.setEnabled(false);
+		clearShape.addActionListener(this);
+
+		add(clearShape);
+		SpringUtilities.makeCompactGrid(this, 2, 1, 0, 0, 0, 0);
 	}
 
 	/**
@@ -78,9 +88,23 @@ public class _panel_Info extends JPanel implements Observer {
 		InscriptCharacter activeCharacter = inscript.getActiveCharacter();
 		if (activeCharacter != null) {
 			setBorder(new TitledBorder("info: [" + activeCharacter.id + "]"));
+			clearShape.setEnabled(!activeCharacter.shape.isEmpty());
 		} else {
 			setBorder(new TitledBorder("info: [ ]"));
+			clearShape.setEnabled(false);
 		}
 		jta_info.setText(getInfo(activeCharacter));
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getActionCommand().equals(clearShape.getActionCommand())) {
+			InscriptCharacter activeCharacter = inscript.getActiveCharacter();
+			if (activeCharacter != null) {
+				activeCharacter.shape.clear();
+				inscript.setActiveCharacter(activeCharacter);
+			}
+		}
+
 	}
 }
