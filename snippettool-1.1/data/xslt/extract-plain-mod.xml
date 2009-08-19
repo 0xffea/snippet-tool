@@ -50,9 +50,14 @@
     </xsl:if>
   </xsl:template>
   <!-- AB -->
-  <xsl:template match="tei:damage">
+  <xsl:template match="tei:damage[@type='indiscernible']">
     <xsl:for-each select="string-to-codepoints(translate(.,$interpunktion,''))">
       <span class="damage">Ⓓ</span>
+    </xsl:for-each>
+  </xsl:template>
+  <xsl:template match="tei:damage">
+    <xsl:for-each select="string-to-codepoints(translate(.,$interpunktion,''))">
+      <span class="damage">⬜</span>
     </xsl:for-each>
   </xsl:template>
   <!-- AB -->
