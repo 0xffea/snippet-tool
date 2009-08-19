@@ -129,9 +129,8 @@ public class InscriptCharacter {
 	 * SnippetShape(new Rectangle(base, delta)); }
 	 */
 
-	public InscriptCharacter(Inscript s, String chStandard, String chOriginal,
-			float cert, boolean preferred, int var, int r, int c, int n,
-			SnippetShape sh) {
+	public InscriptCharacter(Inscript s, String chStandard, String chOriginal, float cert, boolean preferred, int var,
+			int r, int c, int n, SnippetShape sh) {
 		// initialize parent inscript
 		this.inscript = s;
 		// initialize further attributes
@@ -279,41 +278,28 @@ public class InscriptCharacter {
 	 * @return XUpdate
 	 */
 	public String getXUpdate(String collection) {
-		String xupdate =
-		// "<xu:modifications version=\'1.0\' xmlns:xu=\'http://www.xmldb.org/xupdate\'>"
-		// +
-		// "    <xu:append select=\"//unihandb/char[@xmlid=\'U+"+NumUtil.dec2hex(character.codePointAt(0)).toUpperCase()+"\']\">"
-		// +
-		"    <xu:append select=\"collection('"
-				+ collection
-				+ "')//char[@xmlid=\'U+"
-				+ NumUtil.dec2hex(characterStandard.codePointAt(0))
-						.toUpperCase() + "\']\">"
-				+ "       <xu:element name=\"appearance\">"
-				+ "           <xu:attribute name=\"character\">"
-				+ this.characterStandard + "</xu:attribute>"
-				+ "           <xu:attribute name=\"original\">"
-				+ this.characterOriginal + "</xu:attribute>"
-				+ "           <xu:attribute name=\"id\">" + this.id
-				+ "</xu:attribute>"
-				+ "           <xu:attribute name=\"preferred_reading\">"
-				+ this.preferred_reading + "</xu:attribute>"
-				+ "           <xu:attribute name=\"variant\">" + this.variant
-				+ "</xu:attribute>" + "           <xu:attribute name=\"cert\">"
-				+ this.cert + "</xu:attribute>"
-				+ "           <xu:attribute name=\"nr\">" + inscript.getId()
-				+ "_" + this.number + "</xu:attribute>" + "           <source>"
-				+ inscript.getId() + "</source>" + "           <rubbing>"
-				+ inscript.getRelativeRubbingPath() + "</rubbing>"
-				+ "           <graphic>" + path_to_snippet + "</graphic>"
-				+ "           <coordinates>" + "           <base x=\""
-				+ shape.base.x + "\" y=\"" + shape.base.y + "\" width=\""
-				+ shape.base.width + "\" height=\"" + shape.base.height
-				+ "\" />" + "           <angle phi=\"" + shape.angle + "\"/>"
-				+ "           </coordinates>" + "       </xu:element>"
-				+ "    </xu:append>";// +
-		// "</xu:modifications>";
-		return xupdate;
+
+		if (shape.isEmpty()) {
+			return "";
+		} else {
+			return "    <xu:append select=\"collection('" + collection + "')//char[@xmlid=\'U+"
+					+ NumUtil.dec2hex(characterStandard.codePointAt(0)).toUpperCase() + "\']\">\n"
+					+ "       <xu:element name=\"appearance\">\n" + "           <xu:attribute name=\"character\">"
+					+ this.characterStandard + "</xu:attribute>\n" + "           <xu:attribute name=\"original\">"
+					+ this.characterOriginal + "</xu:attribute>\n" + "           <xu:attribute name=\"id\">" + this.id
+					+ "</xu:attribute>\n" + "           <xu:attribute name=\"preferred_reading\">"
+					+ this.preferred_reading + "</xu:attribute>\n" + "           <xu:attribute name=\"variant\">"
+					+ this.variant + "</xu:attribute>\n" + "           <xu:attribute name=\"cert\">" + this.cert
+					+ "</xu:attribute>\n" + "           <xu:attribute name=\"nr\">" + inscript.getId() + "_"
+					+ this.number + "</xu:attribute>\n" + "           <source>" + inscript.getId() + "</source>\n"
+					+ "           <rubbing>" + inscript.getRelativeRubbingPath() + "</rubbing>\n"
+					+ "           <graphic>" + path_to_snippet + "</graphic>\n" + "           <coordinates>\n"
+					+ "           <base x=\"" + shape.base.x + "\" y=\"" + shape.base.y + "\" width=\""
+					+ shape.base.width + "\" height=\"" + shape.base.height + "\" />\n" + "           <angle phi=\""
+					+ shape.angle + "\"/>\n" + "           </coordinates>\n" + "       </xu:element>\n"
+					+ "    </xu:append>\n";
+		}
+
 	}
 
 	/**
@@ -328,12 +314,10 @@ public class InscriptCharacter {
 		appearance.setAttribute("character", this.characterStandard);
 		appearance.setAttribute("character", this.characterOriginal);
 		appearance.setAttribute("id", this.id);
-		appearance.setAttribute("preferred_reading", String
-				.valueOf(this.preferred_reading));
+		appearance.setAttribute("preferred_reading", String.valueOf(this.preferred_reading));
 		appearance.setAttribute("variant", String.valueOf(this.variant));
 		appearance.setAttribute("cert", String.valueOf(this.cert));
-		appearance.setAttribute("nr", String.valueOf(inscript.getId() + "_"
-				+ this.number));
+		appearance.setAttribute("nr", String.valueOf(inscript.getId() + "_" + this.number));
 
 		Element source = new Element("source");
 		source.setText(inscript.getId());
@@ -366,25 +350,21 @@ public class InscriptCharacter {
 	 *            org.jdom.Element <appearance>
 	 * @return
 	 */
-	public static InscriptCharacter fromAppearance(Inscript inscript,
-			Element appearance) {
+	public static InscriptCharacter fromAppearance(Inscript inscript, Element appearance) {
 		String chStandard = appearance.getAttributeValue("character");
 		String chOriginal = appearance.getAttributeValue("original");
 		String chId = appearance.getAttributeValue("id");
-		boolean preferred = Boolean.parseBoolean(appearance
-				.getAttributeValue("preferred_reading"));
+		boolean preferred = Boolean.parseBoolean(appearance.getAttributeValue("preferred_reading"));
 		float cert = Float.parseFloat(appearance.getAttributeValue("cert"));
 		int var = Integer.parseInt(appearance.getAttributeValue("variant"));
-		int n = Integer.parseInt(appearance.getAttributeValue("nr").substring(
-				(inscript.getId() + "_").length()));
+		int n = Integer.parseInt(appearance.getAttributeValue("nr").substring((inscript.getId() + "_").length()));
 		String rc = chId.substring((inscript.getId() + "_").length());
 		int r = Integer.parseInt(rc.substring(0, rc.indexOf("_")));
 		int c = Integer.parseInt(rc.substring(rc.indexOf("_") + 1));
-		SnippetShape shape = SnippetShape.fromElement(appearance
-				.getChild("coordinates"));
+		SnippetShape shape = SnippetShape.fromElement(appearance.getChild("coordinates"));
 
-		InscriptCharacter sign = new InscriptCharacter(inscript, chStandard,
-				chOriginal, cert, preferred, var, r, c, n, shape);
+		InscriptCharacter sign = new InscriptCharacter(inscript, chStandard, chOriginal, cert, preferred, var, r, c, n,
+				shape);
 
 		return sign;
 	}
@@ -418,25 +398,19 @@ public class InscriptCharacter {
 		Color color;
 
 		// draw border
-		alpha = Float.parseFloat(preferences2
-				.getProperty("local.alpha.marking.border"));
-		color = PrefUtil.String2Color(preferences2
-				.getProperty("local.color.marking.border"));
+		alpha = Float.parseFloat(preferences2.getProperty("local.alpha.marking.border"));
+		color = PrefUtil.String2Color(preferences2.getProperty("local.color.marking.border"));
 		setAlpha(g, alpha);
 		g.setColor(color);
 		g.draw(shape.main);
 
 		// draw marking
 		if (!equals(inscript.getActiveCharacter())) {
-			alpha = Float.parseFloat(preferences2
-					.getProperty("local.alpha.marking.p"));
-			color = PrefUtil.String2Color(preferences2
-					.getProperty("local.color.marking.p"));
+			alpha = Float.parseFloat(preferences2.getProperty("local.alpha.marking.p"));
+			color = PrefUtil.String2Color(preferences2.getProperty("local.color.marking.p"));
 		} else {
-			alpha = Float.parseFloat(preferences2
-					.getProperty("local.alpha.marking.a"));
-			color = PrefUtil.String2Color(preferences2
-					.getProperty("local.color.marking.a"));
+			alpha = Float.parseFloat(preferences2.getProperty("local.alpha.marking.a"));
+			color = PrefUtil.String2Color(preferences2.getProperty("local.color.marking.a"));
 		}
 		setAlpha(g, alpha);
 		g.setColor(color);
@@ -444,8 +418,7 @@ public class InscriptCharacter {
 
 		// draw text
 		alpha = Float.parseFloat(preferences2.getProperty("local.alpha.text"));
-		color = PrefUtil.String2Color(preferences2
-				.getProperty("local.color.text"));
+		color = PrefUtil.String2Color(preferences2.getProperty("local.color.text"));
 		setAlpha(g, alpha);
 		g.setColor(color);
 
@@ -454,18 +427,15 @@ public class InscriptCharacter {
 		g.setTransform(textrotator);
 		if (inscript.isCharacterVisible()) {
 			g.setFont(f.deriveFont(fontBaseSize));
-			g.drawString(characterStandard, shape.base.x, shape.base.y
-					+ g.getFontMetrics().getHeight() * 25 / 40);
+			g.drawString(characterStandard, shape.base.x, shape.base.y + g.getFontMetrics().getHeight() * 25 / 40);
 		}
 		if (inscript.isNumberVisible()) {
 			g.setFont(f.deriveFont(fontBaseSize / 3.0f));
-			g.drawString(String.valueOf(number), shape.base.x, shape.base.y
-					+ g.getFontMetrics().getAscent());
+			g.drawString(String.valueOf(number), shape.base.x, shape.base.y + g.getFontMetrics().getAscent());
 		}
 		if (inscript.isRowColumnVisible()) {
 			g.setFont(f.deriveFont(fontBaseSize / 5.0f));
-			g.drawString("(" + String.valueOf(row) + ","
-					+ String.valueOf(column) + ")", shape.base.x, shape.base.y
+			g.drawString("(" + String.valueOf(row) + "," + String.valueOf(column) + ")", shape.base.x, shape.base.y
 					+ g.getFontMetrics().getAscent());
 		}
 		AffineTransform textderotator = g.getTransform();
