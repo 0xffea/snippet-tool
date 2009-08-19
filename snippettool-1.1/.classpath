@@ -6,7 +6,6 @@
 			<attribute name="javadoc_location" value="http://www.cfoster.net/html/xmldb/javadoc-xmldb-api/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib/xmlrpc-1.2-patched.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/exist.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://exist.sourceforge.net/api/"/>
@@ -25,6 +24,9 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/log4j-over-slf4j-1.5.6.jar"/>
 	<classpathentry kind="lib" path="lib/google-collections-1.0-rc1.jar"/>
+	<classpathentry kind="lib" path="lib/xmlrpc-client-3.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/xmlrpc-common-3.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/ws-commons-util-1.0.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="lib/jdom.jar"/>
 	<classpathentry kind="lib" path="lib/ant.jar"/>
