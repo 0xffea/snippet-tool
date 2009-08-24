@@ -25,7 +25,9 @@
             </manifest>
             <fileset dir="./bin"/>
             <zipfileset excludes="META-INF/*.SF" src="./lib/xmldb.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="./lib/xmlrpc-1.2-patched.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/xmlrpc-common-3.1.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/xmlrpc-client-3.1.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/ws-commons-util-1.0.2.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="./lib/exist.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="./lib/exist-optional.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="./lib/saxon9.jar"/>
@@ -58,7 +60,9 @@
             	<exclude name="./bin/org/abratuhi/snippettool/controller/*"/>
             </fileset>
             <zipfileset excludes="META-INF/*.SF" src="./lib/xmldb.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="./lib/xmlrpc-1.2-patched.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/xmlrpc-common-3.1.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/xmlrpc-client-3.1.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/ws-commons-util-1.0.2.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="./lib/exist.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="./lib/exist-optional.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="./lib/saxon9.jar"/>
