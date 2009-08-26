@@ -2,7 +2,6 @@ package org.abratuhi.snippettool.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
@@ -18,18 +17,15 @@ import javax.swing.event.ChangeListener;
 
 import org.abratuhi.snippettool.model.Inscript;
 import org.abratuhi.snippettool.model.InscriptCharacter;
-import org.abratuhi.snippettool.model.SnippetShape;
 import org.abratuhi.snippettool.model.SnippetTool;
 import org.abratuhi.snippettool.util.ErrorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("serial")
-public class _panel_Main extends JPanel implements ActionListener,
-		ChangeListener, Observer {
+public class _panel_Main extends JPanel implements ActionListener, ChangeListener, Observer {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(_panel_Main.class);
+	private static final Logger logger = LoggerFactory.getLogger(_panel_Main.class);
 
 	/** as reference **/
 	_frame_SnippetTool root;
@@ -54,8 +50,7 @@ public class _panel_Main extends JPanel implements ActionListener,
 
 	JButton zoom_in = new JButton("+");
 	JButton zoom_out = new JButton("-");
-	_slider_JZoomSlider zoomer = new _slider_JZoomSlider(
-			_slider_JZoomSlider.HORIZONTAL, -10, 10, 0);
+	_slider_JZoomSlider zoomer = new _slider_JZoomSlider(_slider_JZoomSlider.HORIZONTAL, -10, 10, 0);
 
 	/** Fit whole image in Sub JPanel **/
 	JButton fit_image_max = new JButton("Full");
@@ -94,8 +89,7 @@ public class _panel_Main extends JPanel implements ActionListener,
 		zoom_out.addActionListener(this);
 
 		/* creating extra Zoom options JPanel */
-		main_workspace
-				.setLayout(new BoxLayout(main_workspace, BoxLayout.Y_AXIS));
+		main_workspace.setLayout(new BoxLayout(main_workspace, BoxLayout.Y_AXIS));
 		Box box1 = new Box(BoxLayout.Y_AXIS);
 		box1.add(fit_image_max);
 		box1.add(fit_image_min);
@@ -122,30 +116,23 @@ public class _panel_Main extends JPanel implements ActionListener,
 		String cmd = ae.getActionCommand();
 		if (cmd.equals(zoom_in.getActionCommand())) {
 			// compute new scale factor
-			snippettool.setScale(snippettool.getScale()
-					* snippettool.scaleFactor);
+			snippettool.setScale(snippettool.getScale() * snippettool.scaleFactor);
 			// set zoomer jslider
 			zoomer.setZoom(snippettool.getScale());
 		}
 		if (cmd.equals(zoom_out.getActionCommand())) {
 			// compute new scale factor
-			snippettool.setScale(snippettool.getScale()
-					* (1 / snippettool.scaleFactor));
+			snippettool.setScale(snippettool.getScale() * (1 / snippettool.scaleFactor));
 			// set zoomer jslider
 			zoomer.setZoom(snippettool.getScale());
 		}
-		if (cmd.equals(fit_image_max.getActionCommand())
-				|| cmd.equals(fit_image_min.getActionCommand())) {
+		if (cmd.equals(fit_image_max.getActionCommand()) || cmd.equals(fit_image_min.getActionCommand())) {
 			// compute scale ratio
 			try {
-				Dimension viewportDimension = main_image.scroll_image
-						.getViewport().getExtentSize();
-				Dimension imageDimension = inscript.getPyramidalImage()
-						.getDimension();
-				double horizontalRatio = viewportDimension.getWidth()
-						/ imageDimension.getWidth();
-				double verticalRatio = viewportDimension.getHeight()
-						/ imageDimension.getHeight();
+				Dimension viewportDimension = main_image.scroll_image.getViewport().getExtentSize();
+				Dimension imageDimension = inscript.getPyramidalImage().getDimension();
+				double horizontalRatio = viewportDimension.getWidth() / imageDimension.getWidth();
+				double verticalRatio = viewportDimension.getHeight() / imageDimension.getHeight();
 				double scale = 1.0;
 
 				if (cmd.equals(fit_image_max.getActionCommand())) {
@@ -167,13 +154,13 @@ public class _panel_Main extends JPanel implements ActionListener,
 		if (cmd.equals(clear.getActionCommand())) {
 
 			// clear shapes
+			// TODO: Do we need to clear all shapes? Not only the preferred
+			// ones?
 			for (int i = 0; i < inscript.getText().size(); i++) {
 				for (int j = 0; j < inscript.getText().get(i).size(); j++) {
 					for (int k = 0; k < inscript.getText().get(i).get(j).size(); k++) {
-						InscriptCharacter csign = inscript.getText().get(i)
-								.get(j).get(k);
-						Rectangle zeroRectangle = new Rectangle(0, 0, 0, 0);
-						csign.shape = new SnippetShape(zeroRectangle);
+						InscriptCharacter csign = inscript.getText().get(i).get(j).get(k);
+						csign.clearShape();
 					}
 				}
 			}
@@ -204,8 +191,7 @@ public class _panel_Main extends JPanel implements ActionListener,
 	@Override
 	public void update(Observable o, Object arg) {
 		if (inscript != null) {
-			setBorder(new TitledBorder("main: [ "
-					+ inscript.getAbsoluteRubbingPath() + " ]"));
+			setBorder(new TitledBorder("main: [ " + inscript.getAbsoluteRubbingPath() + " ]"));
 		} else {
 			setBorder(new TitledBorder("main: "));
 		}

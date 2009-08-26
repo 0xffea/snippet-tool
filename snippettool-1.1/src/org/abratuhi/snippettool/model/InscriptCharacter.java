@@ -442,4 +442,8 @@ public class InscriptCharacter {
 		textderotator.rotate(shape.angle, shape.center.x, shape.center.y);
 		g.setTransform(textderotator);
 	}
+
+	public void clearShape() {
+		this.shape.clear();
+	}
 }

@@ -190,14 +190,10 @@ public class SnippetTool extends Observable {
 		if (!snippetdir.endsWith(File.separator))
 			snippetdir += File.separator;
 
-		List<InscriptCharacter> preferredReading = new ArrayList<InscriptCharacter>();
-		for (int i = 0; i < inscript.getText().size(); i++) {
-			preferredReading.add(inscript.getText().get(i).get(0).get(0));
-		}
-
 		File[] preferredSnippets;
 		try {
-			preferredSnippets = inscript.getPyramidalImage().cutSnippets(preferredReading, snippetdir, "subimage");
+			preferredSnippets = inscript.getPyramidalImage().cutSnippets(inscript.getPreferredReadingText(),
+					snippetdir, "subimage");
 
 			DbUtil.uploadBinaryResources(preferredSnippets, collection, user, password);
 			for (int i = 0; i < preferredSnippets.length; i++) {

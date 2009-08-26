@@ -33,8 +33,7 @@ public class MainImageCanvas extends JComponentE implements Observer {
 	private final Inscript inscript;
 
 	/** The logger. */
-	private static final Logger logger = LoggerFactory
-			.getLogger(MainImageCanvas.class);
+	private static final Logger logger = LoggerFactory.getLogger(MainImageCanvas.class);
 
 	/** The preferences to use when drawing. */
 	private final Properties preferences;
@@ -55,8 +54,7 @@ public class MainImageCanvas extends JComponentE implements Observer {
 	 * @param preferences
 	 *            the preferences to apply when drawing the image
 	 */
-	public MainImageCanvas(final SnippetTool snippetTool,
-			final Properties preferences) {
+	public MainImageCanvas(final SnippetTool snippetTool, final Properties preferences) {
 		super();
 		this.snippetTool = snippetTool;
 		this.inscript = snippetTool.inscript;
@@ -105,15 +103,12 @@ public class MainImageCanvas extends JComponentE implements Observer {
 		Graphics2D gg = (Graphics2D) g;
 
 		// load paint properties
-		Color rubbingColor = PrefUtil.String2Color(preferences
-				.getProperty("local.color.rubbing"));
-		Float rubbingAlpha = Float.parseFloat(preferences
-				.getProperty("local.alpha.rubbing"));
+		Color rubbingColor = PrefUtil.String2Color(preferences.getProperty("local.color.rubbing"));
+		Float rubbingAlpha = Float.parseFloat(preferences.getProperty("local.alpha.rubbing"));
 
 		// draw background
 		gg.setBackground(rubbingColor);
-		gg.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-				rubbingAlpha));
+		gg.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, rubbingAlpha));
 
 		if (image != null) {
 			try {
@@ -126,12 +121,9 @@ public class MainImageCanvas extends JComponentE implements Observer {
 		}
 		// draw marking
 		gg.scale(snippetTool.getScale(), snippetTool.getScale());
-		for (int i = 0; i < inscript.getText().size(); i++) {
-			InscriptCharacter sign = inscript.getText().get(i).get(0).get(0);
-			if (sign.shape.base.width > 0
-					&& sign.shape.base.height > 0
-					&& gg.hitClip(sign.shape.base.x, sign.shape.base.y,
-							sign.shape.base.width, sign.shape.base.height)) {
+		for (InscriptCharacter sign : inscript.getPreferredReadingText()) {
+			if (!sign.shape.isEmpty()
+					&& gg.hitClip(sign.shape.base.x, sign.shape.base.y, sign.shape.base.width, sign.shape.base.height)) {
 				sign.drawCharacter(gg, preferences);
 			}
 		}

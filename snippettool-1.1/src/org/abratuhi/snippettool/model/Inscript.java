@@ -30,8 +30,7 @@ import org.xml.sax.InputSource;
  */
 public class Inscript extends Observable {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(Inscript.class);
+	private static final Logger logger = LoggerFactory.getLogger(Inscript.class);
 
 	/** Inscript's id, e.g., HDS_1. **/
 	private String id = "";
@@ -130,8 +129,7 @@ public class Inscript extends Observable {
 		String out = "";
 		int row = 1;
 		int crow = 1;
-		for (int i = 0; i < getText().size(); i++) {
-			InscriptCharacter csign = getText().get(i).get(0).get(0);
+		for (InscriptCharacter csign : getPreferredReadingText()) {
 			crow = csign.row;
 
 			if (crow != row) { // add breakline
@@ -167,8 +165,7 @@ public class Inscript extends Observable {
 		try {
 			// parse XML document
 			SAXBuilder builder = new SAXBuilder();
-			Document doc = builder
-					.build(new InputSource(new StringReader(xml)));
+			Document doc = builder.build(new InputSource(new StringReader(xml)));
 			List<Element> l = doc.getRootElement().getChildren();
 			for (int i = 0; i < l.size(); i++) {
 				// line break
@@ -195,8 +192,7 @@ public class Inscript extends Observable {
 					int basiclength = 0;
 					float basiccert = 0.0f;
 					for (int v = 0; v < lvariants.size(); v++) {
-						float cert = Float.parseFloat(lvariants.get(v)
-								.getAttributeValue("cert"));
+						float cert = Float.parseFloat(lvariants.get(v).getAttributeValue("cert"));
 						if (cert > basiccert) {
 							basicvariant = v;
 							basiclength = lvariants.get(v).getChildren().size();
@@ -242,57 +238,45 @@ public class Inscript extends Observable {
 							// the first reading in choice schema is preferred
 							boolean preferred = (v == 0) ? true : false;
 							// load cert form parent tag choice
-							float cert = Float.parseFloat(lvariants.get(v)
-									.getAttributeValue("cert"));
+							float cert = Float.parseFloat(lvariants.get(v).getAttributeValue("cert"));
 							// create variant number
 							int variantnumber = v;
 
-							if (j < lvariants.get(variantnumber).getChildren()
-									.size()) { // if there is a sign with
+							if (j < lvariants.get(variantnumber).getChildren().size()) { // if
+								// there
+								// is
+								// a
+								// sign
+								// with
 								// indexed j in this variant
 
-								Element cspan = (Element) lvariants.get(v)
-										.getChildren().get(j);
+								Element cspan = (Element) lvariants.get(v).getChildren().get(j);
 
 								if (cspan == null)
-									System.out
-											.println("NULL Element cspan while proceeding.");
+									System.out.println("NULL Element cspan while proceeding.");
 								if (cspan.getAttribute("class") == null)
-									System.out
-											.println("Element doesn't have 'class' attribute;\n"
-													+ cspan.toString());
+									System.out.println("Element doesn't have 'class' attribute;\n" + cspan.toString());
 
-								if (cspan.getAttributeValue("class").equals(
-										"supplied")) {
+								if (cspan.getAttributeValue("class").equals("supplied")) {
 									supplied = true;
 								} else {
 									String ch = cspan.getText();
-									String chOriginal = (cspan
-											.getAttribute("original") != null) ? cspan
-											.getAttributeValue("original")
-											: ch;
+									String chOriginal = (cspan.getAttribute("original") != null) ? cspan
+											.getAttributeValue("original") : ch;
 
-									csign = new InscriptCharacter(this, ch,
-											chOriginal, cert, preferred,
-											variantnumber, current_row,
-											current_column, current_number,
-											new SnippetShape(new Rectangle(0,
-													0, 0, 0)));
+									csign = new InscriptCharacter(this, ch, chOriginal, cert, preferred, variantnumber,
+											current_row, current_column, current_number, new SnippetShape(
+													new Rectangle(0, 0, 0, 0)));
 
 									signs.add(csign);
-									signVariants
-											.add((ArrayList<InscriptCharacter>) signs
-													.clone());
+									signVariants.add((ArrayList<InscriptCharacter>) signs.clone());
 								}
 							}
 						}
 
 						if (!supplied) {
 							// add variants arraylist to sutra text
-							getText()
-									.add(
-											(ArrayList<ArrayList<InscriptCharacter>>) signVariants
-													.clone());
+							getText().add((ArrayList<ArrayList<InscriptCharacter>>) signVariants.clone());
 							//
 							current_column++;
 							current_number++;
@@ -319,50 +303,41 @@ public class Inscript extends Observable {
 							// the first reading in choice schema is preferred
 							boolean preferred = (v == 0) ? true : false;
 							// load cert form parent tag choice
-							float cert = Float.parseFloat(lvariants.get(v)
-									.getAttributeValue("cert"));
+							float cert = Float.parseFloat(lvariants.get(v).getAttributeValue("cert"));
 							// create variant number
 							int variantnumber = v;
 
-							if (j < lvariants.get(variantnumber).getChildren()
-									.size()) { // if there is a sign with
+							if (j < lvariants.get(variantnumber).getChildren().size()) { // if
+								// there
+								// is
+								// a
+								// sign
+								// with
 								// indexed j in this variant
 
-								Element cspan = (Element) lvariants.get(v)
-										.getChildren().get(j);
+								Element cspan = (Element) lvariants.get(v).getChildren().get(j);
 
 								if (cspan == null)
-									System.out
-											.println("NULL Element cspan while proceeding.");
+									System.out.println("NULL Element cspan while proceeding.");
 								if (cspan.getAttribute("class") == null)
-									System.out
-											.println("Element doesn't have 'class' attribute;\n"
-													+ cspan.toString());
+									System.out.println("Element doesn't have 'class' attribute;\n" + cspan.toString());
 
-								if (cspan.getAttributeValue("class").equals(
-										"supplied")) {
+								if (cspan.getAttributeValue("class").equals("supplied")) {
 
 								} else {
 									String ch = cspan.getText();
-									String chOriginal = (cspan
-											.getAttribute("original") != null) ? cspan
-											.getAttributeValue("original")
-											: ch;
+									String chOriginal = (cspan.getAttribute("original") != null) ? cspan
+											.getAttributeValue("original") : ch;
 
-									csign = new InscriptCharacter(this, ch,
-											chOriginal, cert, preferred,
-											variantnumber, current_row,
-											current_column_for_extra,
-											current_number_for_extra,
-											new SnippetShape(new Rectangle(0,
-													0, 0, 0)));
+									csign = new InscriptCharacter(this, ch, chOriginal, cert, preferred, variantnumber,
+											current_row, current_column_for_extra, current_number_for_extra,
+											new SnippetShape(new Rectangle(0, 0, 0, 0)));
 
 									// no imagesign -> attach it to last placed
 									// sign
 									// -1, current_number starts with 1, not 0
 									// and in arraylist numbering starts with 0
-									getText().get(current_number_for_extra - 1)
-											.get(variantnumber).add(csign);
+									getText().get(current_number_for_extra - 1).get(variantnumber).add(csign);
 								}
 							}
 						}
@@ -387,8 +362,7 @@ public class Inscript extends Observable {
 		// transform to list of Characters
 		ArrayList<InscriptCharacter> tarrayOfSigns = new ArrayList<InscriptCharacter>();
 		for (Element appearance : appearances)
-			tarrayOfSigns.add(InscriptCharacter
-					.fromAppearance(this, appearance));
+			tarrayOfSigns.add(InscriptCharacter.fromAppearance(this, appearance));
 
 		// use each appearance's number to update coordinates
 		for (int i = 0; i < tarrayOfSigns.size(); i++) {
@@ -402,8 +376,7 @@ public class Inscript extends Observable {
 			for (int j = 0; j < getText().get(i).size(); j++) {
 				for (int k = 0; k < getText().get(i).get(j).size(); k++) {
 					InscriptCharacter csign = getText().get(i).get(j).get(k);
-					if (csign.shape.base.width == 0
-							|| csign.shape.base.height == 0) {
+					if (csign.shape.base.width == 0 || csign.shape.base.height == 0) {
 						csign.missing = true;
 					}
 				}
@@ -446,8 +419,7 @@ public class Inscript extends Observable {
 		int index = sn.getNumber() - 1; // all variants must be resized
 		for (int j = 0; j < this.getText().get(index).size(); j++) {
 			for (int k = 0; k < this.getText().get(index).get(j).size(); k++) {
-				this.getText().get(index).get(j).get(k).resizeSnippet(dir, dx,
-						dy);
+				this.getText().get(index).get(j).get(k).resizeSnippet(dir, dx, dy);
 			}
 		}
 		this.setChanged();
@@ -492,8 +464,7 @@ public class Inscript extends Observable {
 	public void updateSnippet(SnippetShape shape, int r, int c) {
 		int indexTarget = -1;
 		for (int i = 0; i < getText().size(); i++) {
-			if (getText().get(i).get(0).get(0).row == r
-					&& getText().get(i).get(0).get(0).column == c) {
+			if (getText().get(i).get(0).get(0).row == r && getText().get(i).get(0).get(0).column == c) {
 				indexTarget = i;
 				break;
 			}
@@ -503,8 +474,7 @@ public class Inscript extends Observable {
 		if (indexTarget != -1) {
 			for (int j = 0; j < getText().get(indexTarget).size(); j++) {
 				for (int k = 0; k < getText().get(indexTarget).get(j).size(); k++) {
-					getText().get(indexTarget).get(j).get(k).updateSnippet(
-							shape);
+					getText().get(indexTarget).get(j).get(k).updateSnippet(shape);
 				}
 			}
 		}
@@ -544,23 +514,23 @@ public class Inscript extends Observable {
 		// use preferred reading's signs
 		int dim_x;
 		int dim_y;
-//		try {
-			dim_x = getPyramidalImage().getWidth();
-			dim_y = getPyramidalImage().getHeight();
-//		} catch (IOException e) {
-//			logger.error("IOException occurred in loadMarkingSchema", e);
-//			ErrorUtil.showError(null, "Could not access image file", e);
-//			return;
-//		}
+		// try {
+		dim_x = getPyramidalImage().getWidth();
+		dim_y = getPyramidalImage().getHeight();
+		// } catch (IOException e) {
+		// logger.error("IOException occurred in loadMarkingSchema", e);
+		// ErrorUtil.showError(null, "Could not access image file", e);
+		// return;
+		// }
 		int x_width = 0;
 		int y_height = 0;
 		int max_row = 0;
 		int max_column = 0;
-		for (int i = 0; i < getText().size(); i++) {
-			if (getText().get(i).get(0).get(0).column > max_column)
-				max_column = getText().get(i).get(0).get(0).column;
-			if (getText().get(i).get(0).get(0).row > max_row)
-				max_row = getText().get(i).get(0).get(0).row;
+		for (InscriptCharacter inscriptCharacter : getPreferredReadingText()) {
+			if (inscriptCharacter.column > max_column)
+				max_column = inscriptCharacter.column;
+			if (inscriptCharacter.row > max_row)
+				max_row = inscriptCharacter.row;
 		}
 		x_width = oa + (max_row - 1) * (a + da);
 		y_height = ob + (max_column - 1) * (b + db);
@@ -573,8 +543,7 @@ public class Inscript extends Observable {
 
 		// apply parameters if check passed
 		for (int i = 0; i < getText().size(); i++) {
-			ArrayList<ArrayList<InscriptCharacter>> signvariants = getText()
-					.get(i);
+			ArrayList<ArrayList<InscriptCharacter>> signvariants = getText().get(i);
 			for (int j = 0; j < signvariants.size(); j++) {
 				for (int k = 0; k < signvariants.get(j).size(); k++) {
 					InscriptCharacter csign = signvariants.get(j).get(k);
@@ -588,13 +557,10 @@ public class Inscript extends Observable {
 						int c = csign.getColumn() - 1;
 						if (isLeftToRight()) {
 							csign.shape = new SnippetShape(new Rectangle(
-									new Point(oa + (a + da) * r, ob + (b + db)
-											* c), new Dimension(a, b)));
+									new Point(oa + (a + da) * r, ob + (b + db) * c), new Dimension(a, b)));
 						} else {
-							csign.shape = new SnippetShape(new Rectangle(
-									new Point(dim_x - oa - a - (a + da) * r, ob
-											+ (b + db) * c),
-									new Dimension(a, b)));
+							csign.shape = new SnippetShape(new Rectangle(new Point(dim_x - oa - a - (a + da) * r, ob
+									+ (b + db) * c), new Dimension(a, b)));
 						}
 					}
 				}
@@ -604,18 +570,17 @@ public class Inscript extends Observable {
 		this.notifyObservers();
 	}
 
+	// TODO: Why emit an xupdate for all variants not only the preferred one?
 	public String getXUpdate(String collection) {
 		String xupdate = "";
 		for (int i = 0; i < getText().size(); i++) {
 			for (int j = 0; j < getText().get(i).size(); j++) {
 				for (int k = 0; k < getText().get(i).get(j).size(); k++) {
-					xupdate += getText().get(i).get(j).get(k).getXUpdate(
-							collection);
+					xupdate += getText().get(i).get(j).get(k).getXUpdate(collection);
 				}
 			}
 		}
-		xupdate = "<xu:modifications version=\'1.0\' xmlns:xu=\'http://www.xmldb.org/xupdate\'>"
-				+ xupdate;
+		xupdate = "<xu:modifications version=\'1.0\' xmlns:xu=\'http://www.xmldb.org/xupdate\'>" + xupdate;
 		xupdate = xupdate + "</xu:modifications>";
 		// System.out.println(xupdate);
 		return xupdate;
@@ -706,6 +671,14 @@ public class Inscript extends Observable {
 	 */
 	public ArrayList<ArrayList<ArrayList<InscriptCharacter>>> getText() {
 		return text;
+	}
+
+	public List<InscriptCharacter> getPreferredReadingText() {
+		List<InscriptCharacter> result = new ArrayList<InscriptCharacter>(text.size());
+		for (ArrayList<ArrayList<InscriptCharacter>> inscriptCharacter : text) {
+			result.add(inscriptCharacter.get(0).get(0));
+		}
+		return result;
 	}
 
 	/**
