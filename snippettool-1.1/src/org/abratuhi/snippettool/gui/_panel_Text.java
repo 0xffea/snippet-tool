@@ -70,8 +70,8 @@ public class _panel_Text extends JPanel implements Observer, MouseListener {
 	 */
 	public void setSelected(InscriptCharacter character) {
 		if (character != null) {
-			int n = character.number;
-			int r = character.row;
+			int n = character.getNumber();
+			int r = character.getRow();
 			text_in.setSelectionStart(n - 1 + r - 1);
 			text_in.setSelectionEnd(n - 1 + r - 1 + 1);
 		} else {
@@ -91,8 +91,8 @@ public class _panel_Text extends JPanel implements Observer, MouseListener {
 			text_in.setText(inscript.getPlainText());
 			setBorder(new TitledBorder("text: [ " + inscript.getPath() + " ]"));
 			if (inscript.getActiveCharacter() != null) {
-				if (selectionBegin != inscript.getActiveCharacter().number - 1
-						+ inscript.getActiveCharacter().row - 1) {
+				if (selectionBegin != inscript.getActiveCharacter().getNumber() - 1
+						+ inscript.getActiveCharacter().getRow() - 1) {
 					text_in.setSelectionStart(selectionBegin);
 					text_in.setSelectionEnd(selectionEnd);
 				} else {

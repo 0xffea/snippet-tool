@@ -119,8 +119,9 @@ public class DbUtil {
 			Collection current = DatabaseManager.getCollection(collection, user, password);
 			for (File element : f) {
 				if (element != null) {
+					logger.debug("Uploading snippet {}", element.getName());
 					BinaryResource resource = (BinaryResource) current.createResource(element.getName(),
-							"BinaryResource");
+					"BinaryResource");
 					resource.setContent(element);
 					current.storeResource(resource);
 				}
@@ -151,7 +152,7 @@ public class DbUtil {
 		SAXBuilder saxbuilder = new SAXBuilder();
 		try {
 			element = (Element) saxbuilder.build(new StringReader((String) xmlresource.getContent())).getRootElement()
-					.detach();
+			.detach();
 		} catch (JDOMException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

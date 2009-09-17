@@ -29,7 +29,7 @@ public class InscriptCharacter {
 	public String path_to_snippet = new String();
 
 	/** snippet marking **/
-	public SnippetShape shape;
+	private SnippetShape shape;
 
 	/**
 	 * standard unicode sign, which is represents characterOriginal in unicode
@@ -47,25 +47,25 @@ public class InscriptCharacter {
 	 * character's id, e.g. HDS_1_2_1; built as
 	 * {InscriptId}_{CharacterRowNumber}_{CharacterColumnNumber}
 	 **/
-	public String id;
+	private String id;
 
 	/**
 	 * character's row number; numeration starts with 1 because of compatibility
 	 * with existing scripts and numeration
 	 **/
-	public int row;
+	private int row;
 
 	/**
 	 * character's column number; numeration starts with 1 because of
 	 * compatibility with existing scripts and numeration
 	 **/
-	public int column;
+	private int column;
 
 	/**
 	 * character's continuous number; numeration starts with 1 because of
 	 * compatibility with existing scripts and numeration
 	 **/
-	public int number;
+	private int number;
 
 	/**
 	 * reading variant, numeration starts with 0, no compatibilitiy needed
@@ -83,7 +83,12 @@ public class InscriptCharacter {
 	 * whether this sign was newly added to inscript and not yet marked up as
 	 * its colleagues
 	 **/
-	boolean missing = false;
+	boolean missing = false; // TODO: replace by shape.isEmpty
+
+	/**
+	 * Has the character been modified since the last load/save?
+	 */
+	private boolean modified = false;
 
 	/** empty constructor, needed sometimes in technical procedures **/
 	public InscriptCharacter() {
@@ -117,53 +122,30 @@ public class InscriptCharacter {
 	 * @param delta
 	 *            character's snippet dimension
 	 */
-	/*
-	 * public InscriptCharacter(Inscript s, String chStandard, String
-	 * chOriginal, float cert, boolean preferred, int var, int r, int c, int n,
-	 * Point base, Dimension delta){ // initialize parent inscript this.inscript
-	 * = s; // initialize further attributes this.characterStandard =
-	 * chStandard; this.characterOriginal = chOriginal; this.cert = cert;
-	 * this.preferred_reading = preferred; this.variant = var;
-	 * this.setColumn(c); this.setRow(r); this.setNumber(n); this.id =
-	 * this.inscript.id+"_"+this.row+"_"+this.column; // this.shape = new
-	 * SnippetShape(new Rectangle(base, delta)); }
-	 */
 
 	public InscriptCharacter(Inscript s, String chStandard, String chOriginal, float cert, boolean preferred, int var,
 			int r, int c, int n, SnippetShape sh) {
 		// initialize parent inscript
-		this.inscript = s;
+		inscript = s;
 		// initialize further attributes
-		this.characterStandard = chStandard;
-		this.characterOriginal = chOriginal;
+		characterStandard = chStandard;
+		characterOriginal = chOriginal;
 		this.cert = cert;
-		this.preferred_reading = preferred;
-		this.variant = var;
-		this.setColumn(c);
-		this.setRow(r);
-		this.setNumber(n);
+		preferred_reading = preferred;
+		variant = var;
+		column = c;
+		this.row = r;
+		this.number = n;
 		this.id = this.inscript.getId() + "_" + this.row + "_" + this.column;
 		this.shape = sh;
-	}
-
-	public void setNumber(int n) {
-		this.number = n;
 	}
 
 	public int getNumber() {
 		return this.number;
 	}
 
-	public void setColumn(int c) {
-		this.column = c;
-	}
-
 	public int getColumn() {
 		return this.column;
-	}
-
-	public void setRow(int r) {
-		this.row = r;
 	}
 
 	public int getRow() {
@@ -184,22 +166,26 @@ public class InscriptCharacter {
 	public void resizeSnippet(String direction, int dx, int dy) {
 		if (direction == null)
 			return;
-		else if (direction.equals("nw")) {
-			shape.resizeNW(-dx, -dy);
-		} else if (direction.equals("n")) {
-			shape.resizeN(-dy);
-		} else if (direction.equals("ne")) {
-			shape.resizeNE(dx, -dy);
-		} else if (direction.equals("e")) {
-			shape.resizeE(dx);
-		} else if (direction.equals("se")) {
-			shape.resizeSE(dx, dy);
-		} else if (direction.equals("s")) {
-			shape.resizeS(dy);
-		} else if (direction.equals("sw")) {
-			shape.resizeSW(-dx, dy);
-		} else if (direction.equals("w")) {
-			shape.resizeW(-dx);
+		else {
+			if (direction.equals("nw")) {
+				shape.resizeNW(-dx, -dy);
+			} else if (direction.equals("n")) {
+				shape.resizeN(-dy);
+			} else if (direction.equals("ne")) {
+				shape.resizeNE(dx, -dy);
+			} else if (direction.equals("e")) {
+				shape.resizeE(dx);
+			} else if (direction.equals("se")) {
+				shape.resizeSE(dx, dy);
+			} else if (direction.equals("s")) {
+				shape.resizeS(dy);
+			} else if (direction.equals("sw")) {
+				shape.resizeSW(-dx, dy);
+			} else if (direction.equals("w")) {
+				shape.resizeW(-dx);
+			}
+
+			modified = true;
 		}
 	}
 
@@ -213,10 +199,12 @@ public class InscriptCharacter {
 	 */
 	public void moveSnippet(int dx, int dy) {
 		shape.shift(dx, dy);
+		modified = true;
 	}
 
 	public void rotateSnippet(double phi) {
 		shape.rotate(phi);
+		modified = true;
 	}
 
 	/**
@@ -247,59 +235,31 @@ public class InscriptCharacter {
 	}
 
 	/**
-	 * Compute, in which part of character's snippet's marking point is situated
-	 * 
-	 * @param p
-	 *            point to check
-	 * @return direction code
-	 */
-	/*
-	 * public String placeOnBorder(Point p){ if(!shape.contains(p)) return new
-	 * String("none"); //p1 p2 // // //p3 p4 float part = 0.1f; int x0 =
-	 * shape.getLocation().x; int y0 = shape.getLocation().y; int x1 = x0 +
-	 * shape.width; int y1 = y0 + shape.height; Point p1 = new Point(x0, y0);
-	 * Point p2 = new Point(x1, y0); Point p3 = new Point(x0, y1); Point p4 =
-	 * new Point(x1, y1); int x = x1 - x0; int y = y1 - y0; int dx =
-	 * (int)(x*part); int dy = (int)(y*part); if(new Rectangle(p1.x, p1.y, dx,
-	 * dy).contains(p)) return new String("nw"); if(new Rectangle(p1.x+dx, p1.y,
-	 * x-dx-dx, dy).contains(p)) return new String("n"); if(new
-	 * Rectangle(p2.x-dx, p2.y, dx, dy).contains(p)) return new String("ne");
-	 * if(new Rectangle(p2.x-dx, p2.y+dy, dx, y-dy-dy).contains(p)) return new
-	 * String("e"); if(new Rectangle(p4.x-dx, p4.y-dy, dx, dy).contains(p))
-	 * return new String("se"); if(new Rectangle(p3.x+dx, p3.y-dy, x-dx-dx,
-	 * dy).contains(p)) return new String("s"); if(new Rectangle(p3.x, p3.y-dy,
-	 * dx, dy).contains(p)) return new String("sw"); if(new Rectangle(p1.x,
-	 * p1.y+dy, dx, y-dy-dy).contains(p)) return new String("w"); return null; }
-	 */
-
-	/**
-	 * Generate XUpdate
+	 * Generate XUpdate.
 	 * 
 	 * @return XUpdate
 	 */
 	public String getXUpdate(String collection) {
-
-		if (shape.isEmpty()) {
-			return "";
-		} else {
+		if (!shape.isEmpty()) {
 			return "    <xu:append select=\"collection('" + collection + "')//char[@xmlid=\'U+"
-					+ NumUtil.dec2hex(characterStandard.codePointAt(0)).toUpperCase() + "\']\">\n"
-					+ "       <xu:element name=\"appearance\">\n" + "           <xu:attribute name=\"character\">"
-					+ this.characterStandard + "</xu:attribute>\n" + "           <xu:attribute name=\"original\">"
-					+ this.characterOriginal + "</xu:attribute>\n" + "           <xu:attribute name=\"id\">" + this.id
-					+ "</xu:attribute>\n" + "           <xu:attribute name=\"preferred_reading\">"
-					+ this.preferred_reading + "</xu:attribute>\n" + "           <xu:attribute name=\"variant\">"
-					+ this.variant + "</xu:attribute>\n" + "           <xu:attribute name=\"cert\">" + this.cert
-					+ "</xu:attribute>\n" + "           <xu:attribute name=\"nr\">" + inscript.getId() + "_"
-					+ this.number + "</xu:attribute>\n" + "           <source>" + inscript.getId() + "</source>\n"
-					+ "           <rubbing>" + inscript.getRelativeRubbingPath() + "</rubbing>\n"
-					+ "           <graphic>" + path_to_snippet + "</graphic>\n" + "           <coordinates>\n"
-					+ "           <base x=\"" + shape.base.x + "\" y=\"" + shape.base.y + "\" width=\""
-					+ shape.base.width + "\" height=\"" + shape.base.height + "\" />\n" + "           <angle phi=\""
-					+ shape.angle + "\"/>\n" + "           </coordinates>\n" + "       </xu:element>\n"
+			+ NumUtil.dec2hex(characterStandard.codePointAt(0)).toUpperCase() + "\']\">\n"
+			+ "       <xu:element name=\"appearance\">\n" + "           <xu:attribute name=\"character\">"
+			+ this.characterStandard + "</xu:attribute>\n" + "           <xu:attribute name=\"original\">"
+			+ this.characterOriginal + "</xu:attribute>\n" + "           <xu:attribute name=\"id\">" + this.id
+			+ "</xu:attribute>\n" + "           <xu:attribute name=\"preferred_reading\">"
+			+ this.preferred_reading + "</xu:attribute>\n" + "           <xu:attribute name=\"variant\">"
+			+ this.variant + "</xu:attribute>\n" + "           <xu:attribute name=\"cert\">" + this.cert
+			+ "</xu:attribute>\n" + "           <xu:attribute name=\"nr\">" + inscript.getId() + "_"
+			+ this.getNumber() + "</xu:attribute>\n" + "           <source>" + inscript.getId() + "</source>\n"
+			+ "           <rubbing>" + inscript.getRelativeRubbingPath() + "</rubbing>\n"
+			+ "           <graphic>" + path_to_snippet + "</graphic>\n" + "           <coordinates>\n"
+			+ "           <base x=\"" + shape.base.x + "\" y=\"" + shape.base.y + "\" width=\""
+			+ shape.base.width + "\" height=\"" + shape.base.height + "\" />\n" + "           <angle phi=\""
+			+ shape.angle + "\"/>\n" + "           </coordinates>\n" + "       </xu:element>\n"
 					+ "    </xu:append>\n";
+		} else {
+			return "";
 		}
-
 	}
 
 	/**
@@ -317,7 +277,7 @@ public class InscriptCharacter {
 		appearance.setAttribute("preferred_reading", String.valueOf(this.preferred_reading));
 		appearance.setAttribute("variant", String.valueOf(this.variant));
 		appearance.setAttribute("cert", String.valueOf(this.cert));
-		appearance.setAttribute("nr", String.valueOf(inscript.getId() + "_" + this.number));
+		appearance.setAttribute("nr", String.valueOf(inscript.getId() + "_" + this.getNumber()));
 
 		Element source = new Element("source");
 		source.setText(inscript.getId());
@@ -377,6 +337,7 @@ public class InscriptCharacter {
 	 */
 	public void updateSnippet(SnippetShape shape) {
 		this.shape = shape.clone();
+		modified = true;
 	}
 
 	private static void setAlpha(Graphics2D g, float alpha) {
@@ -431,7 +392,7 @@ public class InscriptCharacter {
 		}
 		if (inscript.isNumberVisible()) {
 			g.setFont(f.deriveFont(fontBaseSize / 3.0f));
-			g.drawString(String.valueOf(number), shape.base.x, shape.base.y + g.getFontMetrics().getAscent());
+			g.drawString(String.valueOf(getNumber()), shape.base.x, shape.base.y + g.getFontMetrics().getAscent());
 		}
 		if (inscript.isRowColumnVisible()) {
 			g.setFont(f.deriveFont(fontBaseSize / 5.0f));
@@ -443,7 +404,46 @@ public class InscriptCharacter {
 		g.setTransform(textderotator);
 	}
 
+	/**
+	 * @param shape the shape to set
+	 */
+	public void setShape(SnippetShape shape) {
+		this.shape = shape;
+	}
+
+	/**
+	 * @return the shape
+	 */
+	public SnippetShape getShape() {
+		return shape;
+	}
+
 	public void clearShape() {
-		this.shape.clear();
+		if (!shape.isEmpty()) {
+			shape.clear();
+			modified = true;
+		}
+	}
+
+	public boolean isModified() {
+		return modified;
+	}
+
+	public void setModified(boolean modified) {
+		this.modified = modified;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
 	}
 }

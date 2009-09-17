@@ -122,8 +122,9 @@ public class MainImageCanvas extends JComponentE implements Observer {
 		// draw marking
 		gg.scale(snippetTool.getScale(), snippetTool.getScale());
 		for (InscriptCharacter sign : inscript.getPreferredReadingText()) {
-			if (!sign.shape.isEmpty()
-					&& gg.hitClip(sign.shape.base.x, sign.shape.base.y, sign.shape.base.width, sign.shape.base.height)) {
+			if (!sign.getShape().isEmpty()
+					&& gg.hitClip(sign.getShape().base.x, sign.getShape().base.y,
+							sign.getShape().base.width, sign.getShape().base.height)) {
 				sign.drawCharacter(gg, preferences);
 			}
 		}

@@ -143,8 +143,8 @@ public class PyramidalImage {
 
 					// Create a compatible image for faster drawing ...
 					BufferedImage result = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
-							.getDefaultConfiguration().createCompatibleImage(rawTile.getWidth(), rawTile.getHeight(),
-									Transparency.OPAQUE);
+					.getDefaultConfiguration().createCompatibleImage(rawTile.getWidth(), rawTile.getHeight(),
+							Transparency.OPAQUE);
 
 					// and copy the loaded tile onto it.
 					result.getGraphics().drawImage(rawTile, 0, 0, null);
@@ -333,7 +333,7 @@ public class PyramidalImage {
 	 *             if the image cannot be read
 	 */
 	private void drawSubimage(final Graphics g, final int imageIndex, final double scale, final Rectangle clip)
-			throws IOException {
+	throws IOException {
 
 		// compute rect inside the image we should draw
 		Rectangle image = new Rectangle((int) (reader.getWidth(imageIndex) * scale), (int) (reader
@@ -383,14 +383,14 @@ public class PyramidalImage {
 	 *             if the image cannot be read or writing the snippets fails.
 	 */
 	public File[] cutSnippets(final List<InscriptCharacter> characters, final String directory, final String basename)
-			throws IOException {
+	throws IOException {
 		File dir = FileUtil.getTempdir(directory);
 		File[] outputImageFiles = new File[characters.size()];
 		for (int i = 0; i < characters.size(); i++) {
 			InscriptCharacter ch = characters.get(i);
 
-			if (!ch.shape.isEmpty()) {
-				BufferedImage outputImage = cutImage(ch.shape);
+			if (!ch.getShape().isEmpty() && ch.isModified()) {
+				BufferedImage outputImage = cutImage(ch.getShape());
 				outputImageFiles[i] = new File(dir, basename + "_" + ch.inscript.getId() + "_" + ch.getNumber()
 						+ ".png");
 				ImageIO.write(outputImage, "PNG", outputImageFiles[i]);

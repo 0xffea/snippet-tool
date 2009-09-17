@@ -113,7 +113,7 @@ public class _controller_ManualSelective implements MouseListener,
 
 			// update dimension of snippet marking
 			snippettool.inscript.updateSnippet(new SnippetShape(r),
-					activeChar.row, activeChar.column);
+					activeChar.getRow(), activeChar.getColumn());
 
 			// set active
 			main_image.root.text.setSelected(activeChar);
@@ -153,7 +153,7 @@ public class _controller_ManualSelective implements MouseListener,
 
 			// update dimension of snippet marking
 			snippettool.inscript.updateSnippet(new SnippetShape(r),
-					activeChar.row, activeChar.column);
+					activeChar.getRow(), activeChar.getColumn());
 
 			// set active
 			main_image.root.text.setSelected(activeChar);

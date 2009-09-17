@@ -22,6 +22,7 @@ import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
 import org.xmldb.api.base.XMLDBException;
+import org.xmldb.api.modules.XQueryService;
 import org.xmldb.api.modules.XUpdateQueryService;
 
 /**
@@ -125,8 +126,8 @@ public class XMLUtil {
 		try {
 			String driver = "org.exist.xmldb.DatabaseImpl";
 			String xupdate = "<xu:modifications version=\'1.0\' xmlns:xu=\'http://www.xmldb.org/xupdate\'> "
-					+ "<xu:remove select=\"//appearance[substring(@id,0," + (xmlid.length() + 1) + ")='" + xmlid
-					+ "']\" /> " + "</xu:modifications>";
+				+ "<xu:remove select=\"//appearance[substring(@id,0," + (xmlid.length() + 1) + ")='" + xmlid
+				+ "']\" /> " + "</xu:modifications>";
 
 			Class cl = Class.forName(driver);
 			Database database = (Database) cl.newInstance();
@@ -151,6 +152,25 @@ public class XMLUtil {
 		}
 
 		// TODO: remove snippets
+	}
+
+	public static void deleteAppearances(String user, String pass, String out, String xmlid) throws Exception {
+		if (xmlid.length() < 2)
+			return;
+
+		if (!xmlid.endsWith("_"))
+			xmlid += "_";
+
+		String driver = "org.exist.xmldb.DatabaseImpl";
+		Class cl = Class.forName(driver);
+		Database database = (Database) cl.newInstance();
+		DatabaseManager.registerDatabase(database);
+		Collection col = DatabaseManager.getCollection(out, user, pass);
+
+		XQueryService xqservice = (XQueryService) col.getService("XQueryService", "1.0");
+		xqservice.query("for $appearances in //appearance[substring(@id,0," + (xmlid.length() + 1) + ")='" + xmlid
+				+ "'] return update delete $appearances");
+
 	}
 
 	/**

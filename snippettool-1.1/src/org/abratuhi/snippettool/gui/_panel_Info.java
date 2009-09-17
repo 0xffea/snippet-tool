@@ -71,13 +71,13 @@ public class _panel_Info extends JPanel implements Observer, ActionListener {
 		if (sn != null) {
 			info.append("character:\t" + sn.characterStandard + " ("
 					+ sn.characterOriginal + ")" + "\n");
-			info.append("x, y:\t" + sn.shape.base.x + ", " + sn.shape.base.y
+			info.append("x, y:\t" + sn.getShape().base.x + ", " + sn.getShape().base.y
 					+ "\n");
-			info.append("width, height:\t" + sn.shape.base.width + ", "
-					+ sn.shape.base.height + "\n");
-			info.append("angle:\t" + sn.shape.angle + "\n");
-			info.append("number:\t" + sn.number + " (r:" + sn.row + ", c:"
-					+ sn.column + ")");
+			info.append("width, height:\t" + sn.getShape().base.width + ", "
+					+ sn.getShape().base.height + "\n");
+			info.append("angle:\t" + sn.getShape().angle + "\n");
+			info.append("number:\t" + sn.getNumber() + " (r:" + sn.getRow() + ", c:"
+					+ sn.getColumn() + ")");
 			return info.toString();
 		} else
 			return "";
@@ -87,8 +87,8 @@ public class _panel_Info extends JPanel implements Observer, ActionListener {
 	public void update(Observable arg0, Object arg1) {
 		InscriptCharacter activeCharacter = inscript.getActiveCharacter();
 		if (activeCharacter != null) {
-			setBorder(new TitledBorder("info: [" + activeCharacter.id + "]"));
-			clearShape.setEnabled(!activeCharacter.shape.isEmpty());
+			setBorder(new TitledBorder("info: [" + activeCharacter.getId() + "]"));
+			clearShape.setEnabled(!activeCharacter.getShape().isEmpty());
 		} else {
 			setBorder(new TitledBorder("info: [ ]"));
 			clearShape.setEnabled(false);
@@ -101,7 +101,7 @@ public class _panel_Info extends JPanel implements Observer, ActionListener {
 		if (e.getActionCommand().equals(clearShape.getActionCommand())) {
 			InscriptCharacter activeCharacter = inscript.getActiveCharacter();
 			if (activeCharacter != null) {
-				activeCharacter.shape.clear();
+				activeCharacter.clearShape();
 				inscript.setActiveCharacter(activeCharacter);
 			}
 		}

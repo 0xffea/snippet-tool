@@ -170,13 +170,14 @@ public class SnippetTool extends Observable {
 		submitInscriptCoordinates();
 	}
 
-	public void submitInscriptCoordinates() {
+	private void submitInscriptCoordinates() {
 		String uri = props.getProperty("db.unicode.uri");
 		String collection = props.getProperty("db.unicode.dir");
 		String user = props.getProperty("db.unicode.user");
 		String password = props.getProperty("db.unicode.password");
 
-		XMLUtil.clearAppearances(user, password, collection, inscript.getId());
+		// XMLUtil.clearAppearances(user, password, collection,
+		// inscript.getId());
 		XMLUtil.updateXML(inscript.getXUpdate("/db/" + collection.substring(uri.length())), user, password, collection);
 	}
 

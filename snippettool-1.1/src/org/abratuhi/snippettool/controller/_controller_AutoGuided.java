@@ -73,7 +73,7 @@ public class _controller_AutoGuided implements MouseListener, MouseMotionListene
 				for (InscriptCharacter sign : inscript.getPreferredReadingText()) {
 					// check, whether marking bounds contain mousePressed
 					// coordinates
-					if (sign.shape.main.contains(mouse_current_new)) {
+					if (sign.getShape().main.contains(mouse_current_new)) {
 						// set flag: found existing sign
 						snippettool.existingSign = true;
 						// set character
@@ -175,7 +175,8 @@ public class _controller_AutoGuided implements MouseListener, MouseMotionListene
 
 		// change cursor appearance
 		if (inscript.getActiveCharacter() != null) {
-			String cursorPlace = inscript.getActiveCharacter().shape.getPointRelative(mouse_current_new);
+			String cursorPlace = inscript.getActiveCharacter().getShape()
+					.getPointRelative(mouse_current_new);
 			if (cursorPlace != null && !cursorPlace.equals("none")) {
 				if (cursorPlace.equals("nw")) {
 					main_image.setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR));

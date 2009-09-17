@@ -9,8 +9,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
+import java.util.Set;
 
 import org.abratuhi.snippettool.gui._panel_Options;
 import org.abratuhi.snippettool.util.ErrorUtil;
@@ -130,7 +132,7 @@ public class Inscript extends Observable {
 		int row = 1;
 		int crow = 1;
 		for (InscriptCharacter csign : getPreferredReadingText()) {
-			crow = csign.row;
+			crow = csign.getRow();
 
 			if (crow != row) { // add breakline
 				out += "\n";
@@ -367,7 +369,7 @@ public class Inscript extends Observable {
 		// use each appearance's number to update coordinates
 		for (int i = 0; i < tarrayOfSigns.size(); i++) {
 			InscriptCharacter csign = tarrayOfSigns.get(i);
-			updateSnippet(csign.shape, csign.row, csign.column);
+			updateSnippet(csign.getShape(), csign.getRow(), csign.getColumn());
 		}
 
 		// check, whether all signs have become coordinates assigned, if not,
@@ -376,7 +378,8 @@ public class Inscript extends Observable {
 			for (int j = 0; j < getText().get(i).size(); j++) {
 				for (int k = 0; k < getText().get(i).get(j).size(); k++) {
 					InscriptCharacter csign = getText().get(i).get(j).get(k);
-					if (csign.shape.base.width == 0 || csign.shape.base.height == 0) {
+					csign.setModified(false);
+					if (csign.getShape().isEmpty()) {
 						csign.missing = true;
 					}
 				}
@@ -393,7 +396,7 @@ public class Inscript extends Observable {
 	public InscriptCharacter getCharacterRC(int r, int c) {
 		for (int i = 0; i < getText().size(); i++) {
 			InscriptCharacter ch = getCharacterNV(i, 0);
-			if (ch.row == r && ch.column == c) {
+			if (ch.getRow() == r && ch.getColumn() == c) {
 				return ch;
 			}
 		}
@@ -464,7 +467,8 @@ public class Inscript extends Observable {
 	public void updateSnippet(SnippetShape shape, int r, int c) {
 		int indexTarget = -1;
 		for (int i = 0; i < getText().size(); i++) {
-			if (getText().get(i).get(0).get(0).row == r && getText().get(i).get(0).get(0).column == c) {
+			if (getText().get(i).get(0).get(0).getRow() == r
+					&& getText().get(i).get(0).get(0).getColumn() == c) {
 				indexTarget = i;
 				break;
 			}
@@ -548,19 +552,20 @@ public class Inscript extends Observable {
 				for (int k = 0; k < signvariants.get(j).size(); k++) {
 					InscriptCharacter csign = signvariants.get(j).get(k);
 
-					// if dimension greater 0, sign already has coordinates
-					// assigned -> no need to generate
 					if (missingOnly && csign.missing) {
 						continue;
 					} else {
 						int r = csign.getRow() - 1;
 						int c = csign.getColumn() - 1;
 						if (isLeftToRight()) {
-							csign.shape = new SnippetShape(new Rectangle(
-									new Point(oa + (a + da) * r, ob + (b + db) * c), new Dimension(a, b)));
+							csign.setShape(new SnippetShape(new Rectangle(
+									new Point(oa + (a + da) * r, ob + (b + db)
+											* c), new Dimension(a, b))));
 						} else {
-							csign.shape = new SnippetShape(new Rectangle(new Point(dim_x - oa - a - (a + da) * r, ob
-									+ (b + db) * c), new Dimension(a, b)));
+							csign.setShape(new SnippetShape(new Rectangle(
+									new Point(dim_x - oa - a - (a + da) * r, ob
+											+ (b + db) * c),
+											new Dimension(a, b))));
 						}
 					}
 				}
@@ -570,20 +575,36 @@ public class Inscript extends Observable {
 		this.notifyObservers();
 	}
 
-	// TODO: Why emit an xupdate for all variants not only the preferred one?
 	public String getXUpdate(String collection) {
-		String xupdate = "";
+		StringBuffer xupdate = new StringBuffer();
+
+		Set<String> ids = new HashSet<String>();
+		StringBuffer additions = new StringBuffer();
 		for (int i = 0; i < getText().size(); i++) {
 			for (int j = 0; j < getText().get(i).size(); j++) {
 				for (int k = 0; k < getText().get(i).get(j).size(); k++) {
-					xupdate += getText().get(i).get(j).get(k).getXUpdate(collection);
+					InscriptCharacter character = getText().get(i).get(j).get(k);
+					if (character.isModified()) {
+						ids.add(character.getId());
+						additions.append(character.getXUpdate(collection));
+						character.setModified(false);
+					}
 				}
 			}
+
 		}
-		xupdate = "<xu:modifications version=\'1.0\' xmlns:xu=\'http://www.xmldb.org/xupdate\'>" + xupdate;
-		xupdate = xupdate + "</xu:modifications>";
-		// System.out.println(xupdate);
-		return xupdate;
+
+		xupdate.append("<xu:modifications version=\'1.0\' xmlns:xu=\'http://www.xmldb.org/xupdate\'>\n");
+
+		for (String id : ids) {
+			xupdate.append("    <xu:remove select=\"//appearance[@id='" + id + "']\" />\n");
+		}
+
+		xupdate.append(additions);
+
+		xupdate.append("</xu:modifications>");
+
+		return xupdate.toString();
 	}
 
 	/**

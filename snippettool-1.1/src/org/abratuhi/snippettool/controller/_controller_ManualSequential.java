@@ -128,14 +128,14 @@ public class _controller_ManualSequential implements MouseListener,
 
 			// update dimension of snippet marking
 			snippettool.inscript.updateSnippet(new SnippetShape(r),
-					activeChar.row, activeChar.column);
+					activeChar.getRow(), activeChar.getColumn());
 
 			//
 			currentIndex++;
 
 			// set next active
 			snippettool.inscript.setActiveCharacter(snippettool.inscript
-					.getCharacterNV(activeChar.number + 1 - 1, 0)); // +1 for
+					.getCharacterNV(activeChar.getNumber() + 1 - 1, 0)); // +1 for
 			// next, -1
 			// for
 			// indexing
@@ -175,7 +175,7 @@ public class _controller_ManualSequential implements MouseListener,
 
 			// update dimension of snippet marking
 			snippettool.inscript.updateSnippet(new SnippetShape(r),
-					activeChar.row, activeChar.column);
+					activeChar.getRow(), activeChar.getColumn());
 
 			// repaint
 			logger.trace("Triggering repaint.");

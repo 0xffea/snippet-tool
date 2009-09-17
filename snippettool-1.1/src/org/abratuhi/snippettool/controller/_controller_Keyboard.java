@@ -58,19 +58,19 @@ public class _controller_Keyboard implements KeyListener{
 			inscript.moveSnippet(inscript.getActiveCharacter(), step, 0);
 			break;
 		case 37:	// l_arrow
-			InscriptCharacter chl = inscript.getCharacterRC(inscript.getActiveCharacter().row+1, inscript.getActiveCharacter().column);
+			InscriptCharacter chl = inscript.getCharacterRC(inscript.getActiveCharacter().getRow()+1, inscript.getActiveCharacter().getColumn());
 			if(chl != null) inscript.setActiveCharacter(chl);
 			break;
 		case 38:	// u_arrow
-			InscriptCharacter chu = inscript.getCharacterRC(inscript.getActiveCharacter().row, inscript.getActiveCharacter().column-1);
+			InscriptCharacter chu = inscript.getCharacterRC(inscript.getActiveCharacter().getRow(), inscript.getActiveCharacter().getColumn()-1);
 			if(chu != null) inscript.setActiveCharacter(chu);
 			break;
 		case 39:	// r_arrow
-			InscriptCharacter chr = inscript.getCharacterRC(inscript.getActiveCharacter().row-1, inscript.getActiveCharacter().column);
+			InscriptCharacter chr = inscript.getCharacterRC(inscript.getActiveCharacter().getRow()-1, inscript.getActiveCharacter().getColumn());
 			if(chr != null) inscript.setActiveCharacter(chr);
 			break;
 		case 40:	// d_arrow
-			InscriptCharacter chd = inscript.getCharacterRC(inscript.getActiveCharacter().row, inscript.getActiveCharacter().column+1);
+			InscriptCharacter chd = inscript.getCharacterRC(inscript.getActiveCharacter().getRow(), inscript.getActiveCharacter().getColumn()+1);
 			if(chd != null) inscript.setActiveCharacter(chd);
 			break;
 
