@@ -68,7 +68,7 @@ public class _controller_AutoGuided implements MouseListener, MouseMotionListene
 		if (me.getButton() == me.BUTTON1 || me.getButton() == me.BUTTON3) {
 			// if not still the same sign used as active
 			if (inscript.getActiveCharacter() == null
-					|| !inscript.getActiveCharacter().shape.main.contains(mouse_pressed)) {
+					|| !inscript.getActiveCharacter().getShape().main.contains(mouse_pressed)) {
 				// find sign that should be active
 				for (InscriptCharacter sign : inscript.getPreferredReadingText()) {
 					// check, whether marking bounds contain mousePressed
@@ -176,7 +176,7 @@ public class _controller_AutoGuided implements MouseListener, MouseMotionListene
 		// change cursor appearance
 		if (inscript.getActiveCharacter() != null) {
 			String cursorPlace = inscript.getActiveCharacter().getShape()
-					.getPointRelative(mouse_current_new);
+			.getPointRelative(mouse_current_new);
 			if (cursorPlace != null && !cursorPlace.equals("none")) {
 				if (cursorPlace.equals("nw")) {
 					main_image.setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR));

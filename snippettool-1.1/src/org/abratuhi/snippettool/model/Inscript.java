@@ -266,12 +266,12 @@ public class Inscript extends Observable {
 									String chOriginal = (cspan.getAttribute("original") != null) ? cspan
 											.getAttributeValue("original") : ch;
 
-									csign = new InscriptCharacter(this, ch, chOriginal, cert, preferred, variantnumber,
-											current_row, current_column, current_number, new SnippetShape(
-													new Rectangle(0, 0, 0, 0)));
+											csign = new InscriptCharacter(this, ch, chOriginal, cert, preferred, variantnumber,
+													current_row, current_column, current_number, new SnippetShape(
+															new Rectangle(0, 0, 0, 0)));
 
-									signs.add(csign);
-									signVariants.add((ArrayList<InscriptCharacter>) signs.clone());
+											signs.add(csign);
+											signVariants.add((ArrayList<InscriptCharacter>) signs.clone());
 								}
 							}
 						}
@@ -331,15 +331,15 @@ public class Inscript extends Observable {
 									String chOriginal = (cspan.getAttribute("original") != null) ? cspan
 											.getAttributeValue("original") : ch;
 
-									csign = new InscriptCharacter(this, ch, chOriginal, cert, preferred, variantnumber,
-											current_row, current_column_for_extra, current_number_for_extra,
-											new SnippetShape(new Rectangle(0, 0, 0, 0)));
+											csign = new InscriptCharacter(this, ch, chOriginal, cert, preferred, variantnumber,
+													current_row, current_column_for_extra, current_number_for_extra,
+													new SnippetShape(new Rectangle(0, 0, 0, 0)));
 
-									// no imagesign -> attach it to last placed
-									// sign
-									// -1, current_number starts with 1, not 0
-									// and in arraylist numbering starts with 0
-									getText().get(current_number_for_extra - 1).get(variantnumber).add(csign);
+											// no imagesign -> attach it to last placed
+											// sign
+											// -1, current_number starts with 1, not 0
+											// and in arraylist numbering starts with 0
+											getText().get(current_number_for_extra - 1).get(variantnumber).add(csign);
 								}
 							}
 						}
@@ -531,10 +531,10 @@ public class Inscript extends Observable {
 		int max_row = 0;
 		int max_column = 0;
 		for (InscriptCharacter inscriptCharacter : getPreferredReadingText()) {
-			if (inscriptCharacter.column > max_column)
-				max_column = inscriptCharacter.column;
-			if (inscriptCharacter.row > max_row)
-				max_row = inscriptCharacter.row;
+			if (inscriptCharacter.getColumn() > max_column)
+				max_column = inscriptCharacter.getColumn();
+			if (inscriptCharacter.getRow() > max_row)
+				max_row = inscriptCharacter.getRow();
 		}
 		x_width = oa + (max_row - 1) * (a + da);
 		y_height = ob + (max_column - 1) * (b + db);
