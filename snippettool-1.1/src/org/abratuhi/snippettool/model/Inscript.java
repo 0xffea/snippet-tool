@@ -453,6 +453,18 @@ public class Inscript extends Observable {
 		this.notifyObservers();
 	}
 
+	public void clearShape(InscriptCharacter character) {
+		int index = character.getNumber() - 1; // all variants must be moved
+		for (int j = 0; j < this.getText().get(index).size(); j++) {
+			for (int k = 0; k < this.getText().get(index).get(j).size(); k++) {
+				this.getText().get(index).get(j).get(k).clearShape();
+			}
+		}
+		this.setChanged();
+		this.notifyObservers();
+
+	}
+
 	public void rotateSnippet(InscriptCharacter sn, double phi) {
 		int index = sn.getNumber() - 1; // all variants must be moved
 		for (int j = 0; j < this.getText().get(index).size(); j++) {

@@ -101,8 +101,7 @@ public class _panel_Info extends JPanel implements Observer, ActionListener {
 		if (e.getActionCommand().equals(clearShape.getActionCommand())) {
 			InscriptCharacter activeCharacter = inscript.getActiveCharacter();
 			if (activeCharacter != null) {
-				activeCharacter.clearShape();
-				inscript.setActiveCharacter(activeCharacter);
+				inscript.clearShape(activeCharacter);
 			}
 		}
 
