@@ -5,14 +5,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -34,36 +26,6 @@ import org.xmldb.api.modules.XUpdateQueryService;
  * 
  */
 public class XMLUtil {
-	/**
-	 * Apply XSL Transformation to XML
-	 * 
-	 * @param xml
-	 *            content of XML
-	 * @param xslt
-	 *            content of XSLT
-	 * @return content of resultant transformation
-	 */
-	public static String transformXML(String xml, String xslt) {
-		StringWriter sw = new StringWriter();
-		TransformerFactory tFactory = TransformerFactory.newInstance();
-		Source xslSource = new StreamSource(new StringReader(xslt));
-		Transformer transformer;
-		try {
-			transformer = tFactory.newTransformer(xslSource);
-			if (transformer != null)
-				transformer.transform(new StreamSource(new StringReader(xml)), new StreamResult(sw));
-			return sw.toString();
-		} catch (TransformerConfigurationException e) {
-			e.printStackTrace();
-			System.out.println("xml = " + xml);
-			System.out.println("xslt = " + xslt);
-		} catch (TransformerException e) {
-			e.printStackTrace();
-			System.out.println("xml = " + xml);
-			System.out.println("xslt = " + xslt);
-		}
-		return null;
-	}
 
 	/**
 	 * Perform an XUpdate on eXist database
