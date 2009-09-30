@@ -96,7 +96,7 @@ public class SnippetTool extends Observable {
 	}
 
 	private void setInscriptText(final File inscriptFile) throws Exception {
-		logger.debug("Loading inscript text from %", inscriptFile);
+		logger.debug("Loading inscript text from {}", inscriptFile);
 
 		String xsltFilename = props.getProperty("local.xslt.file");
 
