@@ -22,6 +22,8 @@ import org.slf4j.LoggerFactory;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.XMLDBException;
+import org.xmldb.api.modules.XMLResource;
+import org.xmldb.api.modules.XQueryService;
 
 /**
  * Snippet-tool Explorer Component. Represents database structure in tree view
@@ -168,76 +170,99 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 
 				} else if (autoload && selectedResource.endsWith(".xml")) {
 
-					new SwingWorker<Object, Object>() {
+					if (!resourceContainsChineseText(selectedCollection, selectedResource)) {
+						JOptionPane.showMessageDialog(this,
+								"<html>The selected document does not contain Chinese text marked as such in the body.<br/>"
+										+ "Check if an <em><code>xml:lang=\"zh\"</code> attribute is missing</em> in "
+								+ selectedResource + "</html>",
+								"No Chinese Text in " + selectedResource, JOptionPane.ERROR_MESSAGE);
+					} else {
 
-						@Override
-						protected Object doInBackground() throws Exception {
-							snippettool.loadInscriptTextFromRemoteResource(selectedCollection, selectedResource);
-							snippettool.updateInscriptImagePathFromAppearances();
-							return null;
-						}
+						new SwingWorker<Object, Object>() {
 
-						@Override
-						protected void done() {
-							try {
-								get();
-								root.status("Inscript " + selectedResource + " loaded.");
-
-								if (snippettool.inscript.getAbsoluteRubbingPath() != null
-										&& snippettool.inscript.getAbsoluteRubbingPath() != ""
-										&& snippettool.inscript.getAbsoluteRubbingPath().contains("/")) {
-									new SwingWorker<String, Object>() {
-
-										@Override
-										protected String doInBackground() throws Exception {
-
-											String rubbingPath = snippettool.inscript.getAbsoluteRubbingPath();
-											snippettool.setInscriptImageToRemoteRessource(rubbingPath);
-											return rubbingPath;
-										}
-
-										@Override
-										protected void done() {
-											try {
-												root.status("Image " + get() + " loaded.");
-											} catch (Exception e) {
-												logger.error("Error loading image", e);
-												root.status("Loading image failed: " + e.getLocalizedMessage());
-											}
-										}
-
-									}.execute();
-								}
-
-								if (snippettool.inscript.getAbsoluteRubbingPath() != null
-										&& snippettool.inscript.getAbsoluteRubbingPath() != "") {
-									new SwingWorker<Object, Object>() {
-
-										@Override
-										protected Object doInBackground() throws Exception {
-											snippettool.updateInscriptCoordinates();
-											return null;
-										}
-
-										@Override
-										protected void done() {
-											root.status("Coordinates loaded.");
-										}
-
-									}.execute();
-								}
-							} catch (Exception e1) {
-								logger.error("Error loading inscript " + selectedResource, e1);
-								root.status.setError("Error loading inscript " + selectedResource, e1);
+							@Override
+							protected Object doInBackground() throws Exception {
+								snippettool.loadInscriptTextFromRemoteResource(selectedCollection, selectedResource);
+								snippettool.updateInscriptImagePathFromAppearances();
+								return null;
 							}
-						}
 
-					}.execute();
+							@Override
+							protected void done() {
+								try {
+									get();
+									root.status("Inscript " + selectedResource + " loaded.");
+
+									if (snippettool.inscript.getAbsoluteRubbingPath() != null
+											&& snippettool.inscript.getAbsoluteRubbingPath() != ""
+												&& snippettool.inscript.getAbsoluteRubbingPath().contains("/")) {
+										new SwingWorker<String, Object>() {
+
+											@Override
+											protected String doInBackground() throws Exception {
+
+												String rubbingPath = snippettool.inscript.getAbsoluteRubbingPath();
+												snippettool.setInscriptImageToRemoteRessource(rubbingPath);
+												return rubbingPath;
+											}
+
+											@Override
+											protected void done() {
+												try {
+													root.status("Image " + get() + " loaded.");
+												} catch (Exception e) {
+													logger.error("Error loading image", e);
+													root.status("Loading image failed: " + e.getLocalizedMessage());
+												}
+											}
+
+										}.execute();
+									}
+
+									if (snippettool.inscript.getAbsoluteRubbingPath() != null
+											&& snippettool.inscript.getAbsoluteRubbingPath() != "") {
+										new SwingWorker<Object, Object>() {
+
+											@Override
+											protected Object doInBackground() throws Exception {
+												snippettool.updateInscriptCoordinates();
+												return null;
+											}
+
+											@Override
+											protected void done() {
+												root.status("Coordinates loaded.");
+											}
+
+										}.execute();
+									}
+								} catch (Exception e1) {
+									logger.error("Error loading inscript " + selectedResource, e1);
+									root.status.setError("Error loading inscript " + selectedResource, e1);
+								}
+							}
+
+						}.execute();
+					}
 				}
 			}
 		} catch (XMLDBException e) {
 			logger.error("XMLDBException in valueChanged(): ", e);
 			JOptionPane.showMessageDialog(this, e.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
+	}
+
+	private boolean resourceContainsChineseText(String selectedCollection2, String selectedResource2)
+	throws XMLDBException {
+		String chineseTextQuery = "declare namespace tei=\"http://www.tei-c.org/ns/1.0\";" + "fn:count(doc(\""
+		+ selectedResource2 + "\")//tei:TEI/tei:text/tei:body/tei:div[@xml:lang = 'zh'])";
+
+		Collection col = DatabaseManager.getCollection(selectedCollection2, db_data_user, db_data_password);
+		XQueryService service = (XQueryService) col.getService("XQueryService", "1.0");
+
+		XMLResource result = (XMLResource) service.query(chineseTextQuery).getResource(0);
+
+		return Integer.parseInt((String) result.getContent()) > 0;
+
 	}
 }

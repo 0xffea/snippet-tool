@@ -44,7 +44,7 @@ public class DbUtil {
 			return result;
 
 		} catch (XMLDBException e) {
-			e.printStackTrace();
+			logger.error("Error querying database", e);
 		}
 		return null;
 	}
