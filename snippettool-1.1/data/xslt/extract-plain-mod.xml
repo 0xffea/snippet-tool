@@ -50,12 +50,12 @@
     </xsl:if>
   </xsl:template>
   <!-- AB -->
-<!--  <xsl:template match="tei:damage[@type='indiscernible']">
+  <xsl:template match="tei:damage[@type='indiscernible']">
     <xsl:for-each select="string-to-codepoints(translate(.,$interpunktion,''))">
-      <!-\-<span class="damage">Ⓓ</span>-\->
-      <!-\-<span class="damage">⬜</span>-\->
+      <!--<span class="damage">Ⓓ</span>-->
+      <span class="damage">⬜</span>
     </xsl:for-each>
-  </xsl:template>-->
+  </xsl:template>
   <xsl:template match="tei:damage">
     <xsl:for-each select="string-to-codepoints(translate(.,$interpunktion,''))">
       <span class="damage">⬜</span>
@@ -135,7 +135,7 @@
       </span>
     </xsl:for-each>
   </xsl:template>
-  <xsl:template match="tei:supplied|tei:damage[@type='indiscernible']">
+  <xsl:template match="tei:supplied">
   <supplied>
   	<xsl:attribute name="rend"><xsl:value-of select="@rend"/></xsl:attribute>
 	<xsl:apply-templates />
