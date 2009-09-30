@@ -105,7 +105,7 @@
     <br />
   </xsl:template>
   <xsl:template match="tei:persName//text()">
-    <xsl:variable name="class">
+<!--    <xsl:variable name="class">
       <xsl:choose>
         <xsl:when test="ancestor::tei:persName/@type = 'Buddha'">persNameBuddha</xsl:when>
         <xsl:when test="ancestor::tei:persName/@type = ('monk', 'nun')">persNameMonk</xsl:when>
@@ -113,9 +113,9 @@
         <xsl:when test="ancestor::tei:persName/starts-with(@type, 'emp')">persNameEmperor</xsl:when>
         <xsl:when test="ancestor::tei:persName/starts-with(@type, 'disciple')">persNameDisciple</xsl:when>
       </xsl:choose>
-    </xsl:variable>
+    </xsl:variable>-->
     <xsl:for-each select="string-to-codepoints(translate(.,$interpunktion,''))">
-      <span class="{$class}">
+      <span class="persName">
         <xsl:value-of select="codepoints-to-string(.)" />
       </span>
     </xsl:for-each>
