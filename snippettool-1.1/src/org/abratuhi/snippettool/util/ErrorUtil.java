@@ -7,6 +7,7 @@ import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 
 import javax.swing.JOptionPane;
+import javax.xml.transform.TransformerException;
 
 /**
  * @author silvestre
@@ -35,8 +36,11 @@ public final class ErrorUtil {
 	public static void showError(final Component parentComponent,
 			final String message, final Throwable e) {
 		if (!GraphicsEnvironment.isHeadless()) {
-			JOptionPane.showMessageDialog(parentComponent, message + ": "
-					+ e.getLocalizedMessage(), "Error",
+			String errorMessage = message + ": " + e.getLocalizedMessage();
+			if (e instanceof TransformerException) {
+				errorMessage = errorMessage + "\n" + ((TransformerException) e).getLocationAsString();
+			}
+			JOptionPane.showMessageDialog(parentComponent, errorMessage, "Error",
 					JOptionPane.ERROR_MESSAGE);
 		}
 	}
