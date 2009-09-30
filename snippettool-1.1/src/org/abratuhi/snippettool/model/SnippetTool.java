@@ -18,6 +18,9 @@ import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+
 public class SnippetTool extends Observable {
 	private static final Logger logger = LoggerFactory.getLogger(SnippetTool.class);
 
@@ -76,8 +79,8 @@ public class SnippetTool extends Observable {
 		inscript.setId(resource.substring(0, resource.length() - ".xml".length()));
 		inscript.setPath(collection + resource);
 
-		String inscriptText = FileUtil.readStringFromFile(DbUtil.downloadXMLResource(collection, resource, user,
-				password, xml_temp_dir));
+		String inscriptText = Files.toString(DbUtil.downloadXMLResource(collection, resource, user, password,
+				xml_temp_dir), Charsets.UTF_8);
 
 		setInscriptText(inscriptText);
 
@@ -88,20 +91,27 @@ public class SnippetTool extends Observable {
 		inscript.setId(name.substring(0, name.length() - ".xml".length()));
 		inscript.setPath(file.getCanonicalPath());
 
-		String inscriptText = FileUtil.readStringFromFile(file);
+		String inscriptText = Files.toString(file, Charsets.UTF_8);
 		setInscriptText(inscriptText);
 	}
 
 	private void setInscriptText(String inscriptText) throws Exception {
+		if (logger.isDebugEnabled()) {
+			FileUtil.writeXMLStringToFile(new File("1.xml"), inscriptText);
+		}
+
 		String xsltFilename = props.getProperty("local.xslt.file");
 
-		String xsltText = FileUtil.readStringFromFile(xsltFilename);
+		String xsltText = Files.toString(new File(xsltFilename), Charsets.UTF_8);
 		String transformedInscriptText = XMLUtil.transformXML(inscriptText, xsltText);
+
+		if (logger.isDebugEnabled()) {
+			FileUtil.writeXMLStringToFile(new File("2.xml"), transformedInscriptText);
+		}
+
 		String standardizedText = XMLUtil.standardizeXML(transformedInscriptText);
 
 		if (logger.isDebugEnabled()) {
-			FileUtil.writeXMLStringToFile(new File("1.xml"), inscriptText);
-			FileUtil.writeXMLStringToFile(new File("2.xml"), transformedInscriptText);
 			FileUtil.writeXMLStringToFile(new File("3.xml"), standardizedText);
 		}
 
