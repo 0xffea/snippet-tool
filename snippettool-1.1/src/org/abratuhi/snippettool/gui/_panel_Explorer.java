@@ -2,6 +2,7 @@ package org.abratuhi.snippettool.gui;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -16,6 +17,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import org.abratuhi.snippettool.model.SnippetTool;
+import org.abratuhi.snippettool.util.ErrorUtil;
 import org.abratuhi.snippettool.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -173,7 +175,7 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 					if (!resourceContainsChineseText(selectedCollection, selectedResource)) {
 						JOptionPane.showMessageDialog(this,
 								"<html>The selected document does not contain Chinese text marked as such in the body.<br/>"
-										+ "Check if an <em><code>xml:lang=\"zh\"</code> attribute is missing</em> in "
+								+ "Check if an <em><code>xml:lang=\"zh\"</code> attribute is missing</em> in "
 								+ selectedResource + "</html>",
 								"No Chinese Text in " + selectedResource, JOptionPane.ERROR_MESSAGE);
 					} else {
@@ -190,7 +192,14 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 							@Override
 							protected void done() {
 								try {
-									get();
+									try {
+										get();
+									} catch (ExecutionException ee) {
+										Throwable e = ee.getCause();
+										logger.error("Error loading inscript " + selectedResource, e);
+										ErrorUtil.showError(root, "Error loading inscript " + selectedResource, e);
+										return;
+									}
 									root.status("Inscript " + selectedResource + " loaded.");
 
 									if (snippettool.inscript.getAbsoluteRubbingPath() != null
