@@ -131,7 +131,7 @@
   <xsl:template match="tei:unclear">
     <xsl:for-each select="string-to-codepoints(translate(.,$interpunktion,''))">
       <span class="unclear">
-        <xsl:value-of select="text()//codepoints-to-string(.)" />
+        <xsl:value-of select="codepoints-to-string(.)" />
       </span>
     </xsl:for-each>
   </xsl:template>
