@@ -194,7 +194,8 @@ public class Inscript extends Observable {
 					int basiclength = 0;
 					float basiccert = 0.0f;
 					for (int v = 0; v < lvariants.size(); v++) {
-						float cert = Float.parseFloat(lvariants.get(v).getAttributeValue("cert"));
+						String certAttributeValue = lvariants.get(v).getAttributeValue("cert");
+						float cert = parseFloatWithDefaultValue(certAttributeValue);
 						if (cert > basiccert) {
 							basicvariant = v;
 							basiclength = lvariants.get(v).getChildren().size();
@@ -240,7 +241,7 @@ public class Inscript extends Observable {
 							// the first reading in choice schema is preferred
 							boolean preferred = (v == 0) ? true : false;
 							// load cert form parent tag choice
-							float cert = Float.parseFloat(lvariants.get(v).getAttributeValue("cert"));
+							float cert = parseFloatWithDefaultValue(lvariants.get(v).getAttributeValue("cert"));
 							// create variant number
 							int variantnumber = v;
 
@@ -305,7 +306,7 @@ public class Inscript extends Observable {
 							// the first reading in choice schema is preferred
 							boolean preferred = (v == 0) ? true : false;
 							// load cert form parent tag choice
-							float cert = Float.parseFloat(lvariants.get(v).getAttributeValue("cert"));
+							float cert = parseFloatWithDefaultValue(lvariants.get(v).getAttributeValue("cert"));
 							// create variant number
 							int variantnumber = v;
 
@@ -353,6 +354,17 @@ public class Inscript extends Observable {
 		}
 	}
 
+	private static float parseFloatWithDefaultValue(final String s) {
+		float result = 0.0f;
+		try {
+			result = Float.parseFloat(s);
+		} catch (NumberFormatException e) {
+			logger.warn("Number not parsable, using default value of 0.0", e);
+			result = 0.0f;
+		}
+
+		return result;
+	}
 	/**
 	 * Update characters' snippet marking coordinates and dimension using
 	 * results from querying the inscript database
