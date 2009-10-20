@@ -11,6 +11,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.SwingWorker;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -154,8 +155,6 @@ public class _panel_Main extends JPanel implements ActionListener, ChangeListene
 		if (cmd.equals(clear.getActionCommand())) {
 
 			// clear shapes
-			// TODO: Do we need to clear all shapes? Not only the preferred
-			// ones?
 			for (int i = 0; i < inscript.getText().size(); i++) {
 				for (int j = 0; j < inscript.getText().get(i).size(); j++) {
 					for (int k = 0; k < inscript.getText().get(i).get(j).size(); k++) {
@@ -171,14 +170,25 @@ public class _panel_Main extends JPanel implements ActionListener, ChangeListene
 			root.repaint();
 		}
 		if (cmd.equals(submit.getActionCommand())) {
-			Thread t1 = new Thread() {
+
+			final String submissionTaskDescription = root.status.addTask("Submitting snippets");
+
+			new SwingWorker<Object, Object>() {
+
 				@Override
-				public void run() {
+				protected Object doInBackground() throws Exception {
 					snippettool.submitInscript();
-					root.status("Finished Submit");
+					return null;
 				}
-			};
-			t1.start();
+
+				@Override
+				protected void done() {
+					super.done();
+					root.status("Finished Submit");
+					root.status.removeTask(submissionTaskDescription);
+				}
+
+			}.execute();
 		}
 	}
 

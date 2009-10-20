@@ -154,6 +154,7 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 								|| selectedResource.endsWith(".jpg") || selectedResource.endsWith(".tiff") || selectedResource
 								.endsWith(".tif"))) {
 
+					final String loadTaskDescription = root.status.addTask("Loading " + selected);
 					new SwingWorker<Object, Object>() {
 
 						@Override
@@ -166,6 +167,7 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 						protected void done() {
 							super.done();
 							root.status("Image " + selected + " loaded.");
+							root.status.removeTask(loadTaskDescription);
 						}
 
 					}.execute();
@@ -180,6 +182,7 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 								"No Chinese Text in " + selectedResource, JOptionPane.ERROR_MESSAGE);
 					} else {
 
+						final String loadDocumentTaskDescription = root.status.addTask("Loading " + selectedResource);
 						new SwingWorker<Object, Object>() {
 
 							@Override
@@ -201,10 +204,14 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 										return;
 									}
 									root.status("Inscript " + selectedResource + " loaded.");
+									root.status.removeTask(loadDocumentTaskDescription);
 
 									if (snippettool.inscript.getAbsoluteRubbingPath() != null
 											&& snippettool.inscript.getAbsoluteRubbingPath() != ""
 												&& snippettool.inscript.getAbsoluteRubbingPath().contains("/")) {
+
+										final String loadImageTaskDescription = root.status.addTask("Loading "
+												+ snippettool.inscript.getRelativeRubbingPath());
 										new SwingWorker<String, Object>() {
 
 											@Override
@@ -223,6 +230,7 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 													logger.error("Error loading image", e);
 													root.status("Loading image failed: " + e.getLocalizedMessage());
 												}
+												root.status.removeTask(loadImageTaskDescription);
 											}
 
 										}.execute();
@@ -230,6 +238,10 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 
 									if (snippettool.inscript.getAbsoluteRubbingPath() != null
 											&& snippettool.inscript.getAbsoluteRubbingPath() != "") {
+
+										final String loadCoordinatesTaskDescription = root.status
+												.addTask("Loading coordinates for "
+												+ snippettool.inscript.getRelativeRubbingPath());
 										new SwingWorker<Object, Object>() {
 
 											@Override
@@ -240,6 +252,7 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 
 											@Override
 											protected void done() {
+												root.status.removeTask(loadCoordinatesTaskDescription);
 												root.status("Coordinates loaded.");
 											}
 

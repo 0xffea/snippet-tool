@@ -72,7 +72,7 @@ public class _frame_SnippetTool extends JFrame implements WindowListener {
 		menubar = new _menubar_SnippetTool(this, snippettool);
 		main = new _panel_Main(this, snippettool);
 		text = new _panel_Text(this, snippettool);
-		status = new _panel_Status();
+		status = new _panel_Status(this);
 		explorer = new _panel_Explorer(this, snippettool, true);
 		options = new _panel_Options(this, snippettool);
 		info = new _panel_Info(snippettool);
