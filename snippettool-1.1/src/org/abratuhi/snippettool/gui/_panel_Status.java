@@ -5,6 +5,7 @@ import java.awt.Cursor;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.SpringLayout;
 
 import org.abratuhi.snippettool.util.SpringUtilities;
@@ -17,7 +18,7 @@ import com.google.common.collect.Multiset;
 public class _panel_Status extends JPanel {
 
 	private final JLabel labelStatus = new JLabel();
-	private final JLabel runningTasksLabel = new JLabel();
+	private final JProgressBar runningTasksProgress = new JProgressBar();
 
 	private final Component root;
 
@@ -26,11 +27,17 @@ public class _panel_Status extends JPanel {
 	public _panel_Status(Component root) {
 		super();
 		this.root = root;
-		setLayout(new SpringLayout());
+
+		runningTasksProgress.setIndeterminate(true);
+		runningTasksProgress.setVisible(false);
+		runningTasksProgress.setStringPainted(true);
+
+		SpringLayout layout = new SpringLayout();
+		setLayout(layout);
 		add(labelStatus);
-		add(runningTasksLabel);
-		labelStatus.setFont(getFont().deriveFont(10.0f));
-		SpringUtilities.makeCompactGrid(this, 1, 2, 0, 0, 0, 0);
+		add(runningTasksProgress);
+		setStatus("Started.");
+		SpringUtilities.makeCompactGrid(this, 1, 2, 0, 0, 5, 0);
 	}
 
 	public void setStatus(final String status) {
@@ -58,6 +65,7 @@ public class _panel_Status extends JPanel {
 
 	private void updateRunningTasksLabel() {
 		Joiner joiner = Joiner.on("; ");
-		runningTasksLabel.setText("<html>" + joiner.join(tasks) + "</html>");
+		runningTasksProgress.setString(joiner.join(tasks));
+		runningTasksProgress.setVisible(!tasks.isEmpty());
 	}
 }
