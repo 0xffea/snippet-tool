@@ -127,28 +127,7 @@ public class _panel_Main extends JPanel implements ActionListener, ChangeListene
 			zoomer.setZoom(snippettool.getScale());
 		}
 		if (cmd.equals(fit_image_max.getActionCommand()) || cmd.equals(fit_image_min.getActionCommand())) {
-			// compute scale ratio
-			try {
-				Dimension viewportDimension = main_image.scroll_image.getViewport().getExtentSize();
-				Dimension imageDimension = inscript.getPyramidalImage().getDimension();
-				double horizontalRatio = viewportDimension.getWidth() / imageDimension.getWidth();
-				double verticalRatio = viewportDimension.getHeight() / imageDimension.getHeight();
-				double scale = 1.0;
-
-				if (cmd.equals(fit_image_max.getActionCommand())) {
-					scale = Math.max(horizontalRatio, verticalRatio);
-				} else {
-					scale = Math.min(horizontalRatio, verticalRatio);
-				}
-
-				// set zoomer jslider
-				zoomer.setZoom(scale);
-				// scale
-				snippettool.setScale(scale);
-			} catch (Exception e) {
-				logger.error("Error in actionPerformed:", e);
-				ErrorUtil.showError(this, "Error", e);
-			}
+			fitImage(cmd);
 		}
 
 		if (cmd.equals(clear.getActionCommand())) {
@@ -181,6 +160,38 @@ public class _panel_Main extends JPanel implements ActionListener, ChangeListene
 
 			}.execute();
 		}
+	}
+
+	/**
+	 * @param cmd
+	 */
+	private void fitImage(String cmd) {
+		// compute scale ratio
+		try {
+			Dimension viewportDimension = main_image.scroll_image.getViewport().getExtentSize();
+			Dimension imageDimension = inscript.getPyramidalImage().getDimension();
+			double horizontalRatio = viewportDimension.getWidth() / imageDimension.getWidth();
+			double verticalRatio = viewportDimension.getHeight() / imageDimension.getHeight();
+			double scale = 1.0;
+
+			if (cmd.equals(fit_image_max.getActionCommand())) {
+				scale = Math.max(horizontalRatio, verticalRatio);
+			} else {
+				scale = Math.min(horizontalRatio, verticalRatio);
+			}
+
+			// set zoomer jslider
+			zoomer.setZoom(scale);
+			// scale
+			snippettool.setScale(scale);
+		} catch (Exception e) {
+			logger.error("Error in actionPerformed:", e);
+			ErrorUtil.showError(this, "Error", e);
+		}
+	}
+
+	public void fitImageMin() {
+		fitImage(fit_image_min.getActionCommand());
 	}
 
 	@Override

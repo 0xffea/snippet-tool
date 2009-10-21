@@ -166,6 +166,8 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 						@Override
 						protected void done() {
 							super.done();
+
+							root.main.fitImageMin();
 							root.status("Image " + selected + " loaded.");
 							root.status.removeTask(loadTaskDescription);
 						}
@@ -206,9 +208,8 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 									root.status("Inscript " + selectedResource + " loaded.");
 									root.status.removeTask(loadDocumentTaskDescription);
 
-									if (snippettool.inscript.getAbsoluteRubbingPath() != null
-											&& snippettool.inscript.getAbsoluteRubbingPath() != ""
-												&& snippettool.inscript.getAbsoluteRubbingPath().contains("/")) {
+									final String rubbingPath = snippettool.inscript.getAbsoluteRubbingPath();
+									if (rubbingPath != null && rubbingPath != "" && rubbingPath.contains("/")) {
 
 										final String loadImageTaskDescription = root.status.addTask("Loading "
 												+ snippettool.inscript.getRelativeRubbingPath());
@@ -217,7 +218,6 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 											@Override
 											protected String doInBackground() throws Exception {
 
-												String rubbingPath = snippettool.inscript.getAbsoluteRubbingPath();
 												snippettool.setInscriptImageToRemoteRessource(rubbingPath);
 												return rubbingPath;
 											}
@@ -231,16 +231,13 @@ public class _panel_Explorer extends JPanel implements TreeSelectionListener {
 													root.status("Loading image failed: " + e.getLocalizedMessage());
 												}
 												root.status.removeTask(loadImageTaskDescription);
+												root.main.fitImageMin();
 											}
 
 										}.execute();
-									}
-
-									if (snippettool.inscript.getAbsoluteRubbingPath() != null
-											&& snippettool.inscript.getAbsoluteRubbingPath() != "") {
 
 										final String loadCoordinatesTaskDescription = root.status
-												.addTask("Loading coordinates for "
+										.addTask("Loading coordinates for "
 												+ snippettool.inscript.getRelativeRubbingPath());
 										new SwingWorker<Object, Object>() {
 
