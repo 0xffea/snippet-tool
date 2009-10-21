@@ -17,7 +17,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.abratuhi.snippettool.model.Inscript;
-import org.abratuhi.snippettool.model.InscriptCharacter;
 import org.abratuhi.snippettool.model.SnippetTool;
 import org.abratuhi.snippettool.util.ErrorUtil;
 import org.slf4j.Logger;
@@ -154,15 +153,7 @@ public class _panel_Main extends JPanel implements ActionListener, ChangeListene
 
 		if (cmd.equals(clear.getActionCommand())) {
 
-			// clear shapes
-			for (int i = 0; i < inscript.getText().size(); i++) {
-				for (int j = 0; j < inscript.getText().get(i).size(); j++) {
-					for (int k = 0; k < inscript.getText().get(i).get(j).size(); k++) {
-						InscriptCharacter csign = inscript.getText().get(i).get(j).get(k);
-						csign.clearShape();
-					}
-				}
-			}
+			inscript.clearShapes();
 
 			root.options.rb_auto.doClick();
 

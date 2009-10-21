@@ -649,9 +649,14 @@ public class Inscript extends Observable {
 	 *            the absoluteRubbingPath to set
 	 */
 	public void setAbsoluteRubbingPath(String absoluteRubbingPath) {
-		this.absoluteRubbingPath = absoluteRubbingPath;
-		this.setChanged();
-		this.notifyObservers();
+		if (this.absoluteRubbingPath != absoluteRubbingPath) {
+			this.absoluteRubbingPath = absoluteRubbingPath;
+			for (InscriptCharacter inscriptCharacter : getAllInscriptCharacters()) {
+				inscriptCharacter.setModified(true);
+			}
+			this.setChanged();
+			this.notifyObservers();
+		}
 	}
 
 	/**
@@ -825,6 +830,27 @@ public class Inscript extends Observable {
 		setChanged();
 		notifyObservers();
 		System.gc();
+	}
+
+	/**
+	 * Clears shape on all inscript characters
+	 */
+	public void clearShapes() {
+		for (InscriptCharacter inscriptCharacter : getAllInscriptCharacters()) {
+			inscriptCharacter.clearShape();
+		}
+	}
+
+	private List<InscriptCharacter> getAllInscriptCharacters() {
+		List<InscriptCharacter> allInscriptCharacters = new ArrayList<InscriptCharacter>(2 * getText().size());
+		for (int i = 0; i < getText().size(); i++) {
+			for (int j = 0; j < getText().get(i).size(); j++) {
+				for (int k = 0; k < getText().get(i).get(j).size(); k++) {
+					allInscriptCharacters.add(getText().get(i).get(j).get(k));
+				}
+			}
+		}
+		return allInscriptCharacters;
 	}
 
 }
