@@ -81,9 +81,12 @@ public class _frame_SnippetTool extends JFrame implements WindowListener {
 		setJMenuBar(menubar);
 
 		JSplitPane mainoption = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, main, options);
+		mainoption.setResizeWeight(1);
 		JSplitPane up = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, explorer, mainoption);
 		JSplitPane down = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, text, info);
+		down.setResizeWeight(1);
 		JSplitPane all = new JSplitPane(JSplitPane.VERTICAL_SPLIT, up, down);
+		all.setResizeWeight(1);
 
 		mainoption.setBorder(null);
 		up.setBorder(null);
@@ -91,16 +94,16 @@ public class _frame_SnippetTool extends JFrame implements WindowListener {
 		down.setBorder(null);
 		all.setBorder(null);
 
-		mainoption.setDividerSize(PrefUtil.string2integer(preferences.getProperty("local.window.divider.width")));
-		up.setDividerSize(PrefUtil.string2integer(preferences.getProperty("local.window.divider.width")));
-		down.setDividerSize(PrefUtil.string2integer(preferences.getProperty("local.window.divider.width")));
-		down.setDividerSize(PrefUtil.string2integer(preferences.getProperty("local.window.divider.width")));
-		all.setDividerSize(PrefUtil.string2integer(preferences.getProperty("local.window.divider.width")));
+		mainoption.setDividerSize(Integer.parseInt(preferences.getProperty("local.window.divider.width")));
+		up.setDividerSize(Integer.parseInt(preferences.getProperty("local.window.divider.width")));
+		down.setDividerSize(Integer.parseInt(preferences.getProperty("local.window.divider.width")));
+		down.setDividerSize(Integer.parseInt(preferences.getProperty("local.window.divider.width")));
+		all.setDividerSize(Integer.parseInt(preferences.getProperty("local.window.divider.width")));
 
 		// construct jframe
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(all, BorderLayout.CENTER);
-		getContentPane().add(status, BorderLayout.SOUTH);
+		getContentPane().add(status, BorderLayout.PAGE_END);
 
 		setTitle("Snippet-Tool");
 
@@ -114,7 +117,6 @@ public class _frame_SnippetTool extends JFrame implements WindowListener {
 		// add own windowlistener
 		addWindowListener(this);
 
-		//
 		setVisible(true);
 		pack();
 	}
