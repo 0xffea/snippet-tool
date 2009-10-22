@@ -192,7 +192,7 @@ public class Inscript extends Observable {
 					// set the length of preferred reading
 					int basicvariant = 0;
 					int basiclength = 0;
-					float basiccert = 0.0f;
+					float basiccert = -1.0f;
 					for (int v = 0; v < lvariants.size(); v++) {
 						String certAttributeValue = lvariants.get(v).getAttributeValue("cert");
 						float cert = parseFloatWithDefaultValue(certAttributeValue);
