@@ -256,7 +256,7 @@ public class InscriptCharacter {
 			+ "           <base x=\"" + shape.base.x + "\" y=\"" + shape.base.y + "\" width=\""
 			+ shape.base.width + "\" height=\"" + shape.base.height + "\" />\n" + "           <angle phi=\""
 			+ shape.angle + "\"/>\n" + "           </coordinates>\n" + "       </xu:element>\n"
-					+ "    </xu:append>\n";
+			+ "    </xu:append>\n";
 		} else {
 			return "";
 		}
@@ -388,7 +388,10 @@ public class InscriptCharacter {
 		g.setTransform(textrotator);
 		if (inscript.isCharacterVisible()) {
 			g.setFont(f.deriveFont(fontBaseSize));
-			g.drawString(characterStandard, shape.base.x, shape.base.y + g.getFontMetrics().getHeight() * 25 / 40);
+			g.drawString(characterStandard,
+					shape.base.x + shape.base.width / 2 - getRealFontHeight(g) / 2,
+					shape.base.y + shape.base.height / 2 + getRealFontHeight(g) / 2);
+
 		}
 		if (inscript.isNumberVisible()) {
 			g.setFont(f.deriveFont(fontBaseSize / 3.0f));
@@ -402,6 +405,14 @@ public class InscriptCharacter {
 		AffineTransform textderotator = g.getTransform();
 		textderotator.rotate(shape.angle, shape.center.x, shape.center.y);
 		g.setTransform(textderotator);
+	}
+
+	/**
+	 * @param g
+	 * @return
+	 */
+	private int getRealFontHeight(Graphics2D g) {
+		return g.getFontMetrics().getHeight() * 25 / 40;
 	}
 
 	/**
