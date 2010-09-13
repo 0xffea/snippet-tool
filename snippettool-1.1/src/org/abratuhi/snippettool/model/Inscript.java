@@ -26,9 +26,9 @@ import org.xml.sax.InputSource;
 /**
  * Inscript class. Stores all inscript relevant attributes from inscript's .xml
  * description and inscript's text structured due reading variants.
- * 
+ *
  * @author Alexei Bratuhin
- * 
+ *
  */
 public class Inscript extends Observable {
 
@@ -93,6 +93,9 @@ public class Inscript extends Observable {
 	/** Y distance between snippets **/
 	private int db;
 
+	/** Whether we need to submit a complete update to the DB */
+	private boolean completeUpdateNeeded = false;
+
 	public Inscript() {
 	}
 
@@ -114,7 +117,7 @@ public class Inscript extends Observable {
 
 	/**
 	 * Load inscript image from local file
-	 * 
+	 *
 	 * @param img
 	 *            absolute path to image
 	 */
@@ -149,7 +152,7 @@ public class Inscript extends Observable {
 
 	/**
 	 * Load text from inscript's .xml description
-	 * 
+	 *
 	 * @param xml
 	 *            content of inscript's .xml description
 	 */
@@ -368,7 +371,7 @@ public class Inscript extends Observable {
 	/**
 	 * Update characters' snippet marking coordinates and dimension using
 	 * results from querying the inscript database
-	 * 
+	 *
 	 * @param appearances
 	 *            <appearance>s as result of querying database
 	 */
@@ -420,7 +423,7 @@ public class Inscript extends Observable {
 	 * characters (those with the same continuous number) will be automatically
 	 * resized too. Notice: generally applies - all variants marking are
 	 * adjusted using preferred reading's marking.
-	 * 
+	 *
 	 * @param sn
 	 *            character
 	 * @param dir
@@ -446,7 +449,7 @@ public class Inscript extends Observable {
 	 * (those with the same continuous number) will be automatically resized
 	 * too. Notice: generally applies - all variants marking are adjusted using
 	 * preferred reading's marking.
-	 * 
+	 *
 	 * @param sn
 	 *            character
 	 * @param dx
@@ -522,7 +525,7 @@ public class Inscript extends Observable {
 
 	/**
 	 * Load values for autoguided marking from Snippet-tool's Options component.
-	 * 
+	 *
 	 * @param options
 	 *            Snippet-Tool options component
 	 * @param missingOnly
@@ -620,8 +623,13 @@ public class Inscript extends Observable {
 
 		xupdate.append("<xu:modifications version=\'1.0\' xmlns:xu=\'http://www.xmldb.org/xupdate\'>\n");
 
-		for (String id : ids) {
-			xupdate.append("    <xu:remove select=\"//appearance[@id='" + id + "']\" />\n");
+		if (completeUpdateNeeded) {
+			xupdate.append("    <xu:remove select=\"//appearance[source='" + getId() + "']\" />\n");
+			completeUpdateNeeded = false;
+		} else {
+			for (String id : ids) {
+				xupdate.append("    <xu:remove select=\"//appearance[@id='" + id + "']\" />\n");
+			}
 		}
 
 		xupdate.append(additions);
@@ -651,17 +659,25 @@ public class Inscript extends Observable {
 	public void setAbsoluteRubbingPath(String absoluteRubbingPath) {
 		if (this.absoluteRubbingPath != absoluteRubbingPath) {
 			this.absoluteRubbingPath = absoluteRubbingPath;
-			for (InscriptCharacter inscriptCharacter : getAllInscriptCharacters()) {
-				inscriptCharacter.setModified(true);
-			}
-			this.setChanged();
-			this.notifyObservers();
+			setAllCharactersToModified();
 		}
 	}
 
 	/**
+	 *
+	 */
+	public void setAllCharactersToModified() {
+		for (InscriptCharacter inscriptCharacter : getAllInscriptCharacters()) {
+			inscriptCharacter.setModified(true);
+		}
+		completeUpdateNeeded = true;
+		this.setChanged();
+		this.notifyObservers();
+	}
+
+	/**
 	 * Get the absolute rubbing path.
-	 * 
+	 *
 	 * @return the absoluteRubbingPath
 	 */
 	public String getAbsoluteRubbingPath() {

@@ -61,9 +61,12 @@ public class _panel_Main extends JPanel implements ActionListener, ChangeListene
 	JButton clear = new JButton("Clear");
 	/** Submit marking **/
 	JButton submit = new JButton("Submit");
+	/** Submit all markings **/
+	JButton resubmit = new JButton("Resubmit all");
+
 
 	/**
-	 * 
+	 *
 	 * @param jf
 	 *            reference to parent JFrame
 	 * @param sutra
@@ -100,10 +103,12 @@ public class _panel_Main extends JPanel implements ActionListener, ChangeListene
 
 		/* creating CLEAR/SUBMIT JPanel */
 		main_buttons.add(clear);
+		main_buttons.add(resubmit);
 		main_buttons.add(submit);
 
 		clear.addActionListener(this);
 		submit.addActionListener(this);
+		resubmit.addActionListener(this);
 
 		/* creating overall layout */
 		add(main_navigation, BorderLayout.NORTH);
@@ -112,6 +117,7 @@ public class _panel_Main extends JPanel implements ActionListener, ChangeListene
 		add(main_workspace, BorderLayout.EAST);
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent ae) {
 		String cmd = ae.getActionCommand();
 		if (cmd.equals(zoom_in.getActionCommand())) {
@@ -139,7 +145,11 @@ public class _panel_Main extends JPanel implements ActionListener, ChangeListene
 			logger.trace("Triggering repaint.");
 			root.repaint();
 		}
-		if (cmd.equals(submit.getActionCommand())) {
+		if (cmd.equals(submit.getActionCommand()) || cmd.equals(resubmit.getActionCommand())) {
+
+			if (cmd.equals(resubmit.getActionCommand())) {
+				inscript.setAllCharactersToModified();
+			}
 
 			final String submissionTaskDescription = root.status.addTask("Submitting snippets");
 
