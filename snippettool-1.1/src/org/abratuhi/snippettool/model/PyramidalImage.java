@@ -38,9 +38,9 @@ import com.google.common.collect.MapMaker;
  * href="http://iipimage.sourceforge.net/documentation/images/">tiled pyramidal
  * image</a>. Simple images are a degenerated case of a tiled pyramidal image
  * and are processed correctly but not especially efficient.
- * 
+ *
  * @author silvestre
- * 
+ *
  */
 public class PyramidalImage {
 
@@ -63,7 +63,7 @@ public class PyramidalImage {
 
 		/**
 		 * Creates a tile index.
-		 * 
+		 *
 		 * @param imageIndex
 		 *            The index of the page the tile is on (0 being the base of
 		 *            the pyramid).
@@ -121,7 +121,7 @@ public class PyramidalImage {
 	/**
 	 * Creates a PyramidalImage instance accessing the image through the
 	 * provided ImageReader.
-	 * 
+	 *
 	 * @param reader
 	 *            the reader already set up to read the actual image.
 	 * @throws IOException
@@ -136,6 +136,7 @@ public class PyramidalImage {
 		width = reader.getWidth(0);
 
 		cache = new MapMaker().softValues().makeComputingMap(new Function<Tile, BufferedImage>() {
+			@Override
 			public BufferedImage apply(final Tile tile) {
 				try {
 					long start = System.currentTimeMillis();
@@ -166,9 +167,46 @@ public class PyramidalImage {
 		});
 	}
 
+	public static boolean isPyramidalImage(final File imageFile) throws IOException {
+
+		final int EXPECTED_TILE_SIZE = 256;
+
+		ImageReader reader = getImageReader(imageFile);
+
+		if (reader == null) {
+			logger.info("No ImageReader found for " + imageFile.toString() + " - is JAI Image I/O installed?");
+			return false;
+		}
+
+		int height = reader.getHeight(0);
+		int width = reader.getWidth(0);
+		int numImages = reader.getNumImages(true);
+
+		for (int i = 0; i < numImages; i++) {
+			int currentLevelHeight = reader.getHeight(i);
+			int currentLevelWidth = reader.getWidth(i);
+			int currentLevelTileHeight = reader.getTileHeight(i);
+			int currentLevelTileWidth = reader.getTileWidth(i);
+
+			if ((Math.abs(currentLevelHeight - height / Math.pow(2, i)) > 1)
+					|| (Math.abs(currentLevelWidth - width / Math.pow(2, i)) > 1)
+					|| currentLevelTileHeight != EXPECTED_TILE_SIZE || currentLevelTileWidth != EXPECTED_TILE_SIZE) {
+				return false;
+			}
+		}
+
+		if ((reader.getHeight(numImages - 1) > EXPECTED_TILE_SIZE)
+				|| (reader.getWidth(numImages - 1) > EXPECTED_TILE_SIZE)) {
+			return false;
+		}
+
+		return true;
+
+	}
+
 	/**
 	 * A factory creating a {@link PyramidalImage} for a given file.
-	 * 
+	 *
 	 * @param imageFile
 	 *            the image file the PyramidalImage should use.
 	 * @return a {@link PyramidalImage} operating on the given file.
@@ -177,6 +215,25 @@ public class PyramidalImage {
 	 *             {@link ImageReader} is found
 	 */
 	public static PyramidalImage loadImage(final File imageFile) throws IOException {
+		ImageReader reader = getImageReader(imageFile);
+		if (reader == null) {
+			throw new IOException("No ImageReader found for " + imageFile.toString() + " - is JAI Image I/O installed?");
+		} else {
+			return new PyramidalImage(reader);
+		}
+	}
+
+	/**
+	 * Gets an {@link ImageReader} for the specified image file.
+	 *
+	 * @param iamgeFile
+	 *            the image file to read.
+	 * @return an {@link ImageReader} for the specified image file.
+	 * @throws IOException
+	 *             if file not found or the file can not be read for any other
+	 *             reason.
+	 */
+	private static ImageReader getImageReader(final File imageFile) throws IOException {
 		ImageInputStream is = new FileImageInputStream(imageFile);
 		ImageIO.scanForPlugins();
 		Iterator<ImageReader> readers = ImageIO.getImageReaders(is);
@@ -184,13 +241,10 @@ public class PyramidalImage {
 		ImageReader reader = null;
 		if (readers.hasNext()) {
 			reader = readers.next();
-		}
-		if (reader == null) {
-			throw new IOException("No ImageReader found for " + imageFile.toString() + " - is JAI Image I/O installed?");
-		} else {
 			reader.setInput(is);
-			return new PyramidalImage(reader);
 		}
+
+		return reader;
 	}
 
 	/**
@@ -199,9 +253,9 @@ public class PyramidalImage {
 	 * IllegalArgumentException is thrown. If the image is not tiled, the values
 	 * 0, 0 will return the entire image; any other values will cause an
 	 * IllegalArgumentException to be thrown.
-	 * 
+	 *
 	 * @see ImageReader#readTile(int, int, int)
-	 * 
+	 *
 	 * @param imageIndex
 	 *            the index of the page the tile is on (0 being the base of the
 	 *            pyramid).
@@ -220,7 +274,7 @@ public class PyramidalImage {
 
 	/**
 	 * Gets the base {@link Dimension} of the image.
-	 * 
+	 *
 	 * @return the base dimension of the image.
 	 * @throws IOException
 	 *             if the image cannot be read
@@ -231,7 +285,7 @@ public class PyramidalImage {
 
 	/**
 	 * Gets the scaled {@link Dimension} of the image.
-	 * 
+	 *
 	 * @param scale
 	 *            the scale to apply to the base image size
 	 * @return the scaled dimension of the image.
@@ -244,7 +298,7 @@ public class PyramidalImage {
 
 	/**
 	 * Gets the base height of the image.
-	 * 
+	 *
 	 * @return base height of the image.
 	 * @throws IOException
 	 *             if the image cannot be read
@@ -255,7 +309,7 @@ public class PyramidalImage {
 
 	/**
 	 * Gets the base width of the image.
-	 * 
+	 *
 	 * @return base width of the image.
 	 * @throws IOException
 	 *             if the image cannot be read
@@ -268,7 +322,7 @@ public class PyramidalImage {
 	 * Draws the scaled image on the provided graphics context starting at (0,
 	 * 0). If the clip bounds have been set up and the image is a tiled
 	 * pyramidal image only the minimum number of tiles is loaded
-	 * 
+	 *
 	 * @param scale
 	 *            the scale to apply to the base image size
 	 * @param g
@@ -320,7 +374,7 @@ public class PyramidalImage {
 	 * Draws the clipped and scaled image on the provided graphics context
 	 * starting at (0, 0) using the given image index. If image is a tiled
 	 * pyramidal image only the minimum number of tiles is loaded
-	 * 
+	 *
 	 * @param g
 	 *            the graphics context to draw upon.
 	 * @param imageIndex
@@ -371,7 +425,7 @@ public class PyramidalImage {
 	/**
 	 * Cuts the snippets out of the input image file and returns an array
 	 * containing the cut snippets.
-	 * 
+	 *
 	 * @param characters
 	 *            the characters in the image file.
 	 * @param directory
@@ -401,7 +455,7 @@ public class PyramidalImage {
 
 	/**
 	 * Returns the region described by the shape in the input image.
-	 * 
+	 *
 	 * @param shape
 	 *            the shape of the region
 	 * @return the image in the region
@@ -433,9 +487,9 @@ public class PyramidalImage {
 
 	/**
 	 * Returns a subimage defined by a specified rectangular region.
-	 * 
+	 *
 	 * @see BufferedImage#getSubimage(int, int, int, int)
-	 * 
+	 *
 	 * @param bounds
 	 *            the rectangular region to return.
 	 * @return a BufferedImage that is the subimage of this image at the
@@ -453,7 +507,7 @@ public class PyramidalImage {
 
 	/**
 	 * Rounds a double precision Point2D to an integer precision Point.
-	 * 
+	 *
 	 * @param point2D
 	 *            the point2D to convert
 	 * @return a Point approximating the Point2D location, in integer precision.

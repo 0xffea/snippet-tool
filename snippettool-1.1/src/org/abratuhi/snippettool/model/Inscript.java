@@ -123,6 +123,14 @@ public class Inscript extends Observable {
 	 */
 	public void loadLocalImage(File img) {
 		try {
+			if (!PyramidalImage.isPyramidalImage(img)) {
+				ErrorUtil
+						.showWarning(
+								null,
+								"The image "
+										+ img.getName()
+										+ " is not a pyramidal TIFF.\n Loading and displaying might be slow.\n Consider using ConvertToImagePyramid.");
+			}
 			this.setPyramidalImage(PyramidalImage.loadImage(img));
 		} catch (IOException e) {
 			logger.error("IOException occurred in loadLocalImage", e);
