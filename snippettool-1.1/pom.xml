@@ -98,6 +98,9 @@
 				        <version>1.2</version>
 				<configuration>
 							<mainClass>org.stonesutras.snippettool.gui.StartGUI</mainClass>
+							          <systemProperties>
+            <systemProperty><key>file.encoding</key><value>UTF-8</value></systemProperty>
+							</systemProperties>
 				</configuration>
 			</plugin>
 		
