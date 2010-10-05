@@ -1,1 +1,4 @@
-"%JAVA_HOME%\bin\java" -Xms512m -Xmx512m -Dfile.encoding=UTF-8 -jar snippettool-1.1.jar
+@echo off
+set mvnbin=apache-maven-3.0\bin
+@echo on
+%mvnbin%\mvn.bat mvn exec:java

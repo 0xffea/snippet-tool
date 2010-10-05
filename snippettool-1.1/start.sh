@@ -1,1 +1,3 @@
-java -Xms512m -Xmx512m -XX:PermSize=256m -XX:MaxPermSize=256m -Dfile.encoding=UTF-8 -jar snippettool-1.1.jar $@
+#!/bin/bash
+declare PATH=apache-maven-3.0/bin:$PATH
+mvn exec:java

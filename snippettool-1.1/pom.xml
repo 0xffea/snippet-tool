@@ -1,0 +1,164 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.stonesutras</groupId>
+  <artifactId>snippet-tool</artifactId>
+  <version>1.1-SNAPSHOT</version>
+
+  <name>snippet-tool</name>
+  <url>http://www.stonesutras.org</url>
+
+ <organization>
+    <name>Stonesutras</name>
+    <url>http://www.stonesutras.org</url>
+  </organization>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+	<dependency>
+	    <groupId>ch.qos.logback</groupId>
+	    <artifactId>logback-core</artifactId>
+	    <version>0.9.24</version>
+	</dependency>
+		<dependency>
+	    <groupId>ch.qos.logback</groupId>
+	    <artifactId>logback-classic</artifactId>
+	    <version>0.9.24</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.slf4j</groupId>
+	    <artifactId>log4j-over-slf4j</artifactId>
+	    <version>1.6.1</version>
+	</dependency>
+	<dependency>
+		<groupId>org.ostermiller</groupId>
+		<artifactId>utils</artifactId>
+		<version>1.07.00</version>
+	</dependency>
+	<dependency>
+	    <groupId>com.google.guava</groupId>
+	    <artifactId>guava</artifactId>
+	    <version>r06</version>
+	</dependency>
+	<dependency>
+	    <groupId>net.sf.jopt-simple</groupId>
+	    <artifactId>jopt-simple</artifactId>
+	    <version>3.2</version>
+	</dependency>
+	<dependency>
+	    <groupId>net.sf.saxon</groupId>
+	    <artifactId>saxon9he</artifactId>
+	    <version>9.2.1.2</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.apache.xmlrpc</groupId>
+	    <artifactId>xmlrpc-client</artifactId>
+	    <version>3.1.3</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.apache.ws.commons.util</groupId>
+	    <artifactId>ws-commons-util</artifactId>
+	    <version>1.0.2</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.jdom</groupId>
+	    <artifactId>jdom</artifactId>
+	    <version>1.1</version>
+	</dependency>
+	<dependency>
+	    <groupId>net.java.dev</groupId>
+	    <artifactId>colorchooser</artifactId>
+	    <version>1.0-SNAPSHOT</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.exist</groupId>
+	    <artifactId>exist</artifactId>
+	    <version>1.5-SNAPSHOT</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.exist</groupId>
+	    <artifactId>exist-optional</artifactId>
+	    <version>1.5-SNAPSHOT</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.exist</groupId>
+	    <artifactId>xmldb</artifactId>
+	    <version>1.5-SNAPSHOT</version>
+	</dependency>
+  </dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				        <version>1.2</version>
+				<configuration>
+							<mainClass>org.stonesutras.snippettool.gui.StartGUI</mainClass>
+				</configuration>
+			</plugin>
+		
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				        <version>2.3.1</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>org.stonesutras.snippettool.gui.StartGUI</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+<plugin>
+    <groupId>org.codehaus.mojo.webstart</groupId>
+    <artifactId>webstart-maven-plugin</artifactId>
+    <version>1.0-beta-1</version>
+    <executions>
+        <execution>
+            <phase>process-resources</phase>
+            <goals>
+                <goal>jnlp</goal>
+            </goals>
+        </execution>
+    </executions>
+
+    <configuration>
+        <outputDirectoryName>webstart</outputDirectoryName>
+        <excludeTransitive>false</excludeTransitive>
+	<jnlp>
+	        <mainClass>org.stonesutras.snippettool.gui.StartGUI</mainClass>
+	</jnlp>
+        <sign>
+            <keystore>/tmp/myappkeystore</keystore>
+            <keypass>m2m2m2</keypass>
+            <storepass>m2m2m2</storepass>
+            <alias>foobar</alias>
+            <validity>3650</validity>
+
+            <dnameCn>Stonesutras.org</dnameCn>
+            <dnameOu>Software Development</dnameOu>
+            <dnameO>Stonesutras.org</dnameO>
+            <dnameL>Heidelberg</dnameL>
+            <dnameSt>Baden-Württemberg</dnameSt>
+            <dnameC>DE</dnameC>
+            <verify>false</verify>
+            <keystoreConfig>
+                <delete>true</delete>
+                <gen>true</gen>
+            </keystoreConfig>
+        </sign>
+        <outputJarVersions>false</outputJarVersions>
+        <verbose>false</verbose>
+        <unsign>true</unsign>
+        <verifyjar>false</verifyjar>
+    </configuration>
+</plugin>
+
+		</plugins>
+	</build>
+
+</project>
