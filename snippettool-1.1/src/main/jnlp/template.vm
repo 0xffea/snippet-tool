@@ -26,7 +26,7 @@
   </security>
 #end
   <resources>
-    <j2se version="$j2seVersion" java-vm-args="-Dfile.encoding=UTF-8"/>
+    <j2se version="$j2seVersion"/>
     <extension href="http://download.java.net/media/jai-imageio/webstart/release/jai-imageio-1.1.jnlp"/>
      $dependencies
   </resources>

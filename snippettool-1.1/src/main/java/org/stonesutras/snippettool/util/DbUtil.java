@@ -26,9 +26,9 @@ import org.xmldb.api.modules.XPathQueryService;
 /**
  * Collection of functions to ease the use of XMLDB:API and to improve code
  * readability.
- * 
+ *
  * @author Alexei Bratuhin
- * 
+ *
  */
 public class DbUtil {
 
@@ -56,7 +56,7 @@ public class DbUtil {
 			File f = new File(tempdir, resource);
 			Collection col = DatabaseManager.getCollection(collection);
 			XMLResource res = (XMLResource) col.getResource(resource);
-			new FileOutputStream(f).write(((String) res.getContent()).getBytes());
+            new FileOutputStream(f).write(((String) res.getContent()).getBytes("UTF-8"));
 			// alternative:
 			// FileUtil.writeXMLStringToFile(f, (String)res.getContent());
 			return f;
