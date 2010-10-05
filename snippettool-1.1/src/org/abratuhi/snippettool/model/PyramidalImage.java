@@ -169,12 +169,14 @@ public class PyramidalImage {
 
 	public static boolean isPyramidalImage(final File imageFile) throws IOException {
 
+		long start = System.currentTimeMillis();
+
 		final int EXPECTED_TILE_SIZE = 256;
 
 		ImageReader reader = getImageReader(imageFile);
 
 		if (reader == null) {
-			logger.info("No ImageReader found for " + imageFile.toString() + " - is JAI Image I/O installed?");
+			logger.info("No ImageReader found for {} - is JAI Image I/O installed?", imageFile.toString());
 			return false;
 		}
 
@@ -199,6 +201,10 @@ public class PyramidalImage {
 				|| (reader.getWidth(numImages - 1) > EXPECTED_TILE_SIZE)) {
 			return false;
 		}
+
+		long checkTime = System.currentTimeMillis() - start;
+
+		logger.debug("Checking for pyramidal image took {} ms", checkTime);
 
 		return true;
 
