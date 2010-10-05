@@ -96,13 +96,19 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				        <version>1.2</version>
-				<configuration>
-							<mainClass>org.stonesutras.snippettool.gui.StartGUI</mainClass>
-							          <systemProperties>
-            <systemProperty><key>file.encoding</key><value>UTF-8</value></systemProperty>
-							</systemProperties>
-				</configuration>
+					        <configuration>
+          <executable>java</executable>
+          <arguments>
+            <argument>-Dfile.encoding=UTF-8</argument>
+            <argument>-classpath</argument>
+            <!-- automatically creates the classpath using all project dependencies,
+                 also adding the project build directory -->
+            <classpath/>
+            <argument>org.stonesutras.snippettool.gui.StartGUI</argument>
+          </arguments>
+        </configuration>
 			</plugin>
+			
 		
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
