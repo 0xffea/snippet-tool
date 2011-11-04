@@ -270,9 +270,9 @@ public class Inscript extends Observable {
 								if (cspan.getAttribute("class") == null)
 									System.out.println("Element doesn't have 'class' attribute;\n" + cspan.toString());
 
-								if (cspan.getAttributeValue("class").equals("supplied")) {
-									supplied = true;
-								} else {
+								//if (cspan.getAttributeValue("class").equals("supplied")) {
+								//	supplied = true;
+								//} else {
 									String ch = cspan.getText();
 									String chOriginal = (cspan.getAttribute("original") != null) ? cspan
 											.getAttributeValue("original") : ch;
@@ -283,19 +283,19 @@ public class Inscript extends Observable {
 
 											signs.add(csign);
 											signVariants.add((ArrayList<InscriptCharacter>) signs.clone());
-								}
+								//}
 							}
 						}
 
-						if (!supplied) {
+						//if (!supplied) {
 							// add variants arraylist to sutra text
 							getText().add((ArrayList<ArrayList<InscriptCharacter>>) signVariants.clone());
 							//
 							current_column++;
 							current_number++;
-						} else {
-							current_column++;
-						}
+						//} else {
+					//		current_column++;
+						//}
 					}
 
 					// proceed extra length
@@ -335,9 +335,9 @@ public class Inscript extends Observable {
 								if (cspan.getAttribute("class") == null)
 									System.out.println("Element doesn't have 'class' attribute;\n" + cspan.toString());
 
-								if (cspan.getAttributeValue("class").equals("supplied")) {
+								//if (cspan.getAttributeValue("class").equals("supplied")) {
 
-								} else {
+								//} else {
 									String ch = cspan.getText();
 									String chOriginal = (cspan.getAttribute("original") != null) ? cspan
 											.getAttributeValue("original") : ch;
@@ -351,7 +351,7 @@ public class Inscript extends Observable {
 											// -1, current_number starts with 1, not 0
 											// and in arraylist numbering starts with 0
 											getText().get(current_number_for_extra - 1).get(variantnumber).add(csign);
-								}
+								//}
 							}
 						}
 					}
